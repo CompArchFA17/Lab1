@@ -1,0 +1,4 @@
+Completing test bench: 2hr, done by Tues Oct 10
+Writing and testing logic verilog: 2hr, done by Tues Oct 10
+Finishing report: 1hr, by Thursday Oct 12
+Total: 5hr
