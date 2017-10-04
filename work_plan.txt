@@ -1,0 +1,12 @@
+Create ALU in Verilog
+	Implement ADD, SUB, XOR, SLT -  1 hour - 10/8
+
+	Implement AND, NAND, OR, NOR - 0.5 hours - 10/8
+
+Create testbenches - 1.5 hours - 10/9
+
+Set timing - 1 hour- 10/9
+
+Test ALU in Verilog - 1 hour - 10/9
+
+Write report- 2 hours - 10/11
