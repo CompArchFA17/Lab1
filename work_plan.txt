@@ -1,0 +1,9 @@
+Portions to consider:
+
+Verilog:
+- Construct the lookup table and circuit (1 hour)
+- Calculate timing calculations for the resulting circuit (1 hour)
+- Decide which units to test, from low hierarchy to high (1 hour)
+
+Test Bench:
+- Decide which test cases to consider (1 hour)
