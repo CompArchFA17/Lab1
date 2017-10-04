@@ -1,0 +1,11 @@
+ALU verilog implementation(alu.v) (3 hours) ~10/6
+
+Test bench implementation(alu.t.v) (2 hours) ~10/6
+
+Revising the code (2 hours) ~10/7
+
+Experiment with FPGA (2 hours) ~10/8
+
+Analyzing the result (2 hours) ~10/9
+
+Writing Report (2 hours) ~10/10
