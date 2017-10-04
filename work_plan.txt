@@ -1,0 +1,23 @@
+Work Plan
+
+Test cases of ALU and submodules:
+	2 hours (including learning how to make code self-check)
+	Finish 10/6/17
+
+Verilog implementation of ALU:
+
+	Simple implementation (non-optimized, seperated operations):
+		2.5 hours
+		Finish 10/8/17
+		
+	Optimized implementation (reducing silicon area/delay):
+		2 hours
+		Finish 10/11/17 (stretch goal)
+
+Uploading to FPGA (writing wrapper and uploading):
+	1 hour
+	Finish 10/10/17
+
+Report:
+	2 hours
+	Finish 10/11/17
