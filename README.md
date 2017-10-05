@@ -7,7 +7,7 @@
 
 This lab assignment creates the first component of your processor: the ALU.  Additionally, it will help you understand the timing constraints of your designs.
 
-You will work in groups of 2-3. You may shuffle teams from the first lab if you so choose. 
+You will work in groups of 2-3. You may shuffle teams from the first lab if you so choose.
 
 ## Specification ##
 
@@ -24,8 +24,8 @@ The ALU you will implement is a subset of the standard MIPS ALU. The number of o
 | SLT		| `R=(A<B)?1:0`	| No			| `b011`		|
 | AND		| `R=A&B`		| No			| `b100`		|
 | NAND		| `R=~(A&B)`	| No			| `b101`		|
-| NOR		| `R=~(A|B)`	| No			| `b110`		|
-| OR		| `R=A|B`		| No			| `b111`		|
+| NOR		| <code>R=~(A&#124;B)</code>	| No			| `b110`		|
+| OR		| <code>R=A&#124;B</code>		| No			| `b111`		|
 
 
 Each group will construct ALUs with identical behaviors, but the internal structures will vary based on the design decisions you each make.
@@ -90,7 +90,7 @@ For each ALU operation, include the following in your report:
 
 1. A written description of what tests you chose, and why you chose them.  This should be roughly a couple sentences per operation.
 1. Specific instances where your test bench caught a flaw in your design.
-1. As your ALU design evolves, you may find that new test cases should be added to your test bench.  This is a good thing.  When this happens, record specifically why these tests were added. 
+1. As your ALU design evolves, you may find that new test cases should be added to your test bench.  This is a good thing.  When this happens, record specifically why these tests were added.
 
 
 #### Timing Analysis ####
@@ -107,7 +107,7 @@ Push your files to your team GitHub repository (the one listed on the team forma
 1. Report, as a self-contained PDF or MarkDown file
 1. ALU Verilog, with the specified top-level module in `alu.v`
 1. Test benches, including top-level `alu.t.v`
-1. Any scripts used for testing, commented or with a separate `README` on how to run everything and what to expect as output 
+1. Any scripts used for testing, commented or with a separate `README` on how to run everything and what to expect as output
 
 
 ## Hints/Notes ##
