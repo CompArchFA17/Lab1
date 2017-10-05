@@ -1,9 +1,23 @@
-Portions to consider:
+﻿* Portions to consider:
 
 Verilog:
 - Construct the lookup table and circuit (1 hour)
-- Calculate timing calculations for the resulting circuit (1 hour)
-- Decide which units to test, from low hierarchy to high (1 hour)
+* - Implement all functions (probably copy/paste from previous homeworks) (0.5 hours)
+*         - expand for 32 bits
+*         -optionally combine some methods
+* - Implement LUT/mux/whatever we do input to choose the right function (0.5 hours)
+* - Calculate timing calculations for the resulting circuit (0.1 hour)
+* - Finished on 10/9
 
 Test Bench:
-- Decide which test cases to consider (1 hour)
+- Decide which test cases to consider (0.25 hours)
+* - Write the test bench (0.5 hours)
+* - Run and debug test bench (0.1 hours)
+- Finished on 10/9
+   * Report:
+- Write report (3 hours)
+- Broken into two sessions (Tuesday evening, Wednesday evening)
+- Finished on 10/11
+
+
+Thursday (10/12) as leeway in case things overflow timing.
