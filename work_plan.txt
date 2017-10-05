@@ -1,0 +1,24 @@
+Requirements
+Draft a work plan for this lab. Break down the lab in to small portions, and for each portion predict how long it will take (in hours) and when it will be done by (date). You will be comparing your predictions to reality later.
+
+Submit this plan by Wednesday, October 4 by pushing work_plan.txt to GitHub.
+
+Work Plan
+
+1. Understand bitslice ALUs to some extent - sketch out a block diagram, look up anything relevant (1.5hrs) Thursday Oct 5
+
+2. Write test benches - script this, preferably (3hrs) Saturday Oct 7
+
+3. Stub out bitslice module with undefined inputs (1hr) Saturday Oct 7
+
+4. Implement adder/subtracter - we already know how to do this, so it shouldn't be too bad (2hrs) Sunday Oct 8
+
+5. Implement LUT - with a couple working modules, we can try doing this (1.5hrs) Sunday Oct 8
+
+6. Implement XOR and SLT - we think we have a pretty good idea of how to do this (1.5hrs) Monday Oct 9
+
+7. Implement AND/NAND/NOR/OR - related, and don't seem particularly tricky (1.5hrs) Tuesday Oct 10
+
+8. Final block diagram - (.5hrs) Wednesday Oct 11
+
+9. Report/timing analysis/reflection - (3.5hrs) Wednesday Oct 11
