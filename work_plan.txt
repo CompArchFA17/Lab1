@@ -1,0 +1,29 @@
+CompArch Lab 1 Overview
+Logan Sweet & Maggie Jakus
+October 4, 2017
+
+Requirements
+Draft a work plan for this lab. Break down the lab in to small portions, and for each portion predict how long it will take (in hours) and when it will be done by (date). You will be comparing your predictions to reality later.
+
+Submit this plan by Wednesday, October 4 by pushing work_plan.txt to GitHub.
+
+Work Plan/ Schedule
+
+1. Confirm we understand how a general ALU works. Decide on ALU structure, confirm we understand structure. Time: 3hr Due: Thursday October 5
+
+2. Decide on test benches. Time: 2hrs Due: end of day Friday, October 6
+
+3. Write Verilog for each gate. Time: 3hrs Due: End of Sunday, October 8
+
+4. Write test benches with self-checking. Time: 3hrs Due: End of Sunday, October 8
+
+5. Check that test benches are working as expected. Time: 1 hrs Due: Monday, October 9
+
+6. Possible debugging. Time: 2 hrs Due: Tuesday, October 10
+
+7. Perform timing analysis (worst case propagation delay). Time: 1-2 hrs Due: Tuesday, October 10
+
+8. Writeup: Time: 3 hrs Due: Thursday Oct 12
+
+We understand that this work plan may make absolutely no sense, but at this point, it is really hard to tell.
+
