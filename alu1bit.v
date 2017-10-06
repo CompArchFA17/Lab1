@@ -1,4 +1,4 @@
-// ALU1bit is a 31-Bit arithmetic logic unit
+// ALU1bit is a 1-Bit arithmetic logic unit
 // It performs the following operations:
 // b000 -> ADD
 // b001 -> SUB
@@ -11,13 +11,14 @@
 `define OR or #30
 `define NOT not #10
 
-module ALU
+module ALU1bit
 (
-  output      result,
-  output      carryout,
-  input       operandA,
-  input       operandB,
-  input[2:0]  command
+  output      out,
+  output      cout,
+  input       a,
+  input       b,
+  input       cin,
+  input[2:0]  op
 );
   // Your code here
 endmodule
