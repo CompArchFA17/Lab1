@@ -70,7 +70,85 @@ wire XorNor;
 
 endmodule
 
+module ZerothAddSubSLT
+(
+output AddSubSLTSum, carryout, //overflow, 
+input A, B,
+input[2:0] Command, 
+//input carryin  
+);
+	wire nB;
+	wire BornB;
+	wire AxorB;
+	wire AandB;
+	wire CINandAxorB;
+	
+	`NOT Binv(nB, B);
+	TwoInMux mux0(BornB, Command[0], B, nB); 
+	`XOR XOR1(AxorB, A, BornB); 
+	`XOR XOR2(AddSubSLTSum, AxorB, Command[0]); 
+	`AND AND1(AandB, A, BornB); 
+	`AND AND2(CINandAxorB, AxorB, Command[0]);
+	`OR OR1(carryout, AandB, CINandAxorB); 
 
+endmodule
+
+module MiddleAddSubSLT
+(
+output AddSubSLTSum, carryout, //overflow, 
+input A, B,
+input[2:0] Command, 
+input carryin  
+);
+	wire nB;
+	wire BornB;
+	wire AxorB;
+	wire AandB;
+	wire CINandAxorB;
+	
+	`NOT Binv(nB, B);
+	TwoInMux mux0(BornB, Command[0], B, nB); 
+	`XOR XOR1(AxorB, A, BornB); 
+	`XOR XOR2(AddSubSLTSum, AxorB, carryin); 
+	`AND AND1(AandB, A, BornB); 
+	`AND AND2(CINandAxorB, AxorB, carryin);
+	`OR OR1(carryout, AandB, CINandAxorB); 
+
+endmodule
+
+module LastAddSubSLT
+(
+output AddSubSLTSum, carryout, overflow, 
+input A, B,
+input[2:0] Command, 
+input carryin  
+);
+	wire nB;
+	wire BornB;
+	wire AxorB;
+	wire AandB;
+	wire CINandAxorB;
+	
+	`NOT Binv(nB, B);
+	TwoInMux mux0(BornB, Command[0], B, nB); 
+	`XOR XOR1(AxorB, A, BornB); 
+	`XOR XOR2(AddSubSLTSum, AxorB, carryin); 
+	`AND AND1(AandB, A, BornB); 
+	`AND AND2(CINandAxorB, AxorB, carryin);
+	`OR OR1(carryout, AandB, CINandAxorB); 
+	`XOR xor3(overflow, carryout, carryin);
+
+endmodule
+
+
+module BitSlice
+(
+
+
+);
+
+
+endmodule 
 
 
 
