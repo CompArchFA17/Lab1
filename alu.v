@@ -7,7 +7,7 @@
 
 module TwoInMux
 (
-    output out,
+    output outfinal,
     input S,
     input in0, in1
 );   
@@ -15,10 +15,16 @@ module TwoInMux
     wire out0; 
     wire out1; 
 
+    //`NOT Sinv(nS, S);   
+    //`NAND n0(out0, S, in0);
+    //`NAND n1(out1, nS, in1);
+    //`NAND n2(outfinal, out0, out1);  // final output of mux
+
     `NOT Sinv(nS, S);   
-    `NAND n0(out0, nS, in0);
-    `NAND n1(out1, S, in1);
-    `NAND addthem(out, out0, out1);  // final output of mux
+	`AND andgate1(out0, in0, nS);
+    `AND andgate3(out1, in1, S);
+	`OR orgate(outfinal, out0, out1);
+
 
 endmodule
 
@@ -26,17 +32,46 @@ module AndNand
 (
 output AndNandOut, 
 input A, B, 
-input[2:0] Command 
+input[2:0] Command
 
 );
 
 wire AnandB;
 wire AandB;
-//wire[2:0] Command; 
 
 	`NAND n0(AnandB, A, B);
-	`NOT inv0(AandB, AnandB);
-	TwoInMux potato(AndNandOut, Command[0], A, B);    // order to follow out,S,in0, in1
+	`NOT Ainv(AandB, AnandB);
+	TwoInMux potato(AndNandOut, Command[0], AandB, AnandB);    // order to follow out,S,in0, in1
 
 endmodule
+
+module OrNorXor
+(
+output OrNorXorOut,
+input A, B,
+input[2:0] Command
+);
+wire AnorB;
+wire AorB;
+wire AnandB;
+wire nXor;
+wire AxorB;
+wire XorNor;
+
+	`NOR nor0(AnorB, A, B);
+	`NOT n0(AorB, AnorB);
+	`NAND and0(AnandB, A, B);
+	`NAND and1(nXor, AnandB, AorB);
+	`NOT n1(AxorB, nXor);
+
+	TwoInMux mux0(XorNor, Command[2], AxorB, AnorB);
+	TwoInMux mux1(OrNorXorOut, Command[0], XorNor, AorB);
+	
+
+endmodule
+
+
+
+
+
 
