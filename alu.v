@@ -24,8 +24,30 @@ module TwoInMux
 	`AND andgate1(out0, in0, nS);
     `AND andgate3(out1, in1, S);
 	`OR orgate(outfinal, out0, out1);
+endmodule
 
+module FourInMux
+(
+    output out,
+    input S0, S1,
+    input in0, in1, in2, in3
+);
+    wire nS0; 
+    wire nS1; 
 
+    wire out0; 
+    wire out1; 
+    wire out2; 
+    wire out3; 
+
+    `NOT S0inv(nS0, S0);
+    `NOT S1inv(nS1, S1);
+    `NAND n0(out0, nS0, nS1, in0);
+    `NAND n1(out1, S0,  nS1, in1);
+    `NAND n2(out2, nS0, S1, in2);
+    `NAND n3(out3, S0,  S1, in3);
+
+    `NAND addthem(out, out0, out1, out2, out3);
 endmodule
 
 module AndNand
@@ -41,7 +63,7 @@ wire AandB;
 
 	`NAND n0(AnandB, A, B);
 	`NOT Ainv(AandB, AnandB);
-	TwoInMux potato(AndNandOut, Command[0], AandB, AnandB);    // order to follow out,S,in0, in1
+	 TwoInMux potato(AndNandOut, Command[0], AandB, AnandB);    // order to follow out,S,in0, in1
 
 endmodule
 
@@ -66,15 +88,13 @@ wire XorNor;
 
 	TwoInMux mux0(XorNor, Command[2], AxorB, AnorB);
 	TwoInMux mux1(OrNorXorOut, Command[0], XorNor, AorB);
-	
-
 endmodule
 
 module ZerothAddSubSLT
 (
 output AddSubSLTSum, carryout, //overflow, 
 input A, B,
-input[2:0] Command, 
+input[2:0] Command
 //input carryin  
 );
 	wire nB;
@@ -90,7 +110,6 @@ input[2:0] Command,
 	`AND AND1(AandB, A, BornB); 
 	`AND AND2(CINandAxorB, AxorB, Command[0]);
 	`OR OR1(carryout, AandB, CINandAxorB); 
-
 endmodule
 
 module MiddleAddSubSLT
@@ -113,7 +132,6 @@ input carryin
 	`AND AND1(AandB, A, BornB); 
 	`AND AND2(CINandAxorB, AxorB, carryin);
 	`OR OR1(carryout, AandB, CINandAxorB); 
-
 endmodule
 
 module LastAddSubSLT
@@ -137,15 +155,25 @@ input carryin
 	`AND AND2(CINandAxorB, AxorB, carryin);
 	`OR OR1(carryout, AandB, CINandAxorB); 
 	`XOR xor3(overflow, carryout, carryin);
-
 endmodule
-
-
-module BitSlice
+ 
+module Bitslice
 (
-
-
+output OneBitFinalOut, 
+input A, B, 
+input[2:0] Command,
+output AddSubSLTSum, carryout, //overflow, 
+input carryin,
+output OrNorXorOut
 );
+	wire Cmd0Start;
+	wire Cmd1Start; 
+	
+	MiddleAddSubSLT rottenpotato(AddSumSLTSum, carryout, A, B, Command, carryin); 
+	OrNorXor idahopotato(OrNorXorOut, A, B, Command);
+	
+	FourInMux ZeroMux(Cmd0Start, Command[1], Command[0], AddSumSLTSum, AddSumSLTSum, OrNorXorOut, AddSumSLTSum);
+
 
 
 endmodule 

@@ -8,11 +8,35 @@ wire AndNandOut;
 reg A, B;
 reg[2:0] Command;
 reg S;
+wire OneBitFinalOut;
+wire AddSubSLTSum, carryout; //overflow, 
+reg carryin;
+wire OrNorXorOut;
+
+
+wire muxout;
+    reg S0, S1;
+    reg in0, in1, in2, in3;
 
     AndNand newpotato(AndNandOut, A, B, Command); 
 
 	OrNorXor ortest(OrNorXorOut, A, B, Command);
+
+	Bitslice yukongoldpotato(OneBitFinalOut, A, B, Command, AddSubSLTSum, carryout, carryin, OrNorXorOut);
+
+	FourInMux arbitrarypotato(muxout, S0, S1, in0, in1, in2, in3);
+
+
 initial begin
+
+    $display("A B| Command |  Output | Expected Output- pure sadness");
+    S0 = 1; S1 = 0; in0 = 1; in1 = 1; in2 = 0; in3 = 0; #1000 
+    $display("%b  %b | %b %b %b %b |  %b | 1", S0, S1, in0, in1, in2, in3, muxout);
+
+
+    $display("A B| Command |  Output | Expected Output- pure sadness");
+    A=1;B=0;Command=3'b000; #1000 
+    $display("%b  %b |   %b |  %b | 1", A, B, Command, OneBitFinalOut);
 
 // Exhaustively testing AND/NAND 
     $display("A B| Command | command0 Output | Expected Output - AND TESTS");
