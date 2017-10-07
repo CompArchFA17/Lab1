@@ -1,0 +1,43 @@
+$date
+	Sat Oct  7 18:10:02 2017
+$end
+$version
+	Icarus Verilog
+$end
+$timescale
+	1s
+$end
+$scope module BitSliceTestHarness $end
+$scope module bit_slice $end
+$var wire 1 ! A $end
+$var wire 1 " ADD $end
+$var wire 1 # AND $end
+$var wire 1 $ B $end
+$var wire 1 % CIN $end
+$var wire 1 & NAND $end
+$var wire 1 ' NOR $end
+$var wire 1 ( OR $end
+$var wire 1 ) SUB $end
+$var wire 1 * XOR $end
+$var wire 1 + cout $end
+$var wire 1 , res $end
+$var wire 1 - sum $end
+$upscope $end
+$upscope $end
+$enddefinitions $end
+#0
+$dumpvars
+z-
+z,
+z+
+x*
+x)
+x(
+x'
+x&
+x%
+1$
+x#
+x"
+1!
+$end
