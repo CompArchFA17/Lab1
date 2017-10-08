@@ -1,133 +1,50 @@
 // Intermediate testbench
 `timescale 1 ns / 1 ps
-`include "alu.v"
+`include "alu2.v"
 
-module testMultiplexer ();
+module test32Adder();
 
-wire AndNandOut;
-reg A, B;
-reg[2:0] Command;
-//reg S;
-wire OneBitFinalOut;
-wire AddSubSLTSum, carryout; //overflow, 
-reg carryin;
-wire OrNorXorOut;
+parameter size = 4; 
+wire [size-1:0] AddSubSLTSum; 
+wire carryout; 
+wire overflow; 
+wire SLTflag;
+wire [size-1:0] subtract; 
+reg [size-1:0] A, B; 
+reg [2:0] Command;
+reg [size-1:0]carryin; 
 
-	//wire muxout;
-    //reg S0, S1;
-    //reg in0, in1, in2, in3;
-
-	wire Cmd0Start;
-	wire Cmd1Start; 
-	
-	wire nB;
-	wire BornB;
-	wire AxorB;
-	wire AandB;
-	wire CINandAxorB;
-
-	wire AnorB;
-	wire AorB;
-	wire AnandB;
-	wire nXor;
-	wire XorNor;
-
-	MiddleAddSubSLT testadd(AddSubSLTSum, carryout, A, B, Command, carryin);
-
-    AndNand newpotato(AndNandOut, A, B, Command); 
-
-	OrNorXor ortest(OrNorXorOut, A, B, Command);
-
-	Bitslice yukongoldpotato(OneBitFinalOut, AddSubSLTSum, carryout, OrNorXorOut, A, B, Command, carryin);
-
-
-	//FourInMux arbitrarypotato(muxout, S0, S1, in0, in1, in2, in3);
+wire [size-1:0] CarryoutWire;
+AddSubSLT32 trial(AddSubSLTSum, carryout, overflow, SLTflag, subtract, A, B, Command, carryin);
 
 initial begin
+$display(" A   | B   |Command|Output | exOut|Cout|OF|subtract|SLTflag"); 
+A = 4'b1000; B = 4'b0001; Command =3'b000; #1000
+$display("%b | %b | %b | %b | Expect 1001| %b | %b ", A, B, Command, AddSubSLTSum, carryout, overflow);
 
-// just the adder - proper behavior
-	$display("Adder/Subtractor");
-    $display("A B| Command |  Output | Expected Output");
-    A=1;B=1;Command=3'b000; carryin = 0; #1000 
-    $display("%b  %b |   %b |  %b | 0 | %b", A, B, Command, AddSubSLTSum, carryout);
-    A=1;B=1;Command=3'b001; carryin = 1; #1000 
-    $display("%b  %b |   %b |  %b | 0 | %b", A, B, Command, AddSubSLTSum, carryout);
+A = 4'b1010; B = 4'b0001; Command =3'b000; #1000
+$display("%b | %b | %b | %b | Expect 1011| %b | %b | %b", A, B, Command, AddSubSLTSum, carryout, overflow, subtract);
 
-// testing subtraction
-	$display("One Bitslice Adder/Subtractor");
-    $display("A B| Command |Out|ExOut|Carryout");
-    A=1;B=1;Command=3'b000; carryin=0; #1000 
-    $display("%b  %b |   %b |  %b | 0 | %b", A, B, Command, OneBitFinalOut,  carryout);
-    A=1;B=0;Command=3'b000; carryin=0; #1000 
-    $display("%b  %b |   %b |  %b | 1 | %b", A, B, Command, OneBitFinalOut,  carryout);
-    A=0;B=0;Command=3'b000; carryin=0; #1000 
-    $display("%b  %b |   %b |  %b | 0 | %b", A, B, Command, OneBitFinalOut,  carryout);
+A = 4'b1010; B = 4'b0001; Command =3'b000; #1000
+$display("%b | %b | %b | %b | Expect 1011| %b | %b ", A, B, Command, AddSubSLTSum, carryout, overflow);
 
-    A=1;B=1;Command=3'b001; carryin=1; #1000 
-    $display("%b  %b |   %b |  %b | 0 | %b", A, B, Command, OneBitFinalOut,  carryout);
-    A=1;B=0;Command=3'b001; carryin=1; #1000 
-    $display("%b  %b |   %b |  %b | 1 | %b", A, B, Command, OneBitFinalOut,  carryout);
-    A=0;B=0;Command=3'b001; carryin=1; #1000 
-    $display("%b  %b |   %b |  %b | 0 | %b", A, B, Command, OneBitFinalOut,  carryout);
+A = 4'b1010; B = 4'b0111; Command =3'b000; #1000
+$display("%b | %b | %b | %b | Expect 0001| %b | %b ", A, B, Command, AddSubSLTSum, carryout, overflow);
+
+A = 4'b1010; B = 4'b0111; Command =3'b001; #1000
+$display("%b | %b | %b | %b | Expect 0011| %b | %b | %b", A, B, Command, AddSubSLTSum, carryout, overflow, subtract);
+
+A = 4'b1010; B = 4'b0111; Command =3'b011; #1000
+$display("%b | %b | %b | %b | Expect 0011| %b | %b | %b | %b", A, B, Command, AddSubSLTSum, carryout, overflow, subtract, SLTflag);
+
+A = 4'b0111; B = 4'b1010; Command =3'b011; #1000
+$display("%b | %b | %b | %b | Expect 0011| %b | %b | %b | %b", A, B, Command, AddSubSLTSum, carryout, overflow, subtract, SLTflag);
 
 
-    //$display("A B| Command |  Output | Expected Output- pure sadness");
-    //S0 = 1; S1 = 0; in0 = 1; in1 = 1; in2 = 0; in3 = 0; #1000 
-    //$display("%b  %b | %b %b %b %b |  %b | 1", S0, S1, in0, in1, in2, in3, muxout);
+A = 4'b0001; B = 4'b0010; Command =3'b011; #1000
+$display("%b | %b | %b | %b | Expect x| %b | %b | %b | %b", A, B, Command, AddSubSLTSum, carryout, overflow, subtract, SLTflag);
 
-// testing addition
-    $display("A B| Command |  Output | Expected Output-sadness|Carryout");
-    A=1;B=1;Command=3'b000; carryin=0; #1000 
-    $display("%b  %b |   %b |  %b | 0 | %b", A, B, Command, OneBitFinalOut,  carryout);
-    A=1;B=0;Command=3'b000; carryin=0; #1000 
-    $display("%b  %b |   %b |  %b | 1 | %b", A, B, Command, OneBitFinalOut,  carryout);
-    A=0;B=0;Command=3'b000; carryin=0; #1000 
-    $display("%b  %b |   %b |  %b | 0 | %b", A, B, Command, OneBitFinalOut,  carryout);
-
-
-// Exhaustively testing AND/NAND 
-    $display("A B| Command | command0 Output | Expected Output - AND TESTS");
-    A=1;B=1;Command=3'b000; #1000 
-    $display("%b  %b |   %b |  %b  %b | 1", A, B, Command, Command[0], AndNandOut);
-    A=1;B=1;Command=3'b001; #1000 
-    $display("%b  %b |   %b |  %b  %b | 0", A, B, Command, Command[1], AndNandOut);
-    A=0;B=1;Command=3'b000; #1000 
-    $display("%b  %b |   %b |  %b  %b | 0", A, B, Command, Command[0], AndNandOut);
-    A=1;B=0;Command=3'b001; #1000 
-    $display("%b  %b |   %b |  %b  %b | 1", A, B, Command, Command[1], AndNandOut);
-
-
-// Exhaustively testing OR/NOR/XOR
-    $display("A B | Command | Output | Expected Output - OR TESTS");
-	A=1; B=1; Command=3'b111; #1000
-	$display("%b %b |    %b  |  %b   | 1 - OR TEST", A, B, Command, OrNorXorOut);
-	A=1; B=0; Command=3'b111; #1000
-	$display("%b %b |    %b  |  %b   | 1 - OR TEST", A, B, Command, OrNorXorOut);
-	A=0; B=1; Command=3'b111; #1000
-	$display("%b %b |    %b  |  %b   | 1 - OR TEST", A, B, Command, OrNorXorOut);
-	A=0; B=0; Command=3'b111; #1000
-	$display("%b %b |    %b  |  %b   | 0 - OR TEST", A, B, Command, OrNorXorOut);
-
-
-	A=1; B=1; Command=3'b110; #1000
-	$display("%b %b |    %b  |  %b   | 0 - NOR TEST", A, B, Command, OrNorXorOut);
-	A=1; B=0; Command=3'b110; #1000
-	$display("%b %b |    %b  |  %b   | 0 - NOR TEST", A, B, Command, OrNorXorOut);
-	A=0; B=1; Command=3'b110; #1000
-	$display("%b %b |    %b  |  %b   | 0 - NOR TEST", A, B, Command, OrNorXorOut);
-	A=0; B=0; Command=3'b110; #1000
-	$display("%b %b |    %b  |  %b   | 1 - NOR TEST", A, B, Command, OrNorXorOut);
-
-	A=1; B=1; Command=3'b010; #1000
-	$display("%b %b |    %b  |  %b   | 0 - XOR TEST", A, B, Command, OrNorXorOut);
-	A=1; B=0; Command=3'b010; #1000
-	$display("%b %b |    %b  |  %b   | 1 - XOR TEST", A, B, Command, OrNorXorOut);
-	A=0; B=1; Command=3'b010; #1000
-	$display("%b %b |    %b  |  %b   | 1 - XOR TEST", A, B, Command, OrNorXorOut);
-	A=0; B=0; Command=3'b010; #1000
-	$display("%b %b |    %b  |  %b   | 0 - XOR TEST", A, B, Command, OrNorXorOut);
-
-    end
-
+end
 
 endmodule
+
