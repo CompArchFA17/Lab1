@@ -160,21 +160,34 @@ endmodule
 module Bitslice
 (
 output OneBitFinalOut, 
+output AddSubSLTSum, carryout, //overflow, 
+output OrNorXorOut,
 input A, B, 
 input[2:0] Command,
-output AddSubSLTSum, carryout, //overflow, 
-input carryin,
-output OrNorXorOut
+input carryin
+
 );
 	wire Cmd0Start;
 	wire Cmd1Start; 
 	
+	wire nB;
+	wire BornB;
+	wire AxorB;
+	wire AandB;
+	wire CINandAxorB;
+
+	wire AnorB;
+	wire AorB;
+	wire AnandB;
+	wire nXor;
+	wire XorNor;
+
 	MiddleAddSubSLT rottenpotato(AddSumSLTSum, carryout, A, B, Command, carryin); 
 	OrNorXor idahopotato(OrNorXorOut, A, B, Command);
 	
-	FourInMux ZeroMux(Cmd0Start, Command[1], Command[0], AddSumSLTSum, AddSumSLTSum, OrNorXorOut, AddSumSLTSum);
+	//FourInMux ZeroMux(Cmd0Start, Command[1], Command[0], AddSumSLTSum, AddSumSLTSum, OrNorXorOut, AddSumSLTSum);
 
-
+	FourInMux ZeroMux(OneBitFinalOut, Command[0], Command[1], AddSumSLTSum, AddSumSLTSum, OrNorXorOut, AddSumSLTSum);
 
 endmodule 
 
