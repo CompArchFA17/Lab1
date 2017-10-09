@@ -9,6 +9,7 @@
 // b110 -> NOR
 // b111 -> OR
 
+`include "alu1bit.v"
 `define AND and #30
 `define OR or #30
 `define NOT not #10
@@ -23,7 +24,7 @@ module ALU
   input[31:0]   operandB,
   input[2:0]    command
 );
- 	
+
   // supose we're jsut doing Addition for now
   wire[31:0] cout=0;
   ALU1bit a1(result[0], cout[0], operandA[0], operandB[0], 0, op);

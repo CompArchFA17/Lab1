@@ -16,16 +16,16 @@ module testALU ();
 
 
     // Test XOR
-    op=3'b010
+    op=3'b010;
     a=32'b00000000000000000000000000000000; b=32'b00000000000000000000000000000000;#1000
     tests = tests + 1;
     $display("                  op   a  b cin|out cout ");
     if ((a ^ b) == out) begin
         passed_tests = passed_tests + 1;
-        $display("Passed test with: %b  %b  %b  %b | %b  %b", op, a, b, out, cout);
+        $display("Passed test with: %b  %b  %b | %b  %b", op, a, b, out, cout);
     end
     else begin
-        $display("Failed test with: %b  %b  %b  %b | %b  %b*", op, a, b, out, cout);
+        $display("Failed test with: %b  %b  %b | %b  %b*", op, a, b, out, cout);
     end
 
 
