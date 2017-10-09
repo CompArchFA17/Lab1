@@ -15,6 +15,30 @@ module testALU1bit ();
     op=3'b000;
     // without cin
     cin = 0;
+    for (i=0; i<2; i=i+1) begin
+        for (j=0; j<2; j=j+1) begin
+            a=i;b=j;#1000
+            if ((a + b == out) & (a & b == cout)) begin
+                $display("Passed test with: %b  %b  %b  %b | %b  %b", op, a, b, cin, out, cout);
+            end
+            else begin
+                $display("Failed test with: %b  %b  %b  %b | %b  %b", op, a, b, cin, out, cout);
+            end
+        end
+    end
+    // with cin
+    cin = 1;
+    for (i=0; i<2; i=i+1) begin
+        for (j=0; j<2; j=j+1) begin
+            a=i;b=j;#1000
+            if ((a ^ b == out) & (a | b == cout)) begin
+                $display("Passed test with: %b  %b  %b  %b | %b  %b", op, a, b, cin, out, cout);
+            end
+            else begin
+                $display("Failed test with: %b  %b  %b  %b | %b  %b", op, a, b, cin, out, cout);
+            end
+        end
+    end
 
     // Test XOR
     op=3'b010; cin = 0;
@@ -66,7 +90,7 @@ module testALU1bit ();
     for (i=0; i<2; i=i+1) begin
         for (j=0; j<2; j=j+1) begin
             a=i;b=j;#1000
-            if (~(a|b) == out) begin
+            if (a ~| b == out) begin
                 $display("Passed test with: %b  %b  %b  %b | %b  %b", op, a, b, cin, out, cout);
             end
             else begin
