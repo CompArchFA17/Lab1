@@ -1,6 +1,6 @@
 // Multiplexer testbench
 `timescale 1 ns / 1 ps
-`include "alu1bit.v"
+`include "mux3bit.v"
 
 module testMultiplexer ();
   reg[2:0] address;
@@ -8,7 +8,7 @@ module testMultiplexer ();
   wire out;
 
   //behavioralMultiplexer mux(out, addr0, addr1, in0, in1, in2, in3);
-  behavioralMultiplexer mux(out, address, inputs);
+  MUX3bit mux(out, address, inputs);
 
   initial begin
     $display("address | inputs   | Out | Expected Output");
