@@ -1,0 +1,101 @@
+#! /usr/bin/vvp
+:ivl_version "0.9.7 " "(v0_9_7)";
+:vpi_time_precision - 12;
+:vpi_module "system";
+:vpi_module "v2005_math";
+:vpi_module "va_math";
+S_0x19af0e0 .scope module, "ALU1bit" "ALU1bit" 2 14;
+ .timescale -9 -12;
+L_0x19d9d70 .functor XOR 1, C4<z>, C4<z>, C4<0>, C4<0>;
+L_0x19d9dd0 .functor AND 1, C4<z>, C4<z>, C4<1>, C4<1>;
+L_0x19d9e50 .functor NAND 1, C4<z>, C4<z>, C4<1>, C4<1>;
+v0x19d8740_0 .net *"_s3", 0 0, C4<0>; 1 drivers
+v0x19d87e0_0 .net *"_s5", 0 0, C4<0>; 1 drivers
+v0x19d8880_0 .net "a", 0 0, C4<z>; 0 drivers
+v0x19d8930_0 .net "b", 0 0, C4<z>; 0 drivers
+v0x19d8a10_0 .net "cin", 0 0, C4<z>; 0 drivers
+v0x19d8ac0_0 .net "cout", 0 0, L_0x19d9c20; 1 drivers
+v0x19d8b40_0 .net "muxIn", 7 0, L_0x19d9ef0; 1 drivers
+v0x19d8bf0_0 .net "op", 2 0, C4<zzz>; 0 drivers
+RS_0x7ff07d21c078 .resolv tri, L_0x19d9710, L_0x19da1c0, C4<z>, C4<z>;
+v0x19d8ca0_0 .net8 "out", 0 0, RS_0x7ff07d21c078; 2 drivers
+v0x19d8d70_0 .net "res_ADD", 0 0, C4<z>; 0 drivers
+v0x19d8e50_0 .net "res_AND", 0 0, L_0x19d9dd0; 1 drivers
+v0x19d8ed0_0 .net "res_NAND", 0 0, L_0x19d9e50; 1 drivers
+v0x19d8fc0_0 .net "res_SLT", 0 0, C4<z>; 0 drivers
+v0x19d9040_0 .net "res_SUB", 0 0, C4<z>; 0 drivers
+v0x19d9140_0 .net "res_XOR", 0 0, L_0x19d9d70; 1 drivers
+LS_0x19d9ef0_0_0 .concat [ 1 1 1 1], C4<0>, C4<0>, L_0x19d9e50, L_0x19d9dd0;
+LS_0x19d9ef0_0_4 .concat [ 1 1 1 1], L_0x19d9d70, C4<z>, C4<z>, C4<z>;
+L_0x19d9ef0 .concat [ 4 4 0 0], LS_0x19d9ef0_0_0, LS_0x19d9ef0_0_4;
+S_0x19d7e70 .scope module, "adder" "FullAdder1Bit" 2 25, 2 63, S_0x19af0e0;
+ .timescale -9 -12;
+L_0x19d8df0 .functor XOR 1, C4<z>, C4<z>, C4<0>, C4<0>;
+L_0x19d9710 .functor XOR 1, L_0x19d8df0, C4<z>, C4<0>, C4<0>;
+L_0x19d9810 .functor AND 1, C4<z>, C4<z>, C4<1>, C4<1>;
+L_0x19d9870 .functor OR 1, C4<z>, C4<z>, C4<0>, C4<0>;
+L_0x19d99f0 .functor NOT 1, C4<z>, C4<0>, C4<0>, C4<0>;
+L_0x19d9a50 .functor AND 1, L_0x19d9810, L_0x19d99f0, C4<1>, C4<1>;
+L_0x19d9ae0 .functor AND 1, L_0x19d9870, C4<z>, C4<1>, C4<1>;
+L_0x19d9c20 .functor OR 1, L_0x19d9a50, L_0x19d9ae0, C4<0>, C4<0>;
+v0x19d7f60_0 .net "_carryin", 0 0, L_0x19d99f0; 1 drivers
+v0x19d8020_0 .alias "a", 0 0, v0x19d8880_0;
+v0x19d80c0_0 .net "aandb", 0 0, L_0x19d9810; 1 drivers
+v0x19d8160_0 .net "aorb", 0 0, L_0x19d9870; 1 drivers
+v0x19d8210_0 .alias "b", 0 0, v0x19d8930_0;
+v0x19d82b0_0 .alias "carryin", 0 0, v0x19d8a10_0;
+v0x19d8390_0 .alias "carryout", 0 0, v0x19d8ac0_0;
+v0x19d8430_0 .net "outputIfCarryin", 0 0, L_0x19d9a50; 1 drivers
+v0x19d8520_0 .net "outputIf_Carryin", 0 0, L_0x19d9ae0; 1 drivers
+v0x19d85c0_0 .net "s", 0 0, L_0x19d8df0; 1 drivers
+v0x19d86c0_0 .alias "sum", 0 0, v0x19d8ca0_0;
+S_0x1989690 .scope module, "mux" "behavioralMultiplexer" 2 47, 2 53, S_0x19af0e0;
+ .timescale -9 -12;
+v0x1989780_0 .alias "address", 2 0, v0x19d8bf0_0;
+v0x19d7d30_0 .alias "inputs", 7 0, v0x19d8b40_0;
+v0x19d7dd0_0 .alias "out", 0 0, v0x19d8ca0_0;
+L_0x19da1c0 .part/v L_0x19d9ef0, C4<zzz>, 1;
+S_0x19aed30 .scope module, "testMultiplexer" "testMultiplexer" 3 5;
+ .timescale -9 -12;
+v0x19d9490_0 .var "address", 2 0;
+v0x19d9530_0 .var "inputs", 7 0;
+v0x19d95e0_0 .net "out", 0 0, L_0x19da2f0; 1 drivers
+S_0x19d91c0 .scope module, "mux" "behavioralMultiplexer" 3 11, 2 53, S_0x19aed30;
+ .timescale -9 -12;
+v0x19d92b0_0 .net "address", 2 0, v0x19d9490_0; 1 drivers
+v0x19d9350_0 .net "inputs", 7 0, v0x19d9530_0; 1 drivers
+v0x19d93f0_0 .alias "out", 0 0, v0x19d95e0_0;
+L_0x19da2f0 .part/v v0x19d9530_0, v0x19d9490_0, 1;
+    .scope S_0x19aed30;
+T_0 ;
+    %vpi_call 3 14 "$display", "address | inputs   | Out | Expected Output";
+    %movi 8, 1, 8;
+    %set/v v0x19d9530_0, 8, 8;
+    %set/v v0x19d9490_0, 0, 3;
+    %delay 1000000, 0;
+    %vpi_call 3 16 "$display", "%b     | %b | %b   | %b", v0x19d9490_0, v0x19d9530_0, v0x19d95e0_0, 2'sb01;
+    %movi 8, 4, 8;
+    %set/v v0x19d9530_0, 8, 8;
+    %movi 8, 2, 3;
+    %set/v v0x19d9490_0, 8, 3;
+    %delay 1000000, 0;
+    %vpi_call 3 18 "$display", "%b     | %b | %b   | %b", v0x19d9490_0, v0x19d9530_0, v0x19d95e0_0, 2'sb01;
+    %movi 8, 128, 8;
+    %set/v v0x19d9530_0, 8, 8;
+    %set/v v0x19d9490_0, 1, 3;
+    %delay 1000000, 0;
+    %vpi_call 3 20 "$display", "%b     | %b | %b   | %b", v0x19d9490_0, v0x19d9530_0, v0x19d95e0_0, 2'sb01;
+    %movi 8, 64, 8;
+    %set/v v0x19d9530_0, 8, 8;
+    %movi 8, 6, 3;
+    %set/v v0x19d9490_0, 8, 3;
+    %delay 1000000, 0;
+    %vpi_call 3 22 "$display", "%b     | %b | %b   | %b", v0x19d9490_0, v0x19d9530_0, v0x19d95e0_0, 2'sb01;
+    %end;
+    .thread T_0;
+# The file index is used to find the file name in the following table.
+:file_names 4;
+    "N/A";
+    "<interactive>";
+    "./alu1bit.v";
+    "muxTest.t.v";

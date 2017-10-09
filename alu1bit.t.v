@@ -4,57 +4,145 @@
 
 module testALU1bit ();
   wire     out, cout;
-  reg      a, b, cin;
+  reg     a, b, cin;
   reg[2:0] op;
+  integer i, j;
+  integer passed_tests;
 
   ALU1bit alu (out,cout,a,b,cin,op);
   initial begin
-
-    // $dumpfile("../resources/mux.vcd");
-    // $dumpvars;
 
     // Test ADD
     op=3'b000;
     // without cin
     cin = 0;
-    // 0 + 0 = 0
-    // 0 + 1 = 1
-    // 1 + 0 = 1
-    //
-    // addr1=0;in0=0;in1=0;in2=0;in3=0; #1000
-    // if ()
+    for (i=0; i<2; i=i+1) begin
+        for (j=0; j<2; j=j+1) begin
+            a=i;b=j;#1000
+            if ((a + b == out) & (a & b == cout)) begin
+                passed_tests = passed_tests + 1;
+            end
+            else begin
+                $display("Failed test with: %b  %b  %b  %b | %b  %b", op, a, b, cin, out, cout);
+            end
+        end
+    end
+    // with cin
+    cin = 1;
+    for (i=0; i<2; i=i+1) begin
+        for (j=0; j<2; j=j+1) begin
+            a=i;b=j;#1000
+            if ((a ^ b == out) & (a | b == cout)) begin
+                passed_tests = passed_tests + 1;
+            end
+            else begin
+                $display("Failed test with: %b  %b  %b  %b | %b  %b", op, a, b, cin, out, cout);
+            end
+        end
+    end
+
+    // Test SUB
+    op=3'b001;
+    // without cin
+    cin = 0;
+    for (i=0; i<2; i=i+1) begin
+        for (j=0; j<2; j=j+1) begin
+            a=i;b=j;#1000
+            if ((a - b == out) & (a < b == cout)) begin
+                passed_tests = passed_tests + 1;
+            end
+            else begin
+                $display("Failed test with: %b  %b  %b  %b | %b  %b", op, a, b, cin, out, cout);
+            end
+        end
+    end
+    // with cin
+    cin = 1;
+    for (i=0; i<2; i=i+1) begin
+        for (j=0; j<2; j=j+1) begin
+            a=i;b=j;#1000
+            if ((a ~^ b == out) & (a > b == cout)) begin
+                passed_tests = passed_tests + 1;
+            end
+            else begin
+                $display("Failed test with: %b  %b  %b  %b | %b  %b", op, a, b, cin, out, cout);
+            end
+        end
+    end
+
 
     // Test XOR
     op=3'b010; cin = 0;
-    // 0 xor 0 = 0
-    a=0;b=0; #1000
-    integer i = 0
-    for (integer i=0; i<2; i = i + 1) begin
-        $display("asdf");
-    end
-    if (cout == 0) begin
-        $display("Passed test with: %b  %b  %b  %b | %b  %b", op, a, b, cin, out, cout);
-    end
-    else begin
-        $display("Failed test with: %b  %b  %b  %b | %b  %b", op, a, b, cin, out, cout);
-    end
-    // 0 xor 1 = 1
-    a=0;b=1; #1000
-    if (cout != 1) begin
-        $display("Failed test with: %b  %b  %b  %b | %b  %b", op, a, b, cin, out, cout);
-    end
-    // 1 xor 0 = 1
-    a=1;b=0; #1000
-    if (cout != 1) begin
-        $display("Failed test with: %b  %b  %b  %b | %b  %b", op, a, b, cin, out, cout);
-    end
-    // 1 xor 1 = 0
-    a=1;b=1; #1000
-    if (cout != 0) begin
-        $display("Failed test with: %b  %b  %b  %b | %b  %b", op, a, b, cin, out, cout);
+    for (i=0; i<2; i=i+1) begin
+        for (j=0; j<2; j=j+1) begin
+            a=i;b=j;#1000
+            if (a ^ b == out) begin
+                passed_tests = passed_tests + 1;
+            end
+            else begin
+                $display("Failed test with: %b  %b  %b  %b | %b  %b", op, a, b, cin, out, cout);
+            end
+        end
     end
 
-    // Test next op...
+    // Test SLT
+    // TOOD: SLT tests
+
+    // Test AND
+    op=3'b100; cin = 0;
+    for (i=0; i<2; i=i+1) begin
+        for (j=0; j<2; j=j+1) begin
+            a=i;b=j;#1000
+            if (a & b == out) begin
+                $display("Passed test with: %b  %b  %b  %b | %b  %b", op, a, b, cin, out, cout);
+            end
+            else begin
+                $display("Failed test with: %b  %b  %b  %b | %b  %b", op, a, b, cin, out, cout);
+            end
+        end
+    end
+
+    // Test NAND
+    op=3'b101; cin = 0;
+    for (i=0; i<2; i=i+1) begin
+        for (j=0; j<2; j=j+1) begin
+            a=i;b=j;#1000
+            if (~(a&b) == out) begin
+                $display("Passed test with: %b  %b  %b  %b | %b  %b", op, a, b, cin, out, cout);
+            end
+            else begin
+                $display("Failed test with: %b  %b  %b  %b | %b  %b", op, a, b, cin, out, cout);
+            end
+        end
+    end
+
+    // Test NOR
+    op=3'b110; cin = 0;
+    for (i=0; i<2; i=i+1) begin
+        for (j=0; j<2; j=j+1) begin
+            a=i;b=j;#1000
+            if (a ~| b == out) begin
+                $display("Passed test with: %b  %b  %b  %b | %b  %b", op, a, b, cin, out, cout);
+            end
+            else begin
+                $display("Failed test with: %b  %b  %b  %b | %b  %b", op, a, b, cin, out, cout);
+            end
+        end
+    end
+
+    // Test OR
+    op=3'b111; cin = 0;
+    for (i=0; i<2; i=i+1) begin
+        for (j=0; j<2; j=j+1) begin
+            a=i;b=j;#1000
+            if (a|b == out) begin
+                $display("Passed test with: %b  %b  %b  %b | %b  %b", op, a, b, cin, out, cout);
+            end
+            else begin
+                $display("Failed test with: %b  %b  %b  %b | %b  %b", op, a, b, cin, out, cout);
+            end
+        end
+    end
 
     end
 endmodule
