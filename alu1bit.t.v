@@ -9,6 +9,7 @@ module testALU1bit ();
 
   ALU1bit alu (out,cout,a,b,cin,op);
   initial begin
+
     // $dumpfile("../resources/mux.vcd");
     // $dumpvars;
 
@@ -27,7 +28,14 @@ module testALU1bit ();
     op=3'b010; cin = 0;
     // 0 xor 0 = 0
     a=0;b=0; #1000
-    if (cout != 0) begin
+    integer i = 0
+    for (integer i=0; i<2; i = i + 1) begin
+        $display("asdf");
+    end
+    if (cout == 0) begin
+        $display("Passed test with: %b  %b  %b  %b | %b  %b", op, a, b, cin, out, cout);
+    end
+    else begin
         $display("Failed test with: %b  %b  %b  %b | %b  %b", op, a, b, cin, out, cout);
     end
     // 0 xor 1 = 1
