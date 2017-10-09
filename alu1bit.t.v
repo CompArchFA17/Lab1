@@ -29,8 +29,7 @@ module testALU1bit ();
                 $display("Passed test with: %b  %b  %b  %b | %b  %b", op, a, b, cin, out, cout);
             end
             else begin
-                $display("*Failed test with: %b  %b  %b  %b | %b  %b", op, a, b, cin, out, cout);
-            end
+                $display("Failed test with: %b  %b  %b  %b | %b  %b*", op, a, b, cin, out, cout); end
         end
     end
     // with cin
@@ -44,7 +43,7 @@ module testALU1bit ();
                 $display("Passed test with: %b  %b  %b  %b | %b  %b", op, a, b, cin, out, cout);
             end
             else begin
-                $display("*Failed test with: %b  %b  %b  %b | %b  %b", op, a, b, cin, out, cout);
+                $display("Failed test with: %b  %b  %b  %b | %b  %b*", op, a, b, cin, out, cout);
             end
         end
     end
@@ -63,7 +62,7 @@ module testALU1bit ();
                 $display("Passed test with: %b  %b  %b  %b | %b  %b", op, a, b, cin, out, cout);
             end
             else begin
-                $display("*Failed test with: %b  %b  %b  %b | %b  %b", op, a, b, cin, out, cout);
+                $display("Failed test with: %b  %b  %b  %b | %b  %b*", op, a, b, cin, out, cout);
             end
         end
     end
@@ -78,7 +77,7 @@ module testALU1bit ();
                 $display("Passed test with: %b  %b  %b  %b | %b  %b", op, a, b, cin, out, cout);
             end
             else begin
-                $display("*Failed test with: %b  %b  %b  %b | %b  %b", op, a, b, cin, out, cout);
+                $display("Failed test with: %b  %b  %b  %b | %b  %b*", op, a, b, cin, out, cout);
             end
         end
     end
@@ -96,7 +95,7 @@ module testALU1bit ();
                 $display("Passed test with: %b  %b  %b  %b | %b  %b", op, a, b, cin, out, cout);
             end
             else begin
-                $display("*Failed test with: %b  %b  %b  %b | %b  %b", op, a, b, cin, out, cout);
+                $display("Failed test with: %b  %b  %b  %b | %b  %b*", op, a, b, cin, out, cout);
             end
         end
     end
@@ -112,7 +111,7 @@ module testALU1bit ();
     //             $display("Passed test with: %b  %b  %b  %b | %b  %b", op, a, b, cin, out, cout);
     //         end
     //         else begin
-    //             $display("*Failed test with: %b  %b  %b  %b | %b  %b", op, a, b, cin, out, cout);
+    //             $display("Failed test with: %b  %b  %b  %b | %b  %b", op, a, b, cin, out, cout);
     //         end
     //     end
     // end
@@ -129,7 +128,7 @@ module testALU1bit ();
                 $display("Passed test with: %b  %b  %b  %b | %b  %b", op, a, b, cin, out, cout);
             end
             else begin
-                $display("*Failed test with: %b  %b  %b  %b | %b  %b", op, a, b, cin, out, cout);
+                $display("Failed test with: %b  %b  %b  %b | %b  %b*", op, a, b, cin, out, cout);
             end
         end
     end
@@ -146,7 +145,7 @@ module testALU1bit ();
                 $display("Passed test with: %b  %b  %b  %b | %b  %b", op, a, b, cin, out, cout);
             end
             else begin
-                $display("*Failed test with: %b  %b  %b  %b | %b  %b", op, a, b, cin, out, cout);
+                $display("Failed test with: %b  %b  %b  %b | %b  %b*", op, a, b, cin, out, cout);
             end
         end
     end
@@ -163,7 +162,7 @@ module testALU1bit ();
                 $display("Passed test with: %b  %b  %b  %b | %b  %b", op, a, b, cin, out, cout);
             end
             else begin
-                $display("*Failed test with: %b  %b  %b  %b | %b  %b", op, a, b, cin, out, cout);
+                $display("Failed test with: %b  %b  %b  %b | %b  %b*", op, a, b, cin, out, cout);
             end
         end
     end
@@ -180,7 +179,7 @@ module testALU1bit ();
                 $display("Passed test with: %b  %b  %b  %b | %b  %b", op, a, b, cin, out, cout);
             end
             else begin
-                $display("*Failed test with: %b  %b  %b  %b | %b  %b", op, a, b, cin, out, cout);
+                $display("Failed test with: %b  %b  %b  %b | %b  %b*", op, a, b, cin, out, cout);
             end
         end
     end
