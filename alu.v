@@ -6,6 +6,8 @@
 // b011 -> SLT
 // b100 -> AND
 // b101 -> NAND
+// b110 -> NOR
+// b111 -> OR
 
 `define AND and #30
 `define OR or #30

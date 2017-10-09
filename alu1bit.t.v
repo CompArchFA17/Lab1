@@ -4,12 +4,15 @@
 
 module testALU1bit ();
   wire     out, cout;
-  reg     a, b, cin;
+  reg      a, b, cin;
   reg[2:0] op;
+
   integer i, j;
-  integer passed_tests;
+  integer passed_tests = 0;
+  integer tests = 0;
 
   ALU1bit alu (out,cout,a,b,cin,op);
+
   initial begin
 
     // Test ADD
@@ -19,6 +22,7 @@ module testALU1bit ();
     for (i=0; i<2; i=i+1) begin
         for (j=0; j<2; j=j+1) begin
             a=i;b=j;#1000
+            tests = tests + 1;
             if ((a + b == out) & (a & b == cout)) begin
                 passed_tests = passed_tests + 1;
             end
@@ -32,6 +36,7 @@ module testALU1bit ();
     for (i=0; i<2; i=i+1) begin
         for (j=0; j<2; j=j+1) begin
             a=i;b=j;#1000
+            tests = tests + 1;
             if ((a ^ b == out) & (a | b == cout)) begin
                 passed_tests = passed_tests + 1;
             end
@@ -48,6 +53,7 @@ module testALU1bit ();
     for (i=0; i<2; i=i+1) begin
         for (j=0; j<2; j=j+1) begin
             a=i;b=j;#1000
+            tests = tests + 1;
             if ((a - b == out) & (a < b == cout)) begin
                 passed_tests = passed_tests + 1;
             end
@@ -61,6 +67,7 @@ module testALU1bit ();
     for (i=0; i<2; i=i+1) begin
         for (j=0; j<2; j=j+1) begin
             a=i;b=j;#1000
+            tests = tests + 1;
             if ((a ~^ b == out) & (a > b == cout)) begin
                 passed_tests = passed_tests + 1;
             end
@@ -76,6 +83,7 @@ module testALU1bit ();
     for (i=0; i<2; i=i+1) begin
         for (j=0; j<2; j=j+1) begin
             a=i;b=j;#1000
+            tests = tests + 1;
             if (a ^ b == out) begin
                 passed_tests = passed_tests + 1;
             end
@@ -93,8 +101,9 @@ module testALU1bit ();
     for (i=0; i<2; i=i+1) begin
         for (j=0; j<2; j=j+1) begin
             a=i;b=j;#1000
+            tests = tests + 1;
             if (a & b == out) begin
-                $display("Passed test with: %b  %b  %b  %b | %b  %b", op, a, b, cin, out, cout);
+                passed_tests = passed_tests + 1;
             end
             else begin
                 $display("Failed test with: %b  %b  %b  %b | %b  %b", op, a, b, cin, out, cout);
@@ -107,8 +116,9 @@ module testALU1bit ();
     for (i=0; i<2; i=i+1) begin
         for (j=0; j<2; j=j+1) begin
             a=i;b=j;#1000
+            tests = tests + 1;
             if (~(a&b) == out) begin
-                $display("Passed test with: %b  %b  %b  %b | %b  %b", op, a, b, cin, out, cout);
+                passed_tests = passed_tests + 1;
             end
             else begin
                 $display("Failed test with: %b  %b  %b  %b | %b  %b", op, a, b, cin, out, cout);
@@ -121,8 +131,9 @@ module testALU1bit ();
     for (i=0; i<2; i=i+1) begin
         for (j=0; j<2; j=j+1) begin
             a=i;b=j;#1000
+            tests = tests + 1;
             if (a ~| b == out) begin
-                $display("Passed test with: %b  %b  %b  %b | %b  %b", op, a, b, cin, out, cout);
+                passed_tests = passed_tests + 1;
             end
             else begin
                 $display("Failed test with: %b  %b  %b  %b | %b  %b", op, a, b, cin, out, cout);
@@ -135,14 +146,17 @@ module testALU1bit ();
     for (i=0; i<2; i=i+1) begin
         for (j=0; j<2; j=j+1) begin
             a=i;b=j;#1000
+            tests = tests + 1;
             if (a|b == out) begin
-                $display("Passed test with: %b  %b  %b  %b | %b  %b", op, a, b, cin, out, cout);
+                passed_tests = passed_tests + 1;
             end
             else begin
                 $display("Failed test with: %b  %b  %b  %b | %b  %b", op, a, b, cin, out, cout);
             end
         end
     end
+
+    $display("%2d/%2d Test Cases Passed", passed_tests, tests);
 
     end
 endmodule
