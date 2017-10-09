@@ -23,18 +23,21 @@ module ALU1bit
   input[2:0]  op
 );
 	wire res_ADD;
+	wire cout_ADD;
 	// Add
-	FullAdder1Bit adder(out, cout, a, b, cin);
+	FullAdder1Bit adder(res_ADD, cout_ADD, a, b, cin);
 
 	// Subtract
 	wire res_SUB;
+	wire cout_SUB;
 
 	// Xor
 	wire res_XOR;
 	xor(res_XOR, a, b);
 
 	// SLT
-	wire  res_SLT;
+	wire res_SLT;
+	wire cout_SLT;
 
 	// And
 	wire res_AND;
@@ -53,8 +56,10 @@ module ALU1bit
 	or(res_OR, a, b);
 
 	// Use a behavioral mux to select operation
-	wire[7:0] muxIn = {res_ADD, res_SUB, res_XOR, res_SLT, res_AND, res_NAND, res_NOR, res_OR};
-	behavioralMultiplexer mux(out, op, muxIn);
+	wire[7:0] muxRes = {res_OR, res_NOR, res_NAND, res_AND, res_SLT, res_XOR, res_SUB, res_ADD};
+	wire[2:0] muxCout = {cout_SLT, cout_SUB, cout_ADD};
+	behavioralMultiplexer mux1(out, op, muxRes);
+	behavioralMultiplexer mux2(cout, op, muxCout);
 
 endmodule
   
