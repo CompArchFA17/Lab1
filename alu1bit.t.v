@@ -86,6 +86,7 @@ module testALU1bit ();
             tests = tests + 1;
             if (a ^ b == out) begin
                 passed_tests = passed_tests + 1;
+                $display("Passed test with: %b  %b  %b  %b | %b  %b", op, a, b, cin, out, cout);
             end
             else begin
                 $display("Failed test with: %b  %b  %b  %b | %b  %b", op, a, b, cin, out, cout);
@@ -94,7 +95,20 @@ module testALU1bit ();
     end
 
     // Test SLT
-    // TOOD: SLT tests
+    op=3'b011; cin = 0;
+    for (i=0; i<2; i=i+1) begin
+        for (j=0; j<2; j=j+1) begin
+            a=i;b=j;#1000
+            tests = tests + 1;
+            if (a ^ b == out) begin
+                passed_tests = passed_tests + 1;
+                $display("Passed test with: %b  %b  %b  %b | %b  %b", op, a, b, cin, out, cout);
+            end
+            else begin
+                $display("Failed test with: %b  %b  %b  %b | %b  %b", op, a, b, cin, out, cout);
+            end
+        end
+    end
 
     // Test AND
     op=3'b100; cin = 0;
@@ -104,6 +118,7 @@ module testALU1bit ();
             tests = tests + 1;
             if (a & b == out) begin
                 passed_tests = passed_tests + 1;
+                $display("Passed test with: %b  %b  %b  %b | %b  %b", op, a, b, cin, out, cout);
             end
             else begin
                 $display("Failed test with: %b  %b  %b  %b | %b  %b", op, a, b, cin, out, cout);
@@ -119,6 +134,7 @@ module testALU1bit ();
             tests = tests + 1;
             if (~(a&b) == out) begin
                 passed_tests = passed_tests + 1;
+                $display("Passed test with: %b  %b  %b  %b | %b  %b", op, a, b, cin, out, cout);
             end
             else begin
                 $display("Failed test with: %b  %b  %b  %b | %b  %b", op, a, b, cin, out, cout);
@@ -134,6 +150,7 @@ module testALU1bit ();
             tests = tests + 1;
             if (a ~| b == out) begin
                 passed_tests = passed_tests + 1;
+                $display("Passed test with: %b  %b  %b  %b | %b  %b", op, a, b, cin, out, cout);
             end
             else begin
                 $display("Failed test with: %b  %b  %b  %b | %b  %b", op, a, b, cin, out, cout);
@@ -149,6 +166,7 @@ module testALU1bit ();
             tests = tests + 1;
             if (a|b == out) begin
                 passed_tests = passed_tests + 1;
+                $display("Passed test with: %b  %b  %b  %b | %b  %b", op, a, b, cin, out, cout);
             end
             else begin
                 $display("Failed test with: %b  %b  %b  %b | %b  %b", op, a, b, cin, out, cout);
