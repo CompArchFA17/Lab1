@@ -25,10 +25,11 @@ module ALU
 );
  	
   // supose we're jsut doing Addition for now
+  /*wire[31:0] cout;
   initial begin
   	for (index = 0; index < 32; index = index + 1)
-  	FullAdder1Bit(result[index], carryout, operandA[index], operandB[index], carryout);
-  end
+  		//ALU1bit(result[index], cout[index], operandA[index], operandB[index], cin //(result[index], carryout, operandA[index], operandB[index], carryout);
+  end*/
   // TODO: XOR(overflow, carryout, )
 
 
