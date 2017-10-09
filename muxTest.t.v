@@ -13,14 +13,14 @@ module testMultiplexer ();
   initial begin
     $display("address | inputs   | Out | Expected Output");
     inputs=8'b00000001;address=3'b000; #1000
-    $display("%b     | %b | %b   | %b", address, inputs, out, 1);
+    $display("%b     | %b | %b   | %b", address, inputs, out, 1'b1);
     inputs=8'b00000100;address=3'b010; #1000
-    $display("%b     | %b | %b   | %b", address, inputs, out, 1);
+    $display("%b     | %b | %b   | %b", address, inputs, out, 1'b1);
     inputs=8'b10000000;address=3'b111; #1000
-    $display("%b     | %b | %b   | %b", address, inputs, out, 1);
+    $display("%b     | %b | %b   | %b", address, inputs, out, 1'b1);
     inputs=8'b01000000;address=3'b110; #1000
-    $display("%b     | %b | %b   | %b", address, inputs, out, 1);
-    inputs=8'b00000000;address=3'b110; #1000
-    $display("%b     | %b | %b   | %b", address, inputs, out, 1);
+    $display("%b     | %b | %b   | %b", address, inputs, out, 1'b1);
+    inputs=8'b00000000;address=3'b100; #1000
+    $display("%b     | %b | %b   | %b", address, inputs, out, 1'b0);
   end
 endmodule

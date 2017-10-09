@@ -55,8 +55,10 @@ module ALU1bit
 	// Use a behavioral mux to select operation
 	wire[7:0] muxIn = {res_ADD, res_SUB, res_XOR, res_SLT, res_AND, res_NAND, res_NOR, res_OR};
 	behavioralMultiplexer mux(out, op, muxIn);
+
 endmodule
   
+
 
 
 module behavioralMultiplexer
@@ -67,6 +69,8 @@ module behavioralMultiplexer
 );
     assign out = inputs[address];
 endmodule
+
+
 
 
 module FullAdder1Bit
