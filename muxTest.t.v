@@ -20,5 +20,7 @@ module testMultiplexer ();
     $display("%b     | %b | %b   | %b", address, inputs, out, 1);
     inputs=8'b01000000;address=3'b110; #1000
     $display("%b     | %b | %b   | %b", address, inputs, out, 1);
+    inputs=8'b00000000;address=3'b110; #1000
+    $display("%b     | %b | %b   | %b", address, inputs, out, 1);
   end
 endmodule

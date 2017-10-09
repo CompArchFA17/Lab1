@@ -44,10 +44,17 @@ module ALU1bit
 	wire res_NAND;
 	nand(res_NAND, a, b);
 
-	// Use a behavioral mux to select operation
-	wire[7:0] muxIn = {res_ADD, res_SUB, res_SLT, res_XOR, res_AND, res_NAND, 1'b0, 1'b0};
-	behavioralMultiplexer mux(out, op, muxIn);
+	// Nor
+	wire res_NOR;
+	nor(res_NOR, a, b);
 
+	// Or
+	wire res_OR;
+	or(res_OR, a, b);
+
+	// Use a behavioral mux to select operation
+	wire[7:0] muxIn = {res_ADD, res_SUB, res_XOR, res_SLT, res_AND, res_NAND, res_NOR, res_OR};
+	behavioralMultiplexer mux(out, op, muxIn);
 endmodule
   
 
