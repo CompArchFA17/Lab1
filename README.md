@@ -24,8 +24,8 @@ The ALU you will implement is a subset of the standard MIPS ALU. The number of o
 | SLT		| `R=(A<B)?1:0`	| No			| `b011`		|
 | AND		| `R=A&B`		| No			| `b100`		|
 | NAND		| `R=~(A&B)`	| No			| `b101`		|
-| NOR		| `R=~(A|B)`	| No			| `b110`		|
-| OR		| `R=A|B`		| No			| `b111`		|
+| NOR		| `R=~(A\|B)`	| No			| `b110`		|
+| OR		| `R=A\|B`		| No			| `b111`		|
 
 
 Each group will construct ALUs with identical behaviors, but the internal structures will vary based on the design decisions you each make.
