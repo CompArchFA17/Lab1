@@ -11,6 +11,7 @@
 
 `include "mux3bit.v"
 `include "adder1bit.v"
+`include "subtractor1bit.v"
 `define AND and #30
 `define OR or #30
 `define NOT not #10
@@ -32,7 +33,7 @@ module ALU1bit
 	// Subtract
 	wire res_SUB;
 	wire cout_SUB;
-	FullSubtractor1Bit subtractor(res_SUB, cout_SUB, a, b, cin);
+	Subtractor1bit subtractor(res_SUB, cout_SUB, a, b, cin);
 
 	// Xor
 	wire res_XOR;
@@ -64,23 +65,4 @@ module ALU1bit
 	MUX3bit mux1(out, op, muxRes);
 	MUX3bit mux2(cout, op, muxCout);
 
-endmodule
-
-module FullSubtractor1Bit
-(
-    output diff,
-    output borrowout,
-    input a,
-    input b,
-    input borrowin
-);
-    wire axorb;
-    xor(axorb, a, b);
-    xor(diff, axorb, borrowin);
-    wire nota, noteaandb, notaxorb, notaxorbandborrowin;
-    not(nota, a);
-    and(notaandb, nota, b);
-    not(notaxorb, axorb);
-    and(notaxorbandborrowin, notaxorb, borrowin);
-    or(borrowout, notaandb, notaxorbandborrowin);
 endmodule
