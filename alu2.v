@@ -263,6 +263,7 @@ output SLTflag,
 output  [size-1:0] OrNorXorOut,
 output  [size-1:0] AndNandOut,
 output  [size-1:0] subtract,
+output ZeroFlag,
 input  [size-1:0] A, 
 input  [size-1:0] B, 
 input[2:0] Command,
@@ -291,5 +292,8 @@ input [size-1:0]carryin // don't think this does anything but don't want to brea
 		end        
     endgenerate 
             
+	// AndNand32 zeroflagtest(ZeroInt0, OneBitFinalOut, OneBitFinalOut, 3'b101);
+	//`NAND zeroflagtest(ZeroFlag, OneBitFinalOut, OneBitFinalOut);
+
 endmodule 
 
