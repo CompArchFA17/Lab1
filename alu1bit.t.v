@@ -4,8 +4,9 @@
 
 module testALU1bit ();
   wire     out, cout;
-  reg      a, b, cin;
+  reg     a, b, cin;
   reg[2:0] op;
+  integer i, j;
 
   ALU1bit alu (out,cout,a,b,cin,op);
   initial begin
@@ -26,32 +27,16 @@ module testALU1bit ();
 
     // Test XOR
     op=3'b010; cin = 0;
-    // 0 xor 0 = 0
-    a=0;b=0; #1000
-    integer i = 0
-    for (integer i=0; i<2; i = i + 1) begin
-        $display("asdf");
-    end
-    if (cout == 0) begin
-        $display("Passed test with: %b  %b  %b  %b | %b  %b", op, a, b, cin, out, cout);
-    end
-    else begin
-        $display("Failed test with: %b  %b  %b  %b | %b  %b", op, a, b, cin, out, cout);
-    end
-    // 0 xor 1 = 1
-    a=0;b=1; #1000
-    if (cout != 1) begin
-        $display("Failed test with: %b  %b  %b  %b | %b  %b", op, a, b, cin, out, cout);
-    end
-    // 1 xor 0 = 1
-    a=1;b=0; #1000
-    if (cout != 1) begin
-        $display("Failed test with: %b  %b  %b  %b | %b  %b", op, a, b, cin, out, cout);
-    end
-    // 1 xor 1 = 0
-    a=1;b=1; #1000
-    if (cout != 0) begin
-        $display("Failed test with: %b  %b  %b  %b | %b  %b", op, a, b, cin, out, cout);
+    for (i=0; i<2; i=i+1) begin
+        for (j=0; j<2; j=j+1) begin
+            a = i;b=j;#1000
+            if (a ^ b == out) begin
+                $display("Passed test with: %b  %b  %b  %b | %b  %b", op, a, b, cin, out, cout);
+            end
+            else begin
+                $display("Failed test with: %b  %b  %b  %b | %b  %b", op, a, b, cin, out, cout);
+            end
+        end
     end
 
     // Test next op...
