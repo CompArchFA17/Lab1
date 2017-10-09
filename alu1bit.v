@@ -10,6 +10,7 @@
 // b111 -> OR
 
 `include "mux3bit.v"
+`include "adder1bit.v"
 `define AND and #30
 `define OR or #30
 `define NOT not #10
@@ -26,7 +27,7 @@ module ALU1bit
 	wire res_ADD;
 	wire cout_ADD;
 	// Add
-	FullAdder1Bit adder(res_ADD, cout_ADD, a, b, cin);
+	Adder1bit adder(res_ADD, cout_ADD, a, b, cin);
 
 	// Subtract
 	wire res_SUB;
@@ -62,33 +63,4 @@ module ALU1bit
 	MUX3bit mux1(out, op, muxRes);
 	MUX3bit mux2(cout, op, muxCout);
 
-endmodule
-
-
-
-
-
-
-
-
-
-module FullAdder1Bit
-(
-    output sum,
-    output carryout,
-    input a,
-    input b,
-    input carryin
-);
-    wire aandb, aorb;
-    wire s, _carryin;
-    wire outputIfCarryin, outputIf_Carryin;
-    xor(s, a, b);
-    xor(sum, s, carryin);
-    and(aandb, a, b);
-    or(aorb, a, b);
-    not(_carryin, carryin);
-    and(outputIfCarryin, aandb, _carryin);
-    and(outputIf_Carryin, aorb, carryin);
-    or(carryout, outputIfCarryin, outputIf_Carryin);
 endmodule
