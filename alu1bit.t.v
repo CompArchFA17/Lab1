@@ -38,7 +38,7 @@ module testALU1bit ();
         for (j=0; j<2; j=j+1) begin
             a=i;b=j;#1000
             tests = tests + 1;
-            if (((a ^ b) == out) & ((a | b) == cout)) begin
+            if (((a ~^ b) == out) & ((a | b) == cout)) begin
                 passed_tests = passed_tests + 1;
                 $display("Passed test with: %b  %b  %b  %b | %b  %b", op, a, b, cin, out, cout);
             end
