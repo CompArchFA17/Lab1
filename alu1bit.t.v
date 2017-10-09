@@ -183,6 +183,7 @@ module testALU1bit ();
             end
         end
     end
+    $display("                  op   a  b cin|out cout ");
 
     $display("%2d/%2d Test Cases Passed", passed_tests, tests);
 
