@@ -1,6 +1,7 @@
 // 1 Bit alu test bench
 `timescale 1 ns / 1 ps
 `include "alu1bit.v"
+`include "alu.v"
 
 module testALU1bit ();
   wire     out, cout;

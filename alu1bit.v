@@ -42,6 +42,7 @@ module ALU1bit
 	// SLT
 	wire res_SLT;
 	wire cout_SLT;
+	FullSubtractor1Bit slt(res_SUB, cout_SLT, a, b, cin);
 
 	// And
 	wire res_AND;
