@@ -3,8 +3,9 @@
 `include "alu.v"
 
 module testALU ();
-  wire[31:0] out, a, b;
-  reg        zero, overflow, cout;
+  wire[31:0] out;
+  wire       zero, overflow, cout;
+  reg[31:0]  a, b;
   reg[2:0]   op;
 
   integer passed_tests = 0;
