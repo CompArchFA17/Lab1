@@ -60,7 +60,7 @@ module ALU1bit
 
 	// Use a behavioral mux to select operation
 	wire[7:0] muxRes = {res_OR, res_NOR, res_NAND, res_AND, res_SLT, res_XOR, res_SUB, res_ADD};
-	wire[2:0] muxCout = {cout_SLT, cout_SUB, cout_ADD};
+	wire[7:0] muxCout = {1'b0, 1'b0, 1'b0, 1'b0, cout_SLT, 1'b0, cout_SUB, cout_ADD};
 	MUX3bit mux1(out, op, muxRes);
 	MUX3bit mux2(cout, op, muxCout);
 
