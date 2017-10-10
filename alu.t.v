@@ -30,10 +30,63 @@ module testALU ();
     $display("a:   %b", a);
     $display("b:   %b", b);
     $display("out: %b", out);
-    
+
     // Test SLT
     op=3'b011;
+    // SLT(a,b) = 1 where a<b
     a=32'b00000000000000000000000000000001; b=32'b00000000000000000000000000000010;#1000
+    tests = tests + 1;
+    if ((a < b) == out) begin
+        passed_tests = passed_tests + 1;
+        $display("Passed test with op: %b", op);
+    end
+    else begin
+        $display("Failed test with op: %b", op);
+    end
+    $display("a:   %b", a);
+    $display("b:   %b", b);
+    $display("out: %b", out);
+    // SLT(a,b) = 0 where a>b
+    a=32'b00000000000000000000000000001000; b=32'b00000000000000000000000000000010;#1000
+    tests = tests + 1;
+    if ((a < b) == out) begin
+        passed_tests = passed_tests + 1;
+        $display("Passed test with op: %b", op);
+    end
+    else begin
+        $display("Failed test with op: %b", op);
+    end
+    $display("a:   %b", a);
+    $display("b:   %b", b);
+    $display("out: %b", out);
+    // SLT(a,b) = 1 where a(is negative)<b(is positive)
+    a=32'b10000000000000000000000000001000; b=32'b00000000000000000000000000000010;#1000
+    tests = tests + 1;
+    if ((a < b) == out) begin
+        passed_tests = passed_tests + 1;
+        $display("Passed test with op: %b", op);
+    end
+    else begin
+        $display("Failed test with op: %b", op);
+    end
+    $display("a:   %b", a);
+    $display("b:   %b", b);
+    $display("out: %b", out);
+    // SLT(a,b) = 0 where a(is positive)>b(is negative)
+    a=32'b00000000000000000000000000001000; b=32'b10000000000000000000000000000010;#1000
+    tests = tests + 1;
+    if ((a < b) == out) begin
+        passed_tests = passed_tests + 1;
+        $display("Passed test with op: %b", op);
+    end
+    else begin
+        $display("Failed test with op: %b", op);
+    end
+    $display("a:   %b", a);
+    $display("b:   %b", b);
+    $display("out: %b", out);
+    // SLT(a,b) = 1 where a(is negative)>b(is negative)
+    a=32'b10000000000000000000000000001000; b=32'b10000000000000000000000000000010;#1000
     tests = tests + 1;
     if ((a < b) == out) begin
         passed_tests = passed_tests + 1;
