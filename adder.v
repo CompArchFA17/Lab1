@@ -75,10 +75,10 @@ module Subtractor32bit
   output carryout, overflow
 );
 
-  wire[31:0] notb;
+  wire[31:0] notb, b2comp;
   wire unusedCarryout, unusedOverflow;
 
   not32 notbgate (notb, b); // #320 //this delay is due to a 32 bit input
-  FullAdder32bit add1tob(notb, unusedCarryout, unusedOverflow, notb, 32'd1);
-  FullAdder32bit getsum(sum, carryout, overflow, a, notb);
+  FullAdder32bit add1tob(b2comp, unusedCarryout, unusedOverflow, notb, 32'd1);
+  FullAdder32bit getsum(sum, carryout, overflow, a, b2comp);
 endmodule

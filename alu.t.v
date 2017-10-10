@@ -20,29 +20,32 @@ module testALU ();
 
     initial begin 
 
-    address = `ADD; a = 32'd10; b = 32'd10; #1000
-    if ((out !== 32'd20) || (carryout !== 0) || (overflow !== 0)) $display("ADD %d %d failed: %d", a, b, out);
+    $dumpfile("alu.vcd");
+    $dumpvars(0,alu);
 
-    address = `SUB; a = 32'd10; b = 32'd10; #1000
-    if ((out !== 32'd0) || (carryout !== 1) || (overflow !== 0)) $display("SUB 10-10 failed");
+	address = `SUB; a = 32'd10; b = 32'd10; #5000
+    if ((out !== 32'd0) || (carryout !== 1) || (overflow !== 0)) $display("SUB %d %d failed. out: %d carryout: %d overflow: %d", a, b, out, carryout, overflow);
 
-    address = `XOR; a = 32'd10; b = 32'd10; #1000
-    if ((out !== 32'd0) || (carryout !== 0) || (overflow !== 0)) $display("XOR 10 10 failed");
+    address = `ADD; a = 32'd10; b = 32'd10; #5000
+    if ((out !== 32'd20) || (carryout !== 0) || (overflow !== 0)) $display("ADD %d %d failed. out: %d carryout: %d overflow: %d", a, b, out, carryout, overflow);
 
-//    address = `SLT; a = 32'd10; b = 32'd10; #1000
-//    if ((out !== 32'd0) || (carryout !== 0) || (overflow !== 0)) $display("ADD 10+10 failed");
+    address = `XOR; a = 32'd10; b = 32'd10; #5000
+    if ((out !== 32'd0) || (carryout !== 0) || (overflow !== 0)) $display("XOR %d %d failed. out: %d carryout: %d overflow: %d", a, b, out, carryout, overflow);
 
-    address = `AND; a = 32'd10; b = 32'd10; #1000
-    if ((out !== 32'd10) || (carryout !== 0) || (overflow !== 0)) $display("AND 10 10 failed");
+   address = `SLT; a = 32'd15; b = 32'd10; #5000
+   if ((out !== 32'd0) || (carryout !== 0) || (overflow !== 0)) $display("SLT %d %d failed. out: %d carryout: %d overflow: %d", a, b, out, carryout, overflow);
 
-    address = `NAND; a = 32'd10; b = 32'd10; #1000
-    if ((out !== 32'hfffffff5) || (carryout !== 0) || (overflow !== 0)) $display("NAND 10 10 failed");
+    address = `AND; a = 32'd10; b = 32'd10; #5000
+    if ((out !== 32'd10) || (carryout !== 0) || (overflow !== 0)) $display("AND %d %d failed. out: %d carryout: %d overflow: %d", a, b, out, carryout, overflow);
 
-    address = `NOR; a = 32'd10; b = 32'd10; #1000
-    if ((out !== 32'hfffffff5) || (carryout !== 0) || (overflow !== 0)) $display("NOR 10 10 failed");
+    address = `NAND; a = 32'd10; b = 32'd10; #5000
+    if ((out !== 32'hfffffff5) || (carryout !== 0) || (overflow !== 0)) $display("NAND %d %d failed. out: %d carryout: %d overflow: %d", a, b, out, carryout, overflow);
 
-    address = `OR; a = 32'd10; b = 32'd10; #1000
-    if ((out !== 32'd10) || (carryout !== 0) || (overflow !== 0)) $display("OR 10 10 failed");
+    address = `NOR; a = 32'd10; b = 32'd10; #5000
+    if ((out !== 32'hfffffff5) || (carryout !== 0) || (overflow !== 0)) $display("NOR %d %d failed. out: %d carryout: %d overflow: %d", a, b, out, carryout, overflow);
+
+    address = `OR; a = 32'd10; b = 32'd10; #5000
+    if ((out !== 32'd10) || (carryout !== 0) || (overflow !== 0)) $display("OR %d %d failed. out: %d carryout: %d overflow: %d", a, b, out, carryout, overflow);
 
 
     end 

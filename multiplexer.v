@@ -9,9 +9,11 @@ module behavioralMultiplexer
     input[31:0] in0, in1, in2, in3, in4, in5, in6, in7
 );
     // Join single-bit inputs into a bus, use address as index
-    wire[31:0] inputs = {in7, in6, in5, in4, in3, in2, in1, in0};
+    wire [7:0] tempinputs[31:0];
+    assign tempinputs[0] = in0;
+    //wire[7:0] inputs = {in7, in6, in5, in4, in3, in2, in1, in0};
     //wire[2:0] address = {address2, address1, address0};
-    assign out = inputs[address];
+    assign out = tempinputs[address];
 endmodule
 
 
