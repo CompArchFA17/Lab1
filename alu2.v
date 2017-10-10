@@ -5,7 +5,7 @@
 `define NOR nor #10     // base is 10 
 `define XOR xor #40     // and with or is 40
 
-module TwoInMux
+module TwoInMux // this module is a two input mux that takes in two inputs (in0 and in1) and uses switch S to pick the value for outfinal
 (
     output outfinal,
     input S,
@@ -15,18 +15,13 @@ module TwoInMux
     wire out0; 
     wire out1; 
 
-    //`NOT Sinv(nS, S);   
-    //`NAND n0(out0, S, in0);
-    //`NAND n1(out1, nS, in1);
-    //`NAND n2(outfinal, out0, out1);  // final output of mux
-
     `NOT Sinv(nS, S);   
-                `AND andgate1(out0, in0, nS);
+    `AND andgate1(out0, in0, nS);
     `AND andgate3(out1, in1, S);
-                `OR orgate(outfinal, out0, out1);
+    `OR orgate(outfinal, out0, out1);
 endmodule
 
-module FourInMux
+module FourInMux // this module is a four input mux that takes in four inputs (in0, in1, in2, and in3) and uses switches S0 and S1 to pick the value for out
 (
     output out,
     input S0, S1,
@@ -50,74 +45,75 @@ module FourInMux
     `NAND addthem(out, out0, out1, out2, out3);
 endmodule
 
-module AndNand
+module AndNand // Uses Command[0] to determine whether and or nand is chosen
 (
 output AndNandOut, 
 input A, B, 
 input[2:0] Command
-
 );
 
-wire AnandB;
-wire AandB;
+	wire AnandB;
+	wire AandB;
 
-                `NAND n0(AnandB, A, B);
-                `NOT Ainv(AandB, AnandB);
-                TwoInMux potato(AndNandOut, Command[0], AandB, AnandB);    // order to follow out,S,in0, in1
+	`NAND n0(AnandB, A, B);
+	`NOT Ainv(AandB, AnandB);
+	TwoInMux potato(AndNandOut, Command[0], AandB, AnandB);    // order to follow out,S,in0, in1
 
 endmodule
 
 module OrNorXor
 (
-output OrNorXorOut,
+output OrNorXorOut, // uses both Command[0] and Command[2] to determine whether Or, Nor, or Xor is used
 input A, B,
 input[2:0] Command
 );
-wire AnorB;
-wire AorB;
-wire AnandB;
-wire nXor;
-wire AxorB;
-wire XorNor;
+	wire AnorB;
+	wire AorB;
+	wire AnandB;
+	wire nXor;
+	wire AxorB;
+	wire XorNor;
 
-                `NOR nor0(AnorB, A, B);
-                `NOT n0(AorB, AnorB);
-                `NAND and0(AnandB, A, B);
-                `NAND and1(nXor, AnandB, AorB);
-                `NOT n1(AxorB, nXor);
+	`NOR nor0(AnorB, A, B);
+    `NOT n0(AorB, AnorB);
+    `NAND and0(AnandB, A, B);
+    `NAND and1(nXor, AnandB, AorB);
+    `NOT n1(AxorB, nXor);
 
-                TwoInMux mux0(XorNor, Command[2], AxorB, AnorB);
-                TwoInMux mux1(OrNorXorOut, Command[0], XorNor, AorB);
+    TwoInMux mux0(XorNor, Command[2], AxorB, AnorB);
+    TwoInMux mux1(OrNorXorOut, Command[0], XorNor, AorB);
 endmodule
 
 
-
-module MiddleAddSubSLT
+// this module calculates addition, subtraction, and SLT based on which command is selected. SLT happens when A<B, or when A-B < 0. SLT is only calculated with the most significant bit, so it is not used in this smaller module. We use the adder/subtractor like we discussed in class
+module MiddleAddSubSLT 
 (
-output AddSubSLTSum, carryout, //overflow, 
+output AddSubSLTSum, carryout, //overflow is only calculated for the most significant bit, while this is a generic adder/subtractor
 output subtract, 
 input A, B,
 input[2:0] Command, 
 input carryin  
 );
-                wire nB;
-                wire BornB;
-                wire AxorB;
-                wire AandB;
-                wire CINandAxorB;
-                wire nCmd2;
+	wire nB;
+	wire BornB;
+    wire AxorB;
+    wire AandB;
+    wire CINandAxorB;
+    wire nCmd2;
                 
-                `NOT Binv(nB, B);
-                TwoInMux mux0(BornB, Command[0], B, nB); 
-                `NOT n0(nCmd2, Command[2]);
-                `AND subtractchoose(subtract, Command[0], nCmd2); 
-                `XOR XOR1(AxorB, A, BornB); 
-                `XOR XOR2(AddSubSLTSum, AxorB, carryin); 
-                `AND AND1(AandB, A, BornB); 
-                `AND AND2(CINandAxorB, AxorB, carryin);
-                `OR OR1(carryout, AandB, CINandAxorB); 
+	`NOT Binv(nB, B);
+    TwoInMux mux0(BornB, Command[0], B, nB); 
+    `NOT n0(nCmd2, Command[2]);
+    `AND subtractchoose(subtract, Command[0], nCmd2); 
+    `XOR XOR1(AxorB, A, BornB); 
+    `XOR XOR2(AddSubSLTSum, AxorB, carryin); 
+    `AND AND1(AandB, A, BornB); 
+    `AND AND2(CINandAxorB, AxorB, carryin);
+    `OR OR1(carryout, AandB, CINandAxorB); 
 endmodule
 
+// We attempted to create one bitslice that we could use 32 times, but for some reason, this module didn't work
+/*
 module Bitslice
 (
 output OneBitFinalOut, 
@@ -152,31 +148,32 @@ input carryin
                 FourInMux OneMux(Cmd1Start, Command[0], Command[1], AndNandOut, AndNandOut, OrNorXorOut, OrNorXorOut);
                 TwoInMux TwoMux(OneBitFinalOut, Command[2], Cmd0Start, Cmd1Start);
 endmodule 
+*/
 
-
+// this module creates a 32-bit AND/NAND module
 module AndNand32
 (
 output [size-1:0] AndNandOut, 
 input [size-1:0] A,
 input [size-1:0] B, 
 input[2:0] Command
-
 );
-parameter size = 4; 
-wire AnandB;
-wire AandB;
+	parameter size = 4; // set the parameter size to whatever length you want
+	wire AnandB;
+	wire AandB;
 
+	AndNand attempt2(AndNandOut[0], A[0], B[0], Command); // set the zeroth condition. This is only important for the ADD/SUB/SLT module, but we do it for all for consistency
 
-AndNand attempt2(AndNandOut[0], A[0], B[0], Command);
-genvar i; 
-                generate 
-                for (i=1; i<size; i=i+1)
-                     begin: andbits
-                     AndNand attempt(AndNandOut[i], A[i], B[i], Command); 
-                     end        
-                endgenerate     
+	genvar i; 
+	generate 
+    	for (i=1; i<size; i=i+1)
+        	begin: andbits
+            AndNand attempt(AndNandOut[i], A[i], B[i], Command); 
+            end        
+    endgenerate     
 endmodule
 
+// this module creates a 32-bit OR/NOR/XOR module
 module OrNorXor32
 (
 output [size-1:0] OrNorXorOut,
@@ -184,28 +181,27 @@ input [size-1:0] A,
 input [size-1:0] B,
 input[2:0] Command
 );
-parameter size = 4; 
-wire AnorB;
-wire AorB;
-wire AnandB;
-wire nXor;
-wire AxorB;
-wire XorNor;
+	parameter size = 4; // set the parameter size to whatever length you want
+	wire AnorB;
+	wire AorB;
+	wire AnandB;
+	wire nXor;
+	wire AxorB;
+	wire XorNor;
 
-OrNorXor attempt2(OrNorXorOut[0], A[0], B[0], Command);
+	OrNorXor attempt2(OrNorXorOut[0], A[0], B[0], Command); // set the zeroth condition. This is only important for the ADD/SUB/SLT module, but we do it for all for consistency
 
-genvar i; 
-                generate 
-                for (i=1; i<size; i=i+1)
-                     begin: orbits
-                     OrNorXor attempt(OrNorXorOut[i], A[i], B[i], Command); 
-                     end        
-                endgenerate 
-
+	genvar i; 
+    generate 
+    	for (i=1; i<size; i=i+1)
+        	begin: orbits
+            OrNorXor attempt(OrNorXorOut[i], A[i], B[i], Command); 
+            end        
+        endgenerate 
 endmodule
 
 
-
+// this module creates a 32-bit ADD/SUB/SLT module
 module AddSubSLT32
 (
 output [size-1:0]AddSubSLTSum, 
@@ -217,7 +213,7 @@ input [size-1:0] A, B,
 input [2:0] Command,
 input [size-1:0]carryin  // we think this doesn't do anything but don't want to break everything
 );
-                wire [size-1:0] CarryoutWire;
+    wire [size-1:0] CarryoutWire; // this is used to internally connect each of the 32 bitslices
 	wire SLTon;
 	wire nOF;
 	wire nAddSubSLTSum;
@@ -226,22 +222,24 @@ input [size-1:0]carryin  // we think this doesn't do anything but don't want to 
 	wire SLTflag0;
 	wire SLTflag1;
                 
-                MiddleAddSubSLT attempt2(AddSubSLTSum[0], CarryoutWire[0], subtract[0], A[0], B[0], Command, subtract[0]);
+    MiddleAddSubSLT attempt2(AddSubSLTSum[0], CarryoutWire[0], subtract[0], A[0], B[0], Command, subtract[0]);
                 
-                genvar i; 
-                parameter size = 4; 
-                generate 
-                for (i=1; i<size; i=i+1)
-                     begin: addbits
-                     MiddleAddSubSLT attempt(AddSubSLTSum[i], CarryoutWire[i], subtract[i], A[i], B[i], Command, CarryoutWire[i-1]); 
-                     end        
-                endgenerate 
+	genvar i; 
+	parameter size = 4; 
+	generate 
+    	for (i=1; i<size; i=i+1)
+        	begin: addbits
+            MiddleAddSubSLT attempt(AddSubSLTSum[i], CarryoutWire[i], subtract[i], A[i], B[i], Command, CarryoutWire[i-1]); 
+            end        
+    endgenerate 
 	
-	//set carryout = carryoutwire[size-1]
+	//set final carryout value - this will be used for calculating overflow and SLT
 	`OR finalcarryout(carryout, CarryoutWire[size-1], 0);
 
+	// check for overflow - does the final carryin = final carryout?
 	`XOR overflowcheck(overflow, carryout, CarryoutWire[size-2]);
 
+	// check for SLT - either the most significant bit = 1 and overflow = 0, or the most significant bit = 0 and overflow = 1
 	`AND sltcheck0(SLTon, Command[1], subtract[0]);
 	`NOT invOF(nOF, overflow);
 	`NOT invAddSub(nAddSubSLTSum, AddSubSLTSum[size-1]); 
@@ -249,16 +247,12 @@ input [size-1:0]carryin  // we think this doesn't do anything but don't want to 
 	`AND sltint1(Res0OF1, overflow, nAddSubSLTSum);
 	`AND sltint2(SLTflag0, Res1OF0, SLTon);
 	`AND sltint3(SLTflag1, Res0OF1, SLTon);
-
-
 	`OR sltcheck1(SLTflag, SLTflag0, SLTflag1);
-
 
 endmodule
 
-
-
-
+// this module combines the 32 bit ADD/SUB/SLT, 32 bit OR/NOR/XOR, and the 32 bit AND/NAND
+// We do this by using a series of final multiplexers to get the correct result based on what Command is calling for
 module Bitslice32
 (
 output  [size-1:0] OneBitFinalOut, 
@@ -269,119 +263,37 @@ output SLTflag,
 output  [size-1:0] OrNorXorOut,
 output  [size-1:0] AndNandOut,
 output  [size-1:0] subtract,
+output ZeroFlag,
 input  [size-1:0] A, 
 input  [size-1:0] B, 
 input[2:0] Command,
 input [size-1:0]carryin // don't think this does anything but don't want to break it!
 );
-                parameter size = 4; 
-                wire [size-1:0] Cmd0Start;
-                wire [size-1:0] Cmd1Start; 
-                wire [size-1:0] CarryoutWire;
+	parameter size = 4; 
+	wire [size-1:0] Cmd0Start;
+    wire [size-1:0] Cmd1Start; 
+    wire [size-1:0] CarryoutWire;
 
 	AddSubSLT32 trial(AddSubSLTSum, carryout, overflow, SLTflag, subtract, A, B, Command, carryin);
 	AndNand32 trial1(AndNandOut, A, B, Command);
 	OrNorXor32 trial2(OrNorXorOut, A, B, Command);
      
-
 	FourInMux ZeroMux0case(Cmd0Start[0], Command[0], Command[1], AddSubSLTSum[0], AddSubSLTSum[0], OrNorXorOut[0], AddSubSLTSum[0]);	 			
 	FourInMux OneMux0case(Cmd1Start[0], Command[0], Command[1], AndNandOut[0], AndNandOut[0], OrNorXorOut[0], OrNorXorOut[0]);
-                TwoInMux TwoMux0case(OneBitFinalOut[0], Command[2], Cmd0Start[0], Cmd1Start[0]);	
-
-
+	TwoInMux TwoMux0case(OneBitFinalOut[0], Command[2], Cmd0Start[0], Cmd1Start[0]);	
            
-genvar i; 
-                generate 
-                for (i=1; i<size; i=i+1)
-                     begin: muxbits
-                     FourInMux ZeroMux(Cmd0Start[i], Command[0], Command[1], AddSubSLTSum[i], AddSubSLTSum[i], OrNorXorOut[i], AddSubSLTSum[i]);	 			
-	FourInMux OneMux(Cmd1Start[i], Command[0], Command[1], AndNandOut[i], AndNandOut[i], OrNorXorOut[i], OrNorXorOut[i]);
+	genvar i; 
+	generate 
+    	for (i=1; i<size; i=i+1)
+        	begin: muxbits
+            	FourInMux ZeroMux(Cmd0Start[i], Command[0], Command[1], AddSubSLTSum[i], AddSubSLTSum[i], OrNorXorOut[i], AddSubSLTSum[i]);	 			
+				FourInMux OneMux(Cmd1Start[i], Command[0], Command[1], AndNandOut[i], AndNandOut[i], OrNorXorOut[i], OrNorXorOut[i]);
                 TwoInMux TwoMux(OneBitFinalOut[i], Command[2], Cmd0Start[i], Cmd1Start[i]);	     
-
-               end        
-                endgenerate 
+		end        
+    endgenerate 
             
-
-
+	// AndNand32 zeroflagtest(ZeroInt0, OneBitFinalOut, OneBitFinalOut, 3'b101);
+	//`NAND zeroflagtest(ZeroFlag, OneBitFinalOut, OneBitFinalOut);
 
 endmodule 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-module ZerothAddSubSLT
-(
-output AddSubSLTSum, carryout, //overflow, 
-input A, B,
-input[2:0] Command
-//input carryin  
-);
-                wire nB;
-                wire BornB;
-                wire AxorB;
-                wire AandB;
-                wire CINandAxorB;
-                
-                `NOT Binv(nB, B);
-                TwoInMux mux0(BornB, Command[0], B, nB); 
-                `XOR XOR1(AxorB, A, BornB); 
-                `XOR XOR2(AddSubSLTSum, AxorB, Command[0]); 
-                `AND AND1(AandB, A, BornB); 
-                `AND AND2(CINandAxorB, AxorB, Command[0]);
-                `OR OR1(carryout, AandB, CINandAxorB); 
-endmodule
-
-module LastAddSubSLT
-(
-output AddSubSLTSum, carryout, overflow, 
-input A, B,
-input[2:0] Command, 
-input carryin  
-);
-                wire nB;
-                wire BornB;
-                wire AxorB;
-                wire AandB;
-                wire CINandAxorB;
-                
-                `NOT Binv(nB, B);
-                TwoInMux mux0(BornB, Command[0], B, nB); 
-                `XOR XOR1(AxorB, A, BornB); 
-                `XOR XOR2(AddSubSLTSum, AxorB, carryin); 
-                `AND AND1(AandB, A, BornB); 
-                `AND AND2(CINandAxorB, AxorB, carryin);
-                `OR OR1(carryout, AandB, CINandAxorB); 
-                `XOR xor3(overflow, carryout, carryin);
-endmodule
-*/
 
