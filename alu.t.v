@@ -115,7 +115,7 @@ module testALU ();
     // SLT(a,b) = 1 where a(is negative)<b(is positive)
     a=32'b10000000000000000000000000001000; b=32'b00000000000000000000000000000010;#1000
     tests = tests + 1;
-    passed_tests = passed_tests + test((a < b) == out, 1);
+    passed_tests = passed_tests + test(out == 1, 1);
     // SLT(a,b) = 0 where a(is positive)>b(is negative)
     a=32'b00000000000000000000000000001000; b=32'b10000000000000000000000000000010;#1000
     tests = tests + 1;
