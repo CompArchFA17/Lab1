@@ -158,7 +158,7 @@ input [size-1:0] A,
 input [size-1:0] B, 
 input[2:0] Command
 );
-	parameter size = 32; // set the parameter size to whatever length you want
+	parameter size = 4; // set the parameter size to whatever length you want
 	wire AnandB;
 	wire AandB;
 
@@ -181,7 +181,7 @@ input [size-1:0] A,
 input [size-1:0] B,
 input[2:0] Command
 );
-	parameter size = 32; // set the parameter size to whatever length you want
+	parameter size = 4; // set the parameter size to whatever length you want
 	wire AnorB;
 	wire AorB;
 	wire AnandB;
@@ -214,6 +214,8 @@ input [2:0] Command,
 input [size-1:0]carryin  // we think this doesn't do anything but don't want to break everything
 );
     wire [size-1:0] CarryoutWire; // this is used to internally connect each of the 32 bitslices
+    wire [size-1:0] NewVal; // this is used to internally connect each of the 32 bitslices
+
 	wire SLTon;
 	wire nOF;
 	wire nAddSubSLTSum;
@@ -221,17 +223,39 @@ input [size-1:0]carryin  // we think this doesn't do anything but don't want to 
 	wire Res0OF1;
 	wire SLTflag0;
 	wire SLTflag1;
+   wire nCmd2;
                 
-    MiddleAddSubSLT attempt2(AddSubSLTSum[0], CarryoutWire[0], subtract[0], A[0], B[0], Command, subtract[0]);
-                
+
+
+    `NOT n0(nCmd2, Command[2]);
+
+    //`AND subtractchoose(subtract, Command[0], nCmd2); 
+
+	`AND sltcheck0(SLTon, Command[0], Command[1], nCmd2);
+    MiddleAddSubSLT attempt2(NewVal[0], CarryoutWire[0], subtract[0], A[0], B[0], Command, subtract[0]);
+     	TwoInMux setSLTres(AddSubSLTSum[0], SLTon, NewVal[0], 0);
+
+
+
+           
 	genvar i; 
-	parameter size = 32; 
+	parameter size = 4; 
 	generate 
     	for (i=1; i<size; i=i+1)
         	begin: addbits
-            MiddleAddSubSLT attempt(AddSubSLTSum[i], CarryoutWire[i], subtract[i], A[i], B[i], Command, CarryoutWire[i-1]); 
+            MiddleAddSubSLT attempt(NewVal[i], CarryoutWire[i], subtract[i], A[i], B[i], Command, CarryoutWire[i-1]); 
+	TwoInMux setSLTres(AddSubSLTSum[i], SLTon, NewVal[i], 0);
+		
             end        
     endgenerate 
+
+	/*genvar j;
+	generate 
+    	for (j=1; j<size; j=j+1)
+        	begin: genbits
+	TwoInMux setSLTres(AddSubSLTSum[j], SLTon, AddSubSLTSum[j], 0);
+            end        
+    endgenerate */
 	
 	//set final carryout value - this will be used for calculating overflow and SLT
 	`OR finalcarryout(carryout, CarryoutWire[size-1], 0);
@@ -240,7 +264,7 @@ input [size-1:0]carryin  // we think this doesn't do anything but don't want to 
 	`XOR overflowcheck(overflow, carryout, CarryoutWire[size-2]);
 
 	// check for SLT - either the most significant bit = 1 and overflow = 0, or the most significant bit = 0 and overflow = 1
-	`AND sltcheck0(SLTon, Command[1], subtract[0]);
+
 	`NOT invOF(nOF, overflow);
 	`NOT invAddSub(nAddSubSLTSum, AddSubSLTSum[size-1]); 
 	`AND sltint0(Res1OF0, nOF, AddSubSLTSum[size-1]);
@@ -248,6 +272,12 @@ input [size-1:0]carryin  // we think this doesn't do anything but don't want to 
 	`AND sltint2(SLTflag0, Res1OF0, SLTon);
 	`AND sltint3(SLTflag1, Res0OF1, SLTon);
 	`OR sltcheck1(SLTflag, SLTflag0, SLTflag1);
+
+wire FillerVal;
+	//`XOR slttest(FillerVal, AddSubSLTSum[0], SLTflag); 
+	// `OR sltsad(AddSubSLTSum[0], FillerVal, AddSubSLTSum[0]);
+     	//FourInMux setSLTres2(FillerVal, SLTon, SLTflag, AddSubSLTSum[0], AddSubSLTSum[0], AddSubSLTSum[0], SLTflag);
+
 
 endmodule
 
@@ -270,11 +300,13 @@ input  [size-1:0] B,
 input[2:0] Command,
 input [size-1:0]carryin // don't think this does anything but don't want to break it!
 );
-	parameter size = 32;
+	parameter size = 4;
 	wire [size-1:0] Cmd0Start;
     wire [size-1:0] Cmd1Start; 
     wire [size-1:0] CarryoutWire;
 	wire yeszero;
+
+ 
 
 	AddSubSLT32 trial(AddSubSLTSum, carryout, overflow, SLTflag, subtract, A, B, Command, carryin);
 	AndNand32 trial1(AndNandOut, A, B, Command);

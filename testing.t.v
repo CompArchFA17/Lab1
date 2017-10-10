@@ -2,7 +2,7 @@
 `timescale 1 ns / 1 ps
 `include "alu.v"
 
-
+/*
 module testBasicFunctions();
 // we begin by testing the basic AND/NAND, OR/NOR/XOR, and ADD/SUB/SLT modules
 wire AndNandOut;
@@ -30,7 +30,7 @@ initial begin
 
 
 // test mux
-	/*$display("Four Input Multiplexer");
+	$display("Four Input Multiplexer");
 	$display("S0 S1 |in0 in1 in2 in3| Output");
 	S0 = 0; S1 = 0; in0 = 1'bx; in1 = 0; in2 = 0; in3 = 0; #1000
 	$display(" %b %b  | %b   %b   %b   %b | %b", S0, S1, in0, in1, in2, in3, muxout);
@@ -39,7 +39,7 @@ initial begin
 	S0 = 0; S1 = 1; in0 = 0; in1 = 0; in2 = 1'bx; in3 = 0; #1000
 	$display(" %b %b  | %b   %b   %b   %b | %b", S0, S1, in0, in1, in2, in3, muxout);
 	S0 = 1; S1 = 1; in0 = 0; in1 = 0; in2 = 0; in3 = 1'bx; #1000
-	$display(" %b %b  | %b   %b   %b   %b | %b", S0, S1, in0, in1, in2, in3, muxout);*/ 
+	$display(" %b %b  | %b   %b   %b   %b | %b", S0, S1, in0, in1, in2, in3, muxout);
 // just the adder - proper behavior
 	$display("Adder/Subtractor");
     $display("A B | Command |Out|ExpectOut|Carryout-Add");
@@ -121,11 +121,10 @@ initial begin
 	$display("%b %b |    %b  |  %b   | 0", A, B, Command, OrNorXorOut);
 end
 endmodule
+*/
 
-
-/*
 module test32Adder();
-parameter size = 32; 
+parameter size = 4; 
 output  [size-1:0] OneBitFinalOut;
 output [size-1:0] OrNorXorOut;
 output [size-1:0] AndNandOut;
@@ -185,7 +184,7 @@ $display("%b | %b | %b | %b | Expect 1110| %b | %b ", A, B, Command, AddSubSLTSu
 
 //Pos + Neg = 0 | -5 + 5 = 0 | -5 = 1101 | 5 = 0101 | 0 = 0000 | NO OVERFLOW
 A = 4'b1011; B = 4'b0101; Command =3'b000; #1000
-$display("%b | %b | %b | %b | Expect 0110| %b | %b ", A, B, Command, AddSubSLTSum, carryout, overflow);
+$display("%b | %b | %b | %b | Expect 0000| %b | %b ", A, B, Command, AddSubSLTSum, carryout, overflow);
 
 //Pos + Neg = 0 | -7 + 7 = 0 | -7 = 1001 | 7 = 0111 | 0 = 0000 | NO OVERFLOW
 A = 4'b0111; B = 4'b1001; Command =3'b000; #1000
@@ -433,7 +432,5 @@ A = 4'b0000; B = 4'b0000; Command =3'b011; #1000
 end
 
 endmodule
-*/
-
 
 
