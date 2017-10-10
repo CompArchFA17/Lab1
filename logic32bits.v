@@ -183,3 +183,42 @@ module xor32(
 `XOR get31thbit(out[31],a[31],b[31]);
 
 endmodule
+
+module zero_check(
+	output out,
+	input[31:0] check
+)
+wire[30:0] carry_out;
+`OR or0(carry_out[0], check[0], check[1]);
+`OR or1(carry_out[1], check[2], carry_out[0]);
+`OR or2(carry_out[2], check[3], carry_out[1]);
+`OR or3(carry_out[3], check[4], carry_out[2]);
+`OR or4(carry_out[4], check[5], carry_out[3]);
+`OR or5(carry_out[5], check[6], carry_out[4]);
+`OR or06(carry_out[6], check[7], carry_out[5]);
+`OR or07(carry_out[7], check[8], carry_out[6]);
+`OR or08(carry_out[8], check[9], carry_out[7]);
+`OR or09(carry_out[9], check[10], carry_out[8]);
+`OR or10(carry_out[10], check[11], carry_out[9]);
+`OR or11(carry_out[11], check[12], carry_out[10]);
+`OR or12(carry_out[12], check[13], carry_out[11]);
+`OR or13(carry_out[13], check[14], carry_out[12]);
+`OR or14(carry_out[14], check[15], carry_out[13]);
+`OR or15(carry_out[15], check[16], carry_out[14]);
+`OR or16(carry_out[16], check[17], carry_out[15]);
+`OR or17(carry_out[17], check[18], carry_out[16]);
+`OR or18(carry_out[18], check[19], carry_out[17]);
+`OR or19(carry_out[19], check[20], carry_out[18]);
+`OR or20(carry_out[20], check[21], carry_out[19]);
+`OR or21(carry_out[21], check[22], carry_out[20]);
+`OR or22(carry_out[22], check[23], carry_out[21]);
+`OR or23(carry_out[23], check[24], carry_out[22]);
+`OR or24(carry_out[24], check[25], carry_out[23]);
+`OR or25(carry_out[25], check[26], carry_out[24]);
+`OR or26(carry_out[26], check[27], carry_out[25]);
+`OR or27(carry_out[27], check[28], carry_out[26]);
+`OR or28(carry_out[28], check[29], carry_out[27]);
+`OR or29(carry_out[29], check[30], carry_out[28]);
+`OR or30(carry_out[30], check[31], carry_out[29]);
+`NOT invert(out, carry_out[30]);
+endmodule
