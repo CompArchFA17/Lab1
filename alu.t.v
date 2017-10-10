@@ -237,6 +237,7 @@ module testALU ();
     $display("a:   %b", a);
     $display("b:   %b", b);
     $display("out: %b", out);
+    $display("Cout: %b, Overflow: %b\n", cout, overflow);
     // SLT(a,b) = 0 where a>b
     a=32'b00000000000000000000000000001000; b=32'b00000000000000000000000000000010;#1000
     tests = tests + 1;
@@ -250,6 +251,7 @@ module testALU ();
     $display("a:   %b", a);
     $display("b:   %b", b);
     $display("out: %b", out);
+    $display("Cout: %b, Overflow: %b\n", cout, overflow);
     // SLT(a,b) = 1 where a(is negative)<b(is positive)
     a=32'b10000000000000000000000000001000; b=32'b00000000000000000000000000000010;#1000
     tests = tests + 1;
@@ -276,6 +278,7 @@ module testALU ();
     $display("a:   %b", a);
     $display("b:   %b", b);
     $display("out: %b", out);
+    $display("Cout: %b, Overflow: %b\n", cout, overflow);
     // SLT(a,b) = 1 where a(is negative)>b(is negative)
     a=32'b10000000000000000000000000001000; b=32'b10000000000000000000000000000010;#1000
     tests = tests + 1;
@@ -289,6 +292,7 @@ module testALU ();
     $display("a:   %b", a);
     $display("b:   %b", b);
     $display("out: %b", out);
+    $display("Cout: %b, Overflow: %b\n", cout, overflow);
 
 
     $display("%2d/%2d Test Cases Passed", passed_tests, tests);
