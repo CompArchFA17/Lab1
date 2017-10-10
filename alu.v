@@ -62,8 +62,9 @@ module ALU
   ALU1bit a32(res_premux[31], carryout, operandA[31], operandB[31], cout[30], command);
   xor(overflow, carryout, cout[30]);
 
-
-  wire[7:0] resMux0 = {res_premux[0], res_premux[0], res_premux[0], res_premux[0], res_premux[31], res_premux[0], res_premux[0], res_premux[0]};
+  wire temp;
+  xor(temp, res_premux[31], overflow);
+  wire[7:0] resMux0 = {res_premux[0], res_premux[0], res_premux[0], res_premux[0], temp, res_premux[0], res_premux[0], res_premux[0]};
   MUX3bit mux0(result[0], command, resMux0);
   wire[7:0] resMux1 = {res_premux[1], res_premux[1], res_premux[1], res_premux[1], 1'b0, res_premux[1], res_premux[1], res_premux[1]};
   MUX3bit mux1(result[1], command, resMux1);

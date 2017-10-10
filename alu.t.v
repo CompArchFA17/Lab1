@@ -106,11 +106,11 @@ module testALU ();
     a=32'b00000000000000000000000000000001; b=32'b00000000000000000000000000000010;#1000
     tests = tests + 1;
 
-    passed_tests = passed_tests + test((a < b) == out, 1);
+    passed_tests = passed_tests + test(out == 1, 1);
     // SLT(a,b) = 0 where a>b
     a=32'b00000000000000000000000000001000; b=32'b00000000000000000000000000000010;#1000
     tests = tests + 1;
-    passed_tests = passed_tests + test((a < b) == out, 1);
+    passed_tests = passed_tests + test(out == 0, 1);
 
     // SLT(a,b) = 1 where a(is negative)<b(is positive)
     a=32'b10000000000000000000000000001000; b=32'b00000000000000000000000000000010;#1000
@@ -120,12 +120,31 @@ module testALU ();
     a=32'b00000000000000000000000000001000; b=32'b10000000000000000000000000000010;#1000
     tests = tests + 1;
 
-    passed_tests = passed_tests + test((a < b) == out, 1);
+    passed_tests = passed_tests + test(out == 0, 1);
     // SLT(a,b) = 1 where a(is negative)>b(is negative)
-    a=32'b00000000000000000000000000001000; b=32'b00000000000000000000001000000000;#1000
+    a=32'b10000000000000000000000000001000; b=32'b10000000000000000000001000000000;#1000
     tests = tests + 1;
-    passed_tests = passed_tests + test((a < b) == out, 1);
+    passed_tests = passed_tests + test(out == 1, 1);
 
+    // SLT(a,b) = 1 where a(is negative)>b(is negative)
+    a=32'b10000000000000000000000000001000; b=32'b00000000001000000000000000000000;#1000
+    tests = tests + 1;
+    passed_tests = passed_tests + test(out == 1, 1);
+
+    // small pos / large pos = 1
+    // large pos / small pos = 0
+    // equal positives = 0
+
+    // small neg / large neg = 0
+    // large neg / small neg = 1
+    // equal negatives = 0
+
+    // positive overflow: large pos / large neg : 0
+    // negative overflow: large neg / large pos : 1
+
+    a=32'b00000000000000000000000000001000; b=32'b00000000001000000000000000000000;#1000
+    tests = tests + 1;
+    passed_tests = passed_tests + test(out == 1, 1);
     $display("%2d/%2d Test Cases Passed", passed_tests, tests);
 
     end
