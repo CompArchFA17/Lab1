@@ -62,18 +62,42 @@ module ALU
   ALU1bit a32(res_premux[31], carryout, operandA[31], operandB[31], cout[30], command);
   xor(overflow, carryout, cout[30]);
 
-  
-  wire[7:0] resMux0 = {res_premux[0], res_premux[0], res_premux[0], res_premux[0], res_premux[31], res_premux[0], res_premux[0], res_premux[0]};
-  MUX3bit mux0(result[0], op, resMux0);
-  wire[7:0] resMux0 = {res_premux[1], res_premux[1], res_premux[1], res_premux[1], 1'b1, res_premux[1], res_premux[1], res_premux[1]};
-  MUX3bit mux0(result[0], op, resMux0);
-  wire[7:0] resMux0 = {res_premux[0], res_premux[0], res_premux[0], res_premux[0], 1'b0, res_premux[0], res_premux[0], res_premux[0]};
-  MUX3bit mux0(result[0], op, resMux0);
-  wire[7:0] resMux0 = {res_premux[0], res_premux[0], res_premux[0], res_premux[0], 1'b0, res_premux[0], res_premux[0], res_premux[0]};
-  MUX3bit mux0(result[0], op, resMux0);
-  wire[7:0] resMux0 = {res_premux[0], res_premux[0], res_premux[0], res_premux[0], 1'b0, res_premux[0], res_premux[0], res_premux[0]};
-  MUX3bit mux0(result[0], op, resMux0);
-  wire[7:0] resMux0 = {res_premux[0], res_premux[0], res_premux[0], res_premux[0], 1'b0, res_premux[0], res_premux[0], res_premux[0]};
-  MUX3bit mux0(result[0], op, resMux0);
 
+  wire[7:0] resMux0 = {res_premux[0], res_premux[0], res_premux[0], res_premux[0], res_premux[31], res_premux[0], res_premux[0], res_premux[0]};
+  MUX3bit mux0(result[0], command, resMux0);
+  wire[7:0] resMux1 = {res_premux[1], res_premux[1], res_premux[1], res_premux[1], 1'b0, res_premux[1], res_premux[1], res_premux[1]};
+  MUX3bit mux1(result[0], command, resMux1);
+
+  wire[7:0] resMux16 = {res_premux[16], res_premux[16], res_premux[16], res_premux[16], 1'b0, res_premux[16], res_premux[16], res_premux[16]};
+  MUX3bit mux16(result[16], command, resMux16);
+  wire[7:0] resMux17 = {res_premux[17], res_premux[17], res_premux[17], res_premux[17], 1'b0, res_premux[17], res_premux[17], res_premux[17]};
+  MUX3bit mux17(result[17], command, resMux17);
+  wire[7:0] resMux18 = {res_premux[18], res_premux[18], res_premux[18], res_premux[18], 1'b0, res_premux[18], res_premux[18], res_premux[18]};
+  MUX3bit mux18(result[18], command, resMux18);
+  wire[7:0] resMux19 = {res_premux[19], res_premux[19], res_premux[19], res_premux[19], 1'b0, res_premux[19], res_premux[19], res_premux[19]};
+  MUX3bit mux19(result[19], command, resMux19);
+  wire[7:0] resMux20 = {res_premux[20], res_premux[20], res_premux[20], res_premux[20], 1'b0, res_premux[20], res_premux[20], res_premux[20]};
+  MUX3bit mux20(result[20], command, resMux20);
+  wire[7:0] resMux21 = {res_premux[21], res_premux[21], res_premux[21], res_premux[21], 1'b0, res_premux[21], res_premux[21], res_premux[21]};
+  MUX3bit mux21(result[21], command, resMux21);
+  wire[7:0] resMux22 = {res_premux[22], res_premux[22], res_premux[22], res_premux[22], 1'b0, res_premux[22], res_premux[22], res_premux[22]};
+  MUX3bit mux22(result[22], command, resMux22);
+  wire[7:0] resMux23 = {res_premux[23], res_premux[23], res_premux[23], res_premux[23], 1'b0, res_premux[23], res_premux[23], res_premux[23]};
+  MUX3bit mux23(result[23], command, resMux23);
+  wire[7:0] resMux24 = {res_premux[24], res_premux[24], res_premux[24], res_premux[24], 1'b0, res_premux[24], res_premux[24], res_premux[24]};
+  MUX3bit mux24(result[24], command, resMux24);
+  wire[7:0] resMux25 = {res_premux[25], res_premux[25], res_premux[25], res_premux[25], 1'b0, res_premux[25], res_premux[25], res_premux[25]};
+  MUX3bit mux25(result[25], command, resMux25);
+  wire[7:0] resMux26 = {res_premux[26], res_premux[26], res_premux[26], res_premux[26], 1'b0, res_premux[26], res_premux[26], res_premux[26]};
+  MUX3bit mux26(result[26], command, resMux26);
+  wire[7:0] resMux27 = {res_premux[27], res_premux[27], res_premux[27], res_premux[27], 1'b0, res_premux[27], res_premux[27], res_premux[27]};
+  MUX3bit mux27(result[27], command, resMux27);
+  wire[7:0] resMux28 = {res_premux[28], res_premux[28], res_premux[28], res_premux[28], 1'b0, res_premux[28], res_premux[28], res_premux[28]};
+  MUX3bit mux28(result[28], command, resMux28);
+  wire[7:0] resMux29 = {res_premux[29], res_premux[29], res_premux[29], res_premux[29], 1'b0, res_premux[29], res_premux[29], res_premux[29]};
+  MUX3bit mux29(result[29], command, resMux29);
+  wire[7:0] resMux30 = {res_premux[30], res_premux[30], res_premux[30], res_premux[30], 1'b0, res_premux[30], res_premux[30], res_premux[30]};
+  MUX3bit mux30(result[30], command, resMux30);
+  wire[7:0] resMux31 = {res_premux[31], res_premux[31], res_premux[31], res_premux[31], 1'b0, res_premux[31], res_premux[31], res_premux[31]};
+  MUX3bit mux31(result[31], command, resMux31);
 endmodule
