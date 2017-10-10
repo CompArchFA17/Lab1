@@ -10,28 +10,6 @@
 `define opNOR  3'd6
 `define opOR   3'd7
 
-module ALUcontrolLUT
-(
-output reg[2:0] 	muxindex,
-output reg	invertB,
-output reg	flagger,
-input[2:0]	ALUcommand
-);
-
-  always @(ALUcommand) begin
-    case (ALUcommand)
-      `opADD:  begin muxindex = 0; invertB=0; flagger = 1; end
-      `opSUB:  begin muxindex = 0; invertB=1; flagger = 1; end
-      `opXOR:  begin muxindex = 1; invertB=0; flagger = 0; end
-      `opSLT:  begin muxindex = 2; invertB=0; flagger = 0; end
-      `opAND:  begin muxindex = 3; invertB=1; flagger = 0; end
-      `opNAND: begin muxindex = 3; invertB=0; flagger = 0; end
-      `opNOR:  begin muxindex = 4; invertB=0; flagger = 0; end
-      `opOR:   begin muxindex = 4; invertB=1; flagger = 0; end
-    endcase
-  end
-endmodule
-
 module ALUTestBench();
   reg[2:0]    command;
   reg[31:0]   operandA;
