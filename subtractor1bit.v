@@ -1,3 +1,10 @@
+`define AND and #30
+`define OR or #30
+`define NOT not #10
+`define XOR xor #30
+`define NOR nor #20
+`define NAND nand #20
+
 module Subtractor1bit
 (
     output diff,
@@ -7,12 +14,12 @@ module Subtractor1bit
     input borrowin
 );
     wire axorb;
-    xor(axorb, a, b);
-    xor(diff, axorb, borrowin);
+    `XOR(axorb, a, b);
+    `XOR(diff, axorb, borrowin);
     wire nota, noteaandb, notaxorb, notaxorbandborrowin;
-    not(nota, a);
-    and(notaandb, nota, b);
-    not(notaxorb, axorb);
-    and(notaxorbandborrowin, notaxorb, borrowin);
-    or(borrowout, notaandb, notaxorbandborrowin);
+    `NOT(nota, a);
+    `AND(notaandb, nota, b);
+    `NOT(notaxorb, axorb);
+    `AND(notaxorbandborrowin, notaxorb, borrowin);
+    `OR(borrowout, notaandb, notaxorbandborrowin);
 endmodule

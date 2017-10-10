@@ -10,9 +10,6 @@
 // b111 -> OR
 
 `include "alu1bit.v"
-`define AND and #30
-`define OR or #30
-`define NOT not #10
 
 module ALU
 (

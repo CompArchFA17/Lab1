@@ -15,6 +15,10 @@
 `define AND and #30
 `define OR or #30
 `define NOT not #10
+`define XOR xor #30
+`define NOR nor #20
+`define NAND nand #20
+
 
 module ALU1bit
 (
@@ -37,7 +41,7 @@ module ALU1bit
 
 	// Xor
 	wire res_XOR;
-	xor(res_XOR, a, b);
+	`XOR(res_XOR, a, b);
 
 	// SLT
 	wire res_SLT;
@@ -46,19 +50,19 @@ module ALU1bit
 
 	// And
 	wire res_AND;
-	and(res_AND, a, b);
+	`AND(res_AND, a, b);
 
 	// Nand
 	wire res_NAND;
-	nand(res_NAND, a, b);
+	`NAND(res_NAND, a, b);
 
 	// Nor
 	wire res_NOR;
-	nor(res_NOR, a, b);
+	`NOR(res_NOR, a, b);
 
 	// Or
 	wire res_OR;
-	or(res_OR, a, b);
+	`OR(res_OR, a, b);
 
 	// Use a behavioral mux to select operation
 	wire[7:0] muxRes = {res_OR, res_NOR, res_NAND, res_AND, res_SLT, res_XOR, res_SUB, res_ADD};
