@@ -19,6 +19,7 @@ module BitSliceALU
 );
   wire Cout;
   wire [7:0] out;
+
   structAddSub structadder(out[0], Cout, bit1, bit2, invertB, Cin);
 
   wire nored, nanded;
@@ -53,7 +54,7 @@ input[31:0]   operandA,
 input[31:0]   operandB,
 input[2:0]    mux,
 input         invertB,
-input         flags
+input         flagger
 );
   //wire control2;
   wire overflow;

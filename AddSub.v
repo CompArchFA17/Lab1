@@ -12,16 +12,16 @@ module structAddSub
   input a,
   input b,
   input sub, carryin
-);
+); //Add 1 to least significant bit during subtraction
   wire AxorB;
 	wire AandB;
 	wire AxorBandCarryIn;
   wire bnew;
 
   `XOR (bnew, b, sub);
-	`XOR (AxorB, a, b);
+	`XOR (AxorB, a, bnew);
 	`XOR (sum, AxorB, carryin);
-	`AND (AandB, a, b);
+	`AND (AandB, a, bnew);
 	`AND (AxorBandCarryIn, AxorB, carryin);
 	`OR (carryout, AxorBandCarryIn, AandB);
 endmodule
