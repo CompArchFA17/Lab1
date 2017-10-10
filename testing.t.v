@@ -147,6 +147,9 @@ OrNorXor32 trial2(OrNorXorOut, A, B, Command);
 Bitslice32 superalu(OneBitFinalOut, AddSubSLTSum, carryout, overflow, SLTflag,  OrNorXorOut, AndNandOut, subtract, ZeroFlag, AllZeros, A, B, Command, carryin);
 
 initial begin
+	$dumpfile("FullALU.vcd");
+	$dumpvars()
+
 $display("Test 4 Bit Adder Functionality");
 // there are too many possibilities even for just a four bit adder/subtractor, which means we need to choose our test cases strategically
 $display(" A   | B    |Command| Out|ExpectedOut|Cout|OF"); 
@@ -421,8 +424,6 @@ A = 4'b0010; B = 4'b0010; Command =3'b001; #1000
 
 A = 4'b0000; B = 4'b0000; Command =3'b011; #1000
     $display("%b | %b | %b - SLT  |  %b   | 0000       | %b    | %b  | %b | %b", A, B, Command, OneBitFinalOut, carryout, overflow, SLTflag, AllZeros);
-
-
 
 end
 
