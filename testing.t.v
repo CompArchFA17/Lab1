@@ -128,7 +128,8 @@ wire [size-1:0] AddSubSLTSum;
 wire carryout; 
 wire overflow; 
 wire SLTflag;
-wire ZeroFlag;
+wire [size-1:0]ZeroFlag;
+wire AllZeros;
 wire [size-1:0] subtract; 
 reg [size-1:0] A, B; 
 reg [2:0] Command;
@@ -143,7 +144,7 @@ AndNand32 trial1(AndNandOut, A, B, Command);
 
 OrNorXor32 trial2(OrNorXorOut, A, B, Command);
 
-Bitslice32 superalu(OneBitFinalOut, AddSubSLTSum, carryout, overflow, SLTflag,  OrNorXorOut, AndNandOut, subtract, ZeroFlag, A, B, Command, carryin);
+Bitslice32 superalu(OneBitFinalOut, AddSubSLTSum, carryout, overflow, SLTflag,  OrNorXorOut, AndNandOut, subtract, ZeroFlag, AllZeros, A, B, Command, carryin);
 
 initial begin
 $display("Test 4 Bit Adder Functionality");
@@ -344,55 +345,60 @@ $display(" A   | B    |Command     | Out     |ExpectedOut | COut | OF |SLT|Zero"
 // Test AND
 // A = B | A = 1111 | AND = 1111
     A=4'b1111;B=4'b1111;Command=3'b100; #1000 
-    $display("%b | %b | %b - AND  |  %b   | 1111       | %b    | %b  | %b | %b", A, B, Command, OneBitFinalOut, carryout, overflow, SLTflag, ZeroFlag);
+    $display("%b | %b | %b - AND  |  %b   | 1111       | %b    | %b  | %b | %b", A, B, Command, OneBitFinalOut, carryout, overflow, SLTflag, AllZeros);
 
 // Test NAND
 //  A = 1111 | B = 0000 | NAND = 1111
     A=4'b1111;B=4'b0000;Command=3'b101; #1000 
-    $display("%b | %b | %b - NAND |  %b   | 1111       | %b    | %b  | %b | %b", A, B, Command, OneBitFinalOut, carryout, overflow, SLTflag, ZeroFlag);
+    $display("%b | %b | %b - NAND |  %b   | 1111       | %b    | %b  | %b | %b", A, B, Command, OneBitFinalOut, carryout, overflow, SLTflag, AllZeros);
 
 // Test OR
 // A = 1111 | B = 0101 | OR = 1111
 	A=4'b1111; B=4'b0101; Command=3'b111; #1000
-    $display("%b | %b | %b - OR   |  %b   | 1111       | %b    | %b  | %b | %b", A, B, Command, OneBitFinalOut, carryout, overflow, SLTflag, ZeroFlag);
+    $display("%b | %b | %b - OR   |  %b   | 1111       | %b    | %b  | %b | %b", A, B, Command, OneBitFinalOut, carryout, overflow, SLTflag, AllZeros);
 
 // Test NOR
 // A = 1011 | B = 0000 | NOR = 0100
 	A=4'b1011; B=4'b0000; Command=3'b110; #1000
-    $display("%b | %b | %b - NOR  |  %b   | 0100       | %b    | %b  | %b | %b", A, B, Command, OneBitFinalOut, carryout, overflow, SLTflag, ZeroFlag);
+    $display("%b | %b | %b - NOR  |  %b   | 0100       | %b    | %b  | %b | %b", A, B, Command, OneBitFinalOut, carryout, overflow, SLTflag, AllZeros);
 
 // Test XOR
 // A = 1011 | B = 0000 | XOR = 1011
 	A=4'b1011; B=4'b0000; Command=3'b010; #1000
-    $display("%b | %b | %b - XOR  |  %b   | 1011       | %b    | %b  | %b | %b", A, B, Command, OneBitFinalOut, carryout, overflow, SLTflag, ZeroFlag);
+    $display("%b | %b | %b - XOR  |  %b   | 1011       | %b    | %b  | %b | %b", A, B, Command, OneBitFinalOut, carryout, overflow, SLTflag, AllZeros);
 
 // Test ADD
 //Pos + Pos < 7 | 2 + 4 = 6 | 2 = 0010 | 4 = 0100 | 6 = 0110 | NO OVERFLOW
 A = 4'b0010; B = 4'b0100; Command =3'b000; #1000
-    $display("%b | %b | %b - ADD  |  %b   | 0110       | %b    | %b  | %b | %b", A, B, Command, OneBitFinalOut, carryout, overflow, SLTflag, ZeroFlag);
+    $display("%b | %b | %b - ADD  |  %b   | 0110       | %b    | %b  | %b | %b", A, B, Command, OneBitFinalOut, carryout, overflow, SLTflag, AllZeros);
 
 //Neg + Neg < -8 | -5 + -4 = -9 | -5 = 1011 | -4 = 1100 |  | OVERFLOW
 A = 4'b1011; B = 4'b1100; Command =3'b000; #1000
-    $display("%b | %b | %b - ADD  |  %b   | XXXX       | %b    | %b  | %b | %b", A, B, Command, OneBitFinalOut, carryout, overflow, SLTflag, ZeroFlag);
+    $display("%b | %b | %b - ADD  |  %b   | XXXX       | %b    | %b  | %b | %b", A, B, Command, OneBitFinalOut, carryout, overflow, SLTflag, AllZeros);
 
 // Test SUB
 // A < B, A > 0 | B > 0 | No Overflow | A = 2 = 0010 | B = 4 = 0100
 A = 4'b0010; B = 4'b0100; Command =3'b001; #1000
-    $display("%b | %b | %b - SUB  |  %b   | 1110       | %b    | %b  | %b | %b", A, B, Command, OneBitFinalOut, carryout, overflow, SLTflag, ZeroFlag);
+    $display("%b | %b | %b - SUB  |  %b   | 1110       | %b    | %b  | %b | %b", A, B, Command, OneBitFinalOut, carryout, overflow, SLTflag, AllZeros);
 
 // A < B, A < 0 | B > 0 | Overflow | A = -7 = 1001 | B = 3 = 0011
 A = 4'b1001; B = 4'b0011; Command =3'b001; #1000
-    $display("%b | %b | %b - SUB  |  %b   | XXXX       | %b    | %b  | %b | %b", A, B, Command, OneBitFinalOut, carryout, overflow, SLTflag, ZeroFlag);
+    $display("%b | %b | %b - SUB  |  %b   | XXXX       | %b    | %b  | %b | %b", A, B, Command, OneBitFinalOut, carryout, overflow, SLTflag, AllZeros);
 
 // Test SLT
 
 // A > B, A > 0 | B > 0 | No Overflow | A = 4 = 0100 | B = 2 = 0010
 A = 4'b0100; B = 4'b0010; Command =3'b011; #1000
-    $display("%b | %b | %b - SLT  |  %b   | 0010       | %b    | %b  | %b | %b", A, B, Command, OneBitFinalOut, carryout, overflow, SLTflag, ZeroFlag);
+    $display("%b | %b | %b - SLT  |  %b   | 0010       | %b    | %b  | %b | %b", A, B, Command, OneBitFinalOut, carryout, overflow, SLTflag, AllZeros);
 
 // A < B, A < 0 | B > 0 | Overflow | A = -7 = 1001 | B = 5 = 0101
 A = 4'b1001; B = 4'b0101; Command =3'b011; #1000
-    $display("%b | %b | %b - SLT  |  %b   | XXXX       | %b    | %b  | %b | %b", A, B, Command, OneBitFinalOut, carryout, overflow, SLTflag, ZeroFlag);
+    $display("%b | %b | %b - SLT  |  %b   | XXXX       | %b    | %b  | %b | %b", A, B, Command, OneBitFinalOut, carryout, overflow, SLTflag, AllZeros);
+
+// Test Zero
+// A = B, A = 0 | B = 0 | No Overflow
+A = 4'b0000; B = 4'b0000; Command =3'b011; #1000
+    $display("%b | %b | %b - SLT  |  %b   | 0000       | %b    | %b  | %b | %b", A, B, Command, OneBitFinalOut, carryout, overflow, SLTflag, AllZeros);
 end
 
 endmodule

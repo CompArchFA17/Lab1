@@ -263,7 +263,8 @@ output SLTflag,
 output  [size-1:0] OrNorXorOut,
 output  [size-1:0] AndNandOut,
 output  [size-1:0] subtract,
-output ZeroFlag,
+output [size-1:0] ZeroFlag,
+output AllZeros,
 input  [size-1:0] A, 
 input  [size-1:0] B, 
 input[2:0] Command,
@@ -273,6 +274,7 @@ input [size-1:0]carryin // don't think this does anything but don't want to brea
 	wire [size-1:0] Cmd0Start;
     wire [size-1:0] Cmd1Start; 
     wire [size-1:0] CarryoutWire;
+	wire yeszero;
 
 	AddSubSLT32 trial(AddSubSLTSum, carryout, overflow, SLTflag, subtract, A, B, Command, carryin);
 	AndNand32 trial1(AndNandOut, A, B, Command);
@@ -280,7 +282,8 @@ input [size-1:0]carryin // don't think this does anything but don't want to brea
      
 	FourInMux ZeroMux0case(Cmd0Start[0], Command[0], Command[1], AddSubSLTSum[0], AddSubSLTSum[0], OrNorXorOut[0], AddSubSLTSum[0]);	 			
 	FourInMux OneMux0case(Cmd1Start[0], Command[0], Command[1], AndNandOut[0], AndNandOut[0], OrNorXorOut[0], OrNorXorOut[0]);
-	TwoInMux TwoMux0case(OneBitFinalOut[0], Command[2], Cmd0Start[0], Cmd1Start[0]);	
+	TwoInMux TwoMux0case(OneBitFinalOut[0], Command[2], Cmd0Start[0], Cmd1Start[0]);
+	`AND setZerothZero(ZeroFlag[0], OneBitFinalOut[0], OneBitFinalOut[0]);	
            
 	genvar i; 
 	generate 
@@ -288,12 +291,16 @@ input [size-1:0]carryin // don't think this does anything but don't want to brea
         	begin: muxbits
             	FourInMux ZeroMux(Cmd0Start[i], Command[0], Command[1], AddSubSLTSum[i], AddSubSLTSum[i], OrNorXorOut[i], AddSubSLTSum[i]);	 			
 				FourInMux OneMux(Cmd1Start[i], Command[0], Command[1], AndNandOut[i], AndNandOut[i], OrNorXorOut[i], OrNorXorOut[i]);
-                TwoInMux TwoMux(OneBitFinalOut[i], Command[2], Cmd0Start[i], Cmd1Start[i]);	     
+                TwoInMux TwoMux(OneBitFinalOut[i], Command[2], Cmd0Start[i], Cmd1Start[i]);
+
+		`OR zeroflagtest(ZeroFlag[i], ZeroFlag[i-1], OneBitFinalOut[i]);     
 		end        
     endgenerate 
-            
-	// AndNand32 zeroflagtest(ZeroInt0, OneBitFinalOut, OneBitFinalOut, 3'b101);
-	//`NAND zeroflagtest(ZeroFlag, OneBitFinalOut, OneBitFinalOut);
+
+	`NOT invzeroflag(yeszero, ZeroFlag[size-1]);
+	`AND setzeros(AllZeros, yeszero, yeszero);
+
+
 
 endmodule 
 
