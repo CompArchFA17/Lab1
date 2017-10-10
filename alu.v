@@ -40,8 +40,8 @@ input[31:0] operandB,
 input subtract
 );
 
-reg carryoutmid[30:0];
-reg zeromid[30:0];
+wire carryoutmid[30:0];
+wire zeromid[30:0];
 FullAdder1bit adderinit (result[0], carryoutmid[0], operandA[0], operandB[0], subtract, subtract);
 genvar i;
 for (i = 1; i < 31; i = i + 1) begin
@@ -62,7 +62,6 @@ end
 endmodule
 
 
-
 module NOR
 (
 output[31:0] result,
@@ -78,6 +77,10 @@ for (i = 0; i < 32; i = i + 1) begin
 	`NOR norgate (result[i], operandA[i], operandB[i]);
 end
 
+
+buf setcarryout (carryout, 'b0);
+buf setzero (zero, 'b0);
+buf setoverflow (overflow, 'b0);
 endmodule
 
 module OR
@@ -95,6 +98,9 @@ for (i = 0; i < 32; i = i + 1) begin
 	`OR orgate(result[i], operandA[i], operandB[i]);
 end
 
+buf setcarryout (carryout, 'b0);
+buf setzero (zero, 'b0);
+buf setoverflow (overflow, 'b0);
 endmodule
 
 module ALU
