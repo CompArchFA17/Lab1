@@ -132,12 +132,30 @@ module testALU ();
     passed_tests = passed_tests + test(out == 1, 1);
 
     // small pos / large pos = 1
+    a=32'b00000000000000000000000000001000; b=32'b01110000001000000000000000000000;#1000
+    tests = tests + 1;
+    passed_tests = passed_tests + test(out == 1, 1);
     // large pos / small pos = 0
+    a=32'b01110000000000000000000000001000; b=32'b00000000001000000000000000000000;#1000
+    tests = tests + 1;
+    passed_tests = passed_tests + test(out == 0, 1);
     // equal positives = 0
+    a=32'b01110000000000000000000000001000; b=32'b01110000000000000000000000000000;#1000
+    tests = tests + 1;
+    passed_tests = passed_tests + test(out == 0, 1);
 
     // small neg / large neg = 0
+    a=32'b11111111000000000000000000001000; b=32'b10000000000000000000000000000111;#1000
+    tests = tests + 1;
+    passed_tests = passed_tests + test(out == 0, 1);
     // large neg / small neg = 1
+    a=32'b10000000000000000000000000000111; b=32'b11111111000000000000000000001000;#1000
+    tests = tests + 1;
+    passed_tests = passed_tests + test(out == 1, 1);
     // equal negatives = 0
+    a=32'b10000000000000000000000000000111; b=32'b10000000000000000000000000000111;#1000
+    tests = tests + 1;
+    passed_tests = passed_tests + test(out == 0, 1);
 
     // positive overflow: large pos / large neg : 0
     // negative overflow: large neg / large pos : 1
