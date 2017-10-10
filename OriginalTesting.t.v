@@ -46,12 +46,6 @@ initial begin
     $display("A B| Command |  Output | Expected Output");
     A=1;B=1;Command=3'b000; carryin = 0; #1000 
     $display("%b  %b |   %b |  %b | 0 | %b", A, B, Command, AddSubSLTSum, carryout);
-    A=1;B=0;Command=3'b000; carryin = 0; #1000 
-    $display("%b  %b |   %b |  %b | 1 | %b", A, B, Command, AddSubSLTSum, carryout);
-    A=0;B=1;Command=3'b000; carryin = 0; #1000 
-    $display("%b  %b |   %b |  %b | 1 | %b", A, B, Command, AddSubSLTSum, carryout);   					 
-	A=0;B=0;Command=3'b000; carryin = 0; #1000 
-    $display("%b  %b |   %b |  %b | 0 | %b", A, B, Command, AddSubSLTSum, carryout);	
     A=1;B=1;Command=3'b001; carryin = 1; #1000 
     $display("%b  %b |   %b |  %b | 0 | %b", A, B, Command, AddSubSLTSum, carryout);
 
@@ -130,6 +124,5 @@ initial begin
 	$display("%b %b |    %b  |  %b   | 0 - XOR TEST", A, B, Command, OrNorXorOut);
 
     end
-
 
 endmodule
