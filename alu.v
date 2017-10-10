@@ -59,6 +59,6 @@ module ALU
   ALU1bit a30(result[29], cout[29], operandA[29], operandB[29], cout[28], command);
   ALU1bit a31(result[30], cout[30], operandA[30], operandB[30], cout[29], command);
   ALU1bit a32(result[31], carryout, operandA[31], operandB[31], cout[30], command);
-  xor(overflow, carryout, cout[30]);
+  xor(overflow, carryout, cout[30]); 
 
 endmodule
