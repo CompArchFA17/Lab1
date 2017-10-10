@@ -13,8 +13,30 @@ module testALU ();
 
   ALU alu (out,cout,zero,overflow,a,b,op);
 
-  initial begin
+  function integer test;
+    input test_case;
+    integer test_case;
+    input show_extras;
+    begin
+      if (test_case) begin
+        test = 1;
+        $display("Passed test with:");
+      end
+      else begin
+        test = 0;
+        $display("Failed test with:");
+      end
+      $display("a:   %b", a);
+      $display("b:   %b", b);
+      $display("out: %b", out);
+      if (show_extras) begin
+        $display("Cout: %b, Overflow: %b", cout, overflow);
+      end
+    end
+  endfunction
 
+
+  initial begin
 
 
     // Test Add
@@ -81,16 +103,7 @@ module testALU ();
     $display("op: %b", op);
     a=32'b00000000000000000000000000000000; b=32'b00000000000000000000000000000001;#1000
     tests = tests + 1;
-    if ((a ^ b) == out) begin
-        passed_tests = passed_tests + 1;
-        $display("Passed test with:");
-    end
-    else begin
-        $display("Failed test with:");
-    end
-    $display("a:   %b", a);
-    $display("b:   %b", b);
-    $display("out: %b", out);
+    passed_tests = passed_tests + test((a ^ b) == out, 0);
 
     // Test SLT
     $display("\nSLT");
@@ -100,69 +113,23 @@ module testALU ();
     // SLT(a,b) = 1 where a<b
     a=32'b00000000000000000000000000000001; b=32'b00000000000000000000000000000010;#1000
     tests = tests + 1;
-    if ((a < b) == out) begin
-        passed_tests = passed_tests + 1;
-        $display("Passed test with:");
-    end
-    else begin
-        $display("Failed test with:");
-    end
-    $display("a:   %b", a);
-    $display("b:   %b", b);
-    $display("out: %b", out);
+    passed_tests = passed_tests + test((a < b) == out, 0);
     // SLT(a,b) = 0 where a>b
     a=32'b00000000000000000000000000001000; b=32'b00000000000000000000000000000010;#1000
     tests = tests + 1;
-    if ((a < b) == out) begin
-        passed_tests = passed_tests + 1;
-        $display("Passed test with:");
-    end
-    else begin
-        $display("Failed test with:");
-    end
-    $display("a:   %b", a);
-    $display("b:   %b", b);
-    $display("out: %b", out);
+    passed_tests = passed_tests + test((a < b) == out, 0);
     // SLT(a,b) = 1 where a(is negative)<b(is positive)
     a=32'b10000000000000000000000000001000; b=32'b00000000000000000000000000000010;#1000
     tests = tests + 1;
-    if ((a < b) == out) begin
-        passed_tests = passed_tests + 1;
-        $display("Passed test with:");
-    end
-    else begin
-        $display("Failed test with:");
-    end
-    $display("a:   %b", a);
-    $display("b:   %b", b);
-    $display("out: %b", out);
+    passed_tests = passed_tests + test((a < b) == out, 0);
     // SLT(a,b) = 0 where a(is positive)>b(is negative)
     a=32'b00000000000000000000000000001000; b=32'b10000000000000000000000000000010;#1000
     tests = tests + 1;
-    if ((a < b) == out) begin
-        passed_tests = passed_tests + 1;
-        $display("Passed test with:");
-    end
-    else begin
-        $display("Failed test with:");
-    end
-    $display("a:   %b", a);
-    $display("b:   %b", b);
-    $display("out: %b", out);
+    passed_tests = passed_tests + test((a < b) == out, 0);
     // SLT(a,b) = 1 where a(is negative)>b(is negative)
     a=32'b10000000000000000000000000001000; b=32'b10000000000000000000000000000010;#1000
     tests = tests + 1;
-    if ((a < b) == out) begin
-        passed_tests = passed_tests + 1;
-        $display("Passed test with:");
-    end
-    else begin
-        $display("Failed test with:");
-    end
-    $display("a:   %b", a);
-    $display("b:   %b", b);
-    $display("out: %b", out);
-
+    passed_tests = passed_tests + test((a < b) == out, 0);
 
     $display("%2d/%2d Test Cases Passed", passed_tests, tests);
 
