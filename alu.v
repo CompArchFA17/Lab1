@@ -158,7 +158,7 @@ input [size-1:0] A,
 input [size-1:0] B, 
 input[2:0] Command
 );
-	parameter size = 4; // set the parameter size to whatever length you want
+	parameter size = 32; // set the parameter size to whatever length you want
 	wire AnandB;
 	wire AandB;
 
@@ -181,7 +181,7 @@ input [size-1:0] A,
 input [size-1:0] B,
 input[2:0] Command
 );
-	parameter size = 4; // set the parameter size to whatever length you want
+	parameter size = 32; // set the parameter size to whatever length you want
 	wire AnorB;
 	wire AorB;
 	wire AnandB;
@@ -225,7 +225,7 @@ input [size-1:0]carryin  // we think this doesn't do anything but don't want to 
     MiddleAddSubSLT attempt2(AddSubSLTSum[0], CarryoutWire[0], subtract[0], A[0], B[0], Command, subtract[0]);
                 
 	genvar i; 
-	parameter size = 4; 
+	parameter size = 32; 
 	generate 
     	for (i=1; i<size; i=i+1)
         	begin: addbits
@@ -270,7 +270,7 @@ input  [size-1:0] B,
 input[2:0] Command,
 input [size-1:0]carryin // don't think this does anything but don't want to break it!
 );
-	parameter size = 4; 
+	parameter size = 32;
 	wire [size-1:0] Cmd0Start;
     wire [size-1:0] Cmd1Start; 
     wire [size-1:0] CarryoutWire;

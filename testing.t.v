@@ -2,7 +2,7 @@
 `timescale 1 ns / 1 ps
 `include "alu.v"
 
-/*
+
 module testBasicFunctions();
 // we begin by testing the basic AND/NAND, OR/NOR/XOR, and ADD/SUB/SLT modules
 wire AndNandOut;
@@ -117,10 +117,11 @@ initial begin
 	$display("%b %b |    %b  |  %b   | 0", A, B, Command, OrNorXorOut);
 end
 endmodule
-*/
 
+
+/*
 module test32Adder();
-parameter size = 4; 
+parameter size = 32; 
 output  [size-1:0] OneBitFinalOut;
 output [size-1:0] OrNorXorOut;
 output [size-1:0] AndNandOut;
@@ -424,8 +425,11 @@ A = 4'b0010; B = 4'b0010; Command =3'b001; #1000
 
 A = 4'b0000; B = 4'b0000; Command =3'b011; #1000
     $display("%b | %b | %b - SLT  |  %b   | 0000       | %b    | %b  | %b | %b", A, B, Command, OneBitFinalOut, carryout, overflow, SLTflag, AllZeros);
-
+ 
 end
 
 endmodule
+*/
+
+
 
