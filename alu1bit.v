@@ -25,9 +25,9 @@ module ALU1bit
   input       cin,
   input[2:0]  op
 );
+	// Add
 	wire res_ADD;
 	wire cout_ADD;
-	// Add
 	Adder1bit adder(res_ADD, cout_ADD, a, b, cin);
 
 	// Subtract

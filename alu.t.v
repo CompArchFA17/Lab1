@@ -16,7 +16,67 @@ module testALU ();
   initial begin
 
 
+
+    // Test Add
+    $display("Addition");
+    $display("-----------------------------------------------------------------");
+    op=3'b000;
+    a=32'b00000000000011111111111111111111; b=32'b0000000000000000000000000000001;#1000
+    tests = tests + 1;
+    if ((a + b) == out) begin
+        passed_tests = passed_tests + 1;
+        $display("Passed test with op: %b", op);
+        $display("a:   %b", a);
+        $display("b:   %b", b);
+        $display("out: %b", out);
+        $display("Cout: %b, Overflow: %b", cout, overflow);
+    end
+    else begin
+        $display("Failed test with op: %b", op);
+        $display("a:   %b", a);
+        $display("b:   %b", b);
+        $display("out: %b", out);
+        $display("Cout: %b, Overflow: %b", cout, overflow);
+    end
+    a=32'b11111111111111111111111111111111; b=32'b0000000000000000000000000000000;#1000
+    tests = tests + 1;
+    if ((a + b) == out) begin
+        passed_tests = passed_tests + 1;
+        $display("Passed test with op: %b", op);
+        $display("a:   %b", a);
+        $display("b:   %b", b);
+        $display("out: %b", out);
+        $display("Cout: %b, Overflow: %b", cout, overflow);
+    end
+    else begin
+        $display("Failed test with op: %b", op);
+        $display("a:   %b", a);
+        $display("b:   %b", b);
+        $display("out: %b", out);
+        $display("Cout: %b, Overflow: %b", cout, overflow);
+    end
+    a=32'b11111111111111111111111111111111; b=32'b0000000000000000000000000000001;#1000
+    tests = tests + 1;
+    if ((a + b) == out) begin
+        passed_tests = passed_tests + 1;
+        $display("Passed test with op: %b", op);
+        $display("a:   %b", a);
+        $display("b:   %b", b);
+        $display("out: %b", out);
+        $display("Cout: %b, Overflow: %b", cout, overflow);
+    end
+    else begin
+        $display("Failed test with op: %b", op);
+        $display("a:   %b", a);
+        $display("b:   %b", b);
+        $display("out: %b", out);
+        $display("Cout: %b, Overflow: %b", cout, overflow);
+    end
+
+
     // Test XOR
+    $display("XOR");
+    $display("-----------------------------------------------------------------");
     op=3'b010;
     a=32'b00000000000000000000000000000000; b=32'b00000000000000000000000000000001;#1000
     tests = tests + 1;
