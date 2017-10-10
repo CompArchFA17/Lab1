@@ -25,7 +25,7 @@ input[2:0]    command
 
 
 wire[31:0] add_out, sub_out, xor_out, slt_out, and_out, nand_out, nor_out, or_out;
-wire add_carryout, add_overflow, sub_carryout, sub_overflow;
+wire add_carryout, add_overflow, sub_carryout, sub_overflow, add_zero, sub_zero;
 
 FullAdder32bit get_add_out(add_out, add_carryout, add_overflow, operandA, operandB);
 Subtractor32bit get_sub_out(operandA, operandB, sub_out, sub_carryout, sub_overflow);
@@ -35,6 +35,8 @@ and32 get_and(and_out, operandA, operandB);
 nand32 get_nand(nand_out, operandA, operandB);
 nor32 get_nor(nor_out, operandA, operandB);
 or32 get_or(or_out, operandA, operandB);
+zero_check zcheck_add(add_zero, add_out);
+zero_check zcheck_sub(sub_zero, sub_out);
 
 
 always @(command) begin
@@ -44,41 +46,49 @@ always @(command) begin
 			result = add_out;
 			carryout = add_carryout;
 			overflow = add_overflow;
+			zero = add_zero;
 		end
 		`opSUB: begin
 			result = sub_out;
 			carryout = sub_carryout;
 			overflow = sub_overflow;
+			zero = sub_zero;
 		end
 		`opXOR: begin
 			result = xor_out;
 			carryout = 1'b0;
 			overflow = 1'b0;
+			zero = 1'b0;
 		end
 		`opSLT: begin
 			result = slt_out;
 			carryout = 1'b0;
 			overflow = 1'b0;
+			zero = 1'b0;
 		end
 		`opAND: begin
 			result = and_out;
 			carryout = 1'b0;
 			overflow = 1'b0;
+			zero = 1'b0;
 		end
 		`opNAND: begin
 			result = nand_out;
 			carryout = 1'b0;
 			overflow = 1'b0;
+			zero = 1'b0;
 		end
 		`opNOR: begin
 			result = nor_out;
 			carryout = 1'b0;
 			overflow = 1'b0;
+			zero = 1'b0;
 		end
 		`opOR: begin
 			result = or_out;
 			carryout = 1'b0;
 			overflow = 1'b0;
+			zero = 1'b0;
 		end
 	endcase
 end
