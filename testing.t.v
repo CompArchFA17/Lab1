@@ -148,7 +148,7 @@ Bitslice32 superalu(OneBitFinalOut, AddSubSLTSum, carryout, overflow, SLTflag,  
 
 initial begin
 	$dumpfile("FullALU.vcd");
-	$dumpvars()
+	$dumpvars();
 
 $display("Test 4 Bit Adder Functionality");
 // there are too many possibilities even for just a four bit adder/subtractor, which means we need to choose our test cases strategically
