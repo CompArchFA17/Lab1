@@ -126,14 +126,10 @@ initial begin
 	$display("%b %b |    %b  |  %b   | 0", A, B, Command, OrNorXorOut);
 
 end
-
 endmodule
-
 */
 
-
 module test32Adder();
-
 parameter size = 4; 
 output  [size-1:0] OneBitFinalOut;
 output [size-1:0] OrNorXorOut;
@@ -149,9 +145,7 @@ reg [2:0] Command;
 reg [size-1:0]carryin; 
 wire Cmd0Start [size-1:0];
 wire Cmd1Start [size-1:0]; 
-
 wire [size-1:0] CarryoutWire;
-
 
 AddSubSLT32 trial(AddSubSLTSum, carryout, overflow, SLTflag, subtract, A, B, Command, carryin);
 
@@ -160,7 +154,6 @@ AndNand32 trial1(AndNandOut, A, B, Command);
 OrNorXor32 trial2(OrNorXorOut, A, B, Command);
 
 Bitslice32 superalu(OneBitFinalOut, AddSubSLTSum, carryout, overflow, SLTflag,  OrNorXorOut, AndNandOut, subtract, ZeroFlag, A, B, Command, carryin);
-
 
 initial begin
 $display("Test 4 Bit Adder Functionality");
@@ -413,5 +406,4 @@ A = 4'b1001; B = 4'b0101; Command =3'b011; #1000
 end
 
 endmodule
-  
 

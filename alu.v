@@ -41,30 +41,28 @@ module FourInMux // this module is a four input mux that takes in four inputs (i
     `NAND n1(out1, S0,  nS1, in1);
     `NAND n2(out2, nS0, S1, in2);
     `NAND n3(out3, S0,  S1, in3);
-
-    `NAND addthem(out, out0, out1, out2, out3);
+    `NAND finalmuxout(out, out0, out1, out2, out3);
 endmodule
 
-module AndNand // Uses Command[0] to determine whether and or nand is chosen
-(
+module AndNand  // Uses Command[0] to determine whether and or nand is chosen
+(				// and is b100 and nang is b101, so we check the 0th digit
 output AndNandOut, 
 input A, B, 
 input[2:0] Command
 );
-
 	wire AnandB;
 	wire AandB;
 
 	`NAND n0(AnandB, A, B);
 	`NOT Ainv(AandB, AnandB);
-	TwoInMux potato(AndNandOut, Command[0], AandB, AnandB);    // order to follow out,S,in0, in1
+	TwoInMux potato(AndNandOut, Command[0], AandB, AnandB);    // order to follow: out,S,in0, in1
 
 endmodule
 
 module OrNorXor
 (
 output OrNorXorOut, // uses both Command[0] and Command[2] to determine whether Or, Nor, or Xor is used
-input A, B,
+input A, B, 		// or is b111  -  nor is b110  -  xor is b010
 input[2:0] Command
 );
 	wire AnorB;
@@ -84,7 +82,6 @@ input[2:0] Command
     TwoInMux mux1(OrNorXorOut, Command[0], XorNor, AorB);
 endmodule
 
-
 // this module calculates addition, subtraction, and SLT based on which command is selected. SLT happens when A<B, or when A-B < 0. SLT is only calculated with the most significant bit, so it is not used in this smaller module. We use the adder/subtractor like we discussed in class
 module MiddleAddSubSLT 
 (
@@ -102,7 +99,7 @@ input carryin
     wire nCmd2;
                 
 	`NOT Binv(nB, B);
-    TwoInMux mux0(BornB, Command[0], B, nB); 
+    TwoInMux mux0(BornB, Command[0], B, nB); 		
     `NOT n0(nCmd2, Command[2]);
     `AND subtractchoose(subtract, Command[0], nCmd2); 
     `XOR XOR1(AxorB, A, BornB); 
@@ -124,7 +121,6 @@ output subtract,
 input A, B, 
 input[2:0] Command,
 input carryin
-
 );
                 wire Cmd0Start;
                 wire Cmd1Start;               
@@ -212,6 +208,7 @@ output [size-1:0]subtract,
 input [size-1:0] A, B, 
 input [2:0] Command,
 input [size-1:0]carryin  // we think this doesn't do anything but don't want to break everything
+// Thought process is that the carryin is defined by the previous ([i-1]) carryot 
 );
     wire [size-1:0] CarryoutWire; // this is used to internally connect each of the 32 bitslices
 	wire SLTon;
@@ -224,17 +221,17 @@ input [size-1:0]carryin  // we think this doesn't do anything but don't want to 
                 
     MiddleAddSubSLT attempt2(AddSubSLTSum[0], CarryoutWire[0], subtract[0], A[0], B[0], Command, subtract[0]);
                 
-	genvar i; 
-	parameter size = 4; 
-	generate 
-    	for (i=1; i<size; i=i+1)
-        	begin: addbits
-            MiddleAddSubSLT attempt(AddSubSLTSum[i], CarryoutWire[i], subtract[i], A[i], B[i], Command, CarryoutWire[i-1]); 
-            end        
-    endgenerate 
+genvar i; 
+parameter size = 4; 
+generate 
+   	for (i=1; i<size; i=i+1)
+       	begin: addbits
+		MiddleAddSubSLT attempt(AddSubSLTSum[i], CarryoutWire[i], subtract[i], A[i], B[i], Command, CarryoutWire[i-1]); 
+	end        
+endgenerate 
 	
 	//set final carryout value - this will be used for calculating overflow and SLT
-	`OR finalcarryout(carryout, CarryoutWire[size-1], 0);
+	`OR finalcarryout(carryout, CarryoutWire[size-1], 0);		
 
 	// check for overflow - does the final carryin = final carryout?
 	`XOR overflowcheck(overflow, carryout, CarryoutWire[size-2]);
