@@ -26,7 +26,7 @@ module ALU
 );
 
   // supose we're jsut doing Addition for now
-  wire[31:0] cout=0;
+  wire[31:0] cout;
   ALU1bit a1(result[0], cout[0], operandA[0], operandB[0], 0, command);
   ALU1bit a2(result[1], cout[1], operandA[1], operandB[1], cout[0], command);
   ALU1bit a3(result[2], cout[2], operandA[2], operandB[2], cout[1], command);
