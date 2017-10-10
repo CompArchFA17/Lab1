@@ -4,6 +4,21 @@
 `define OR or #20       // nor with not is 20
 `define NOR nor #10     // base is 10 
 `define XOR xor #40     // and with or is 40
+/*
+- - - - - - - - - - - - - - - - - - - - - - - - - - - According to the assignment, we need to have a top-level module with these definitions!!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+module ALU
+(
+output[31:0]  result,
+output        carryout,
+output        zero,
+output        overflow,
+input[31:0]   operandA,
+input[31:0]   operandB,
+input[2:0]    command
+);
+	// Your code here
+endmodule
+*/ 
 
 module TwoInMux // this module is a two input mux that takes in two inputs (in0 and in1) and uses switch S to pick the value for outfinal
 (
