@@ -25,8 +25,12 @@ wire muxout;
 // test OR/NOR/XOR
 	OrNorXor testor(OrNorXorOut, A, B, Command);
 initial begin
+	$dumpfile("SmallALU.vcd");
+	$dumpvars();
+
+
 // test mux
-	$display("Four Input Multiplexer");
+	/*$display("Four Input Multiplexer");
 	$display("S0 S1 |in0 in1 in2 in3| Output");
 	S0 = 0; S1 = 0; in0 = 1'bx; in1 = 0; in2 = 0; in3 = 0; #1000
 	$display(" %b %b  | %b   %b   %b   %b | %b", S0, S1, in0, in1, in2, in3, muxout);
@@ -35,7 +39,7 @@ initial begin
 	S0 = 0; S1 = 1; in0 = 0; in1 = 0; in2 = 1'bx; in3 = 0; #1000
 	$display(" %b %b  | %b   %b   %b   %b | %b", S0, S1, in0, in1, in2, in3, muxout);
 	S0 = 1; S1 = 1; in0 = 0; in1 = 0; in2 = 0; in3 = 1'bx; #1000
-	$display(" %b %b  | %b   %b   %b   %b | %b", S0, S1, in0, in1, in2, in3, muxout);
+	$display(" %b %b  | %b   %b   %b   %b | %b", S0, S1, in0, in1, in2, in3, muxout);*/ 
 // just the adder - proper behavior
 	$display("Adder/Subtractor");
     $display("A B | Command |Out|ExpectOut|Carryout-Add");
