@@ -129,6 +129,7 @@ output  [size-1:0] OneBitFinalOut;
 output [size-1:0] OrNorXorOut;
 output [size-1:0] AndNandOut;
 wire [size-1:0] AddSubSLTSum; 
+wire [size-1:0] SLTSum; 
 wire carryout; 
 wire overflow; 
 wire SLTflag;
@@ -144,11 +145,13 @@ wire [size-1:0] CarryoutWire;
 
 AddSubSLT32 trial(AddSubSLTSum, carryout, overflow, SLTflag, subtract, A, B, Command, carryin);
 
+SLT32 test(SLTSum, carryout, overflow, SLTflag, subtract, A, B, Command, carryin);
+
 AndNand32 trial1(AndNandOut, A, B, Command);
 
 OrNorXor32 trial2(OrNorXorOut, A, B, Command);
 
-Bitslice32 superalu(OneBitFinalOut, AddSubSLTSum, carryout, overflow, SLTflag,  OrNorXorOut, AndNandOut, subtract, ZeroFlag, AllZeros, A, B, Command, carryin);
+Bitslice32 superalu(OneBitFinalOut, AddSubSLTSum, SLTSum, carryout, overflow, SLTflag,  OrNorXorOut, AndNandOut, subtract, ZeroFlag, AllZeros, A, B, Command, carryin);
 
 initial begin
 	$dumpfile("FullALU.vcd");
