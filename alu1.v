@@ -51,8 +51,17 @@ endmodule
 module and8P(output[7:0] out, input[7:0] A, input[7:0] B);
   genvar i;
   generate
-    for(i = 0; i<8; i++)
+    for(i = 0; i<8; i=i+1) begin: and_slces
       `AND and_inst(out[i], A[i], B[i]);
+    end
+  endgenerate
+endmodule
+
+module or32P(output[31:0] out, input[31:0] A, input[31:0] B);
+  genvar i;
+  generate
+    for(i = 0; i<32; i=i+1) begin: or_slces
+      `OR or_inst(out[i], A[i], B[i]);
     end
   endgenerate
 endmodule
@@ -60,7 +69,7 @@ endmodule
 module unaryMultiplexor(output out, input[7:0] in, input[7:0] sel);
   wire[7:0] ands;
   and8P andP(ands, in, sel);
-  or4 ors[out, ands];
+  or8 ors(out, ands);
 endmodule
 
 module halfAdder(
@@ -89,6 +98,27 @@ module fullAdder
     `OR (carryout, c1, c2);
 endmodule
 
+module slt(output out,
+          input carryin,
+          input a, input a_,
+          input b, input b_);
+  wire lt;
+  wire eq;
+  wire w0;
+  wire invertSLT;
+  // a bitwise SLT implementation
+  // if a==b, pass on carry in.
+  // if a>b, return 1
+  // if a<b, return 0
+  // out[n] -> carryin[n+1]
+  // note that this will always be wrong if
+  // the signs of A and B are opposite.
+  `XNOR xnorGate(eq, a, b);
+  `AND  ltAnd(lt, a, b_);
+  `AND  and0(w0, eq, carryin);
+  `OR   or1(out,  w0, lt);
+endmodule
+
 `define ADDSig  command[0]
 `define SUBSig  command[1]
 `define XORSig  command[2]
@@ -108,20 +138,25 @@ module alu1(
     input[7:0] command
 );
 wire[7:0] results;
-wire[7:0] caryouts;
+wire result;
+wire[7:0] carryouts;
 wire A_, B_;
 `NOT an(A_, A);
 `NOT bn(B_, B);
 fullAdder adder(results[0], carryouts[0], A, B, carryin);
 fullAdder sub(results[1], carryouts[1], A, B_, carryin);
-`XOR xor(results[2], A, B);
-fullAdder slt(results[3], carryouts[3], A, B_, carryin);
-`AND and(results[4], A, B);
-`NAND nand(results[5], A, B);
-`NOR  nor(results[6], A, B);
-`OR   or(results[7], A, B);
+`XOR xorGate(results[2], A, B);
+//slt is odd. Only the first bit is ever set, but it depends
+//on the lest bit. The actual result is handled later,
+//in the full ALU
+slt sltGate(carryouts[3], carryin, A, A_, B, B_);
+`OR  falseGate(results[3], 0, 0);
 
+`AND andGate(results[4], A, B);
+`NAND nandGate(results[5], A, B);
+`NOR  norGate(results[6], A, B);
+`OR   orGate(results[7], A, B);
 unaryMultiplexor resMux(result, results, command);
 unaryMultiplexor cMux(carryout, carryouts, command);
-
+`NOT(zero, result);
 endmodule
