@@ -236,7 +236,7 @@ module adder_subtracter
 
   mux addsubmux(finalB[31:0],command[0],opB[31:0], invertedB[31:0]);
   
-  FullAdder4bit #50 adder0(ans[3:0], cout0, _, opA[3:0], finalB[3:0], 0); //coupling 4 adders makes a 32-bit adder, note that overflow flags do not matter except for the last one
+  FullAdder4bit #50 adder0(ans[3:0], cout0, _, opA[3:0], finalB[3:0], command[0]); //coupling 4 adders makes a 32-bit adder, note that overflow flags do not matter except for the last one
   FullAdder4bit #50 adder1(ans[7:4], cout1, _1, opA[7:4], finalB[7:4], cout0);
   FullAdder4bit #50 adder2(ans[11:8], cout2, _2, opA[11:8], finalB[11:8], cout1);
   FullAdder4bit #50 adder3(ans[15:12], cout3, _3, opA[15:12], finalB[15:12], cout2);
