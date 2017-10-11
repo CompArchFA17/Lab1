@@ -37,7 +37,8 @@ module testALU ();
 
 
   initial begin
-
+    $dumpfile("alu.vcd");
+    $dumpvars;
 
     // Test Add
     $display("\nAddition");
