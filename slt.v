@@ -9,11 +9,11 @@ module single_slt
 	wire axorand;
 	wire xornot;
 	wire xornotand;
-	xor axb(abxor, a, b);
-	and aaxb(axorand, a, abxor);
-	not invxor(xornot, abxor);
-	and xorandinput(xornotand, xornot, defaultCompare);
-	or compare(out, axorand, xornotand);
+	xor #10 axb(abxor, a, b);
+	and #10 aaxb(axorand, a, abxor);
+	not #10 invxor(xornot, abxor);
+	and #10 xorandinput(xornotand, xornot, defaultCompare);
+	or #10 compare(out, axorand, xornotand);
 endmodule
 
 module full_slt_32bit
