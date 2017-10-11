@@ -62,40 +62,26 @@ end
 endmodule
 
 
-module NOR
+module NOROR
 (
 output[31:0] result,
 output carryout,
 output zero,
 output overflow,
 input[31:0] operandA,
-input[31:0] operandB
+input[31:0] operandB,
+input invertnor
 );
 
+wire norres[31:0];
 genvar i;
 for (i = 0; i < 32; i = i + 1) begin
-	`NOR norgate (result[i], operandA[i], operandB[i]);
+	`NOR norgate (norres[i], operandA[i], operandB[i]);
 end
 
-
-buf setcarryout (carryout, 'b0);
-buf setzero (zero, 'b0);
-buf setoverflow (overflow, 'b0);
-endmodule
-
-module OR
-(
-output[31:0] result,
-output carryout,
-output zero,
-output overflow,
-input[31:0] operandA,
-input[31:0] operandB
-);
-
-genvar i;
-for (i = 0; i < 32; i = i + 1) begin
-	`OR orgate(result[i], operandA[i], operandB[i]);
+genvar j;
+for (j = 0; j < 32; j = j + 1) begin
+	`XOR final (result[j], invertnor, norres[j]);
 end
 
 buf setcarryout (carryout, 'b0);
