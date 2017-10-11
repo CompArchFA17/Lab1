@@ -10,7 +10,7 @@
 `define NOR  3'd6
 `define OR   3'd7
 
-module ALULut
+module ALU_LUT
 (
     output reg[2:0] select,
     output reg invert,
