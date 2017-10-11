@@ -66,11 +66,11 @@ module testALU ();
     // 0 - 10, has problems:
 	address = `SUB; a = 32'd0; b = 32'd10; #5000
     $display("SUB %d %d ", a, b);
-    if ((out !== 32'b10110) || (carryout !== 0) || (overflow !== 0)) $display("*** SUB %d %d failed. out: %5b carryout: %d overflow: %d", a, b, out, carryout, overflow);
+    if ((out !== -32'd10) || (carryout !== 0) || (overflow !== 0)) $display("*** SUB %d %d failed. out: %d carryout: %d overflow: %d", a, b, out, carryout, overflow);
     // 15 - 10
 	address = `SUB; a = 32'd15; b = 32'd10; #5000
     $display("SUB %d %d ", a, b);
-    if ((out !== 32'd5) || (carryout !== 0) || (overflow !== 0)) $display("*** SUB %d %d failed. out: %d carryout: %d overflow: %d", a, b, out, carryout, overflow);
+    if ((out !== 32'd5) || (carryout !== 1) || (overflow !== 0)) $display("*** SUB %d %d failed. out: %d carryout: %d overflow: %d", a, b, out, carryout, overflow);
     
     // 10 + 0
     address = `ADD; a = 32'd10; b = 32'd0; #5000
@@ -214,6 +214,111 @@ module testALU ();
     address = `OR; a = 32'haaaaaaaa; b = 32'h55555554; #5000
     $display("OR  %d %d ", a, b);
     if ((out !== 32'hfffffffe) || (carryout !== 0) || (overflow !== 0)) $display("*** OR   %d %d failed. out: %d carryout: %d overflow: %d", a, b, out, carryout, overflow);
+
+
+    /*** kaitlyn's test cases ***/
+    $display("Kaitlyn's Tests");
+
+    address = `ADD; a = 32'h7fffffff; b = 32'h7fffffff; #5000
+    $display("ADD %d %d ", a, b);
+    if ((out !== 32'hfffffffe) || (carryout !== 0) || (overflow !== 1)) $display("*** ADD %d %d failed. out: %d carryout: %d overflow: %d", a, b, out, carryout, overflow);
+    
+    address = `ADD; a = -32'd10; b = 32'd10; #5000
+    $display("ADD %d %d ", a, b);
+    if ((out !== 32'd0) || (carryout !== 1) || (overflow !== 0)) $display("*** ADD %d %d failed. out: %d carryout: %d overflow: %d", a, b, out, carryout, overflow);
+    
+    address = `ADD; a = 32'h0000ffff; b = 32'hffff0000; #5000
+    $display("ADD %d %d ", a, b);
+    if ((out !== 32'hffffffff) || (carryout !== 0) || (overflow !== 0)) $display("*** ADD %d %d failed. out: %d carryout: %d overflow: %d", a, b, out, carryout, overflow);
+    
+    address = `SUB; a = 32'h0000ffff; b = -32'h0000ffff; #5000
+    $display("SUB %d %d ", a, b);
+    if ((out !== 32'h0001fffe) || (carryout !== 0) || (overflow !== 0)) $display("*** SUB %d %d failed. out: %d carryout: %d overflow: %d", a, b, out, carryout, overflow);
+    
+    address = `SUB; a = -32'h7fffffff; b = -32'h7fffffff; #5000
+    $display("SUB %d %d ", a, b);
+    if ((out !== 32'h0) || (carryout !== 1) || (overflow !== 0)) $display("*** SUB %d %d failed. out: %d carryout: %d overflow: %d", a, b, out, carryout, overflow);
+    
+    address = `SUB; a = 32'hffffffff; b = 32'h7fffffff; #5000
+    $display("SUB %d %d ", a, b);
+    if ((out !== 32'h80000000) || (carryout !== 1) || (overflow !== 0)) $display("*** SUB %d %d failed. out: %d carryout: %d overflow: %d", a, b, out, carryout, overflow);
+    
+    // THIS IS WRONG AND IS CAUSING OTHER PROBLEMS. INVERTING THIS HAS AN OVERFLOW. WHAT DO.
+    address = `SUB; a = 32'h0; b = 32'h80000000; #5000
+    $display("SUB %d %d ", a, b);
+    if ((out !== 32'h80000000) || (carryout !== 0) || (overflow !== 0)) $display("*** SUB %d %d failed. out: %d carryout: %d overflow: %d", a, b, out, carryout, overflow);
+    
+    address = `XOR; a = 32'hffffffff; b = 32'hffffffff; #5000
+    $display("XOR %d %d ", a, b);
+    if ((out !== 32'h0) || (carryout !== 0) || (overflow !== 0)) $display("*** XOR %d %d failed. out: %d carryout: %d overflow: %d", a, b, out, carryout, overflow);
+    
+    address = `XOR; a = 32'hffff0000; b = 32'hffffffff; #5000
+    $display("XOR %d %d ", a, b);
+    if ((out !== 32'h0000ffff) || (carryout !== 0) || (overflow !== 0)) $display("*** XOR %d %d failed. out: %d carryout: %d overflow: %d", a, b, out, carryout, overflow);
+    
+    address = `XOR; a = 32'h11111111; b = 32'h0e0e0e0e; #5000
+    $display("XOR %d %d ", a, b);
+    if ((out !== 32'h1f1f1f1f) || (carryout !== 0) || (overflow !== 0)) $display("*** XOR %d %d failed. out: %d carryout: %d overflow: %d", a, b, out, carryout, overflow);
+    
+    address = `SLT; a = 32'h7fffffff; b = 32'h0; #5000
+    $display("SLT %d %d ", a, b);
+    if ((out !== 32'h0) || (carryout !== 0) || (overflow !== 0)) $display("*** SLT %d %d failed. out: %d carryout: %d overflow: %d", a, b, out, carryout, overflow);
+    
+    address = `SLT; a = 32'd0; b = 32'd5; #5000
+    $display("SLT %d %d ", a, b);
+    if ((out !== 32'h1) || (carryout !== 0) || (overflow !== 0)) $display("*** SLT %d %d failed. out: %d carryout: %d overflow: %d", a, b, out, carryout, overflow);
+    
+    address = `SLT; a = 32'd0; b = 32'd0; #5000
+    $display("SLT %d %d ", a, b);
+    if ((out !== 32'h0) || (carryout !== 0) || (overflow !== 0)) $display("*** SLT %d %d failed. out: %d carryout: %d overflow: %d", a, b, out, carryout, overflow);
+    
+    address = `AND; a = 32'h0f0f0f0f; b = 32'hf0f0f0f0; #5000
+    $display("AND %d %d ", a, b);
+    if ((out !== 32'h0) || (carryout !== 0) || (overflow !== 0)) $display("*** AND %d %d failed. out: %d carryout: %d overflow: %d", a, b, out, carryout, overflow);
+    
+    address = `AND; a = 32'h11111111; b = 32'hffffffff; #5000
+    $display("AND %d %d ", a, b);
+    if ((out !== 32'h11111111) || (carryout !== 0) || (overflow !== 0)) $display("*** AND %d %d failed. out: %d carryout: %d overflow: %d", a, b, out, carryout, overflow);
+    
+    address = `AND; a = 32'heeeeeeee; b = 32'h77777777; #5000
+    $display("AND %d %d ", a, b);
+    if ((out !== 32'h66666666) || (carryout !== 0) || (overflow !== 0)) $display("*** AND %d %d failed. out: %d carryout: %d overflow: %d", a, b, out, carryout, overflow);
+    
+    address = `NAND; a = 32'heeeeeeee; b = 32'h77777777; #5000
+    $display("NAND%d %d ", a, b);
+    if ((out !== 32'h99999999) || (carryout !== 0) || (overflow !== 0)) $display("*** NAND %d %d failed. out: %d carryout: %d overflow: %d", a, b, out, carryout, overflow);
+    
+    address = `NAND; a = 32'h11111111; b = 32'h10101010; #5000
+    $display("NAND%d %d ", a, b);
+    if ((out !== 32'hefefefef) || (carryout !== 0) || (overflow !== 0)) $display("*** NAND %d %d failed. out: %d carryout: %d overflow: %d", a, b, out, carryout, overflow);
+    
+    address = `NAND; a = 32'h77777777; b = 32'h88888888; #5000
+    $display("NAND%d %d ", a, b);
+    if ((out !== 32'hffffffff) || (carryout !== 0) || (overflow !== 0)) $display("*** NAND %d %d failed. out: %d carryout: %d overflow: %d", a, b, out, carryout, overflow);
+    
+    address = `NOR; a = 32'heeeeeeee; b = 32'h77777777; #5000
+    $display("NOR %d %d ", a, b);
+    if ((out !== 32'h0) || (carryout !== 0) || (overflow !== 0)) $display("*** NOR %d %d failed. out: %d carryout: %d overflow: %d", a, b, out, carryout, overflow);
+    
+    address = `NOR; a = 32'h0; b = 32'h77777777; #5000
+    $display("NOR %d %d ", a, b);
+    if ((out !== 32'h88888888) || (carryout !== 0) || (overflow !== 0)) $display("*** NOR %d %d failed. out: %d carryout: %d overflow: %d", a, b, out, carryout, overflow);
+    
+    address = `NOR; a = 32'heeeeeeee; b = 32'h00000001; #5000
+    $display("NOR %d %d ", a, b);
+    if ((out !== 32'h11111110) || (carryout !== 0) || (overflow !== 0)) $display("*** NOR %d %d failed. out: %d carryout: %d overflow: %d", a, b, out, carryout, overflow);
+    
+    address = `OR; a = 32'heeeeeeee; b = 32'h77777777; #5000
+    $display("OR  %d %d ", a, b);
+    if ((out !== 32'hffffffff) || (carryout !== 0) || (overflow !== 0)) $display("*** OR   %d %d failed. out: %d carryout: %d overflow: %d", a, b, out, carryout, overflow);
+    
+    address = `OR; a = 32'h0; b = 32'h77777777; #5000
+    $display("OR  %d %d ", a, b);
+    if ((out !== 32'h77777777) || (carryout !== 0) || (overflow !== 0)) $display("*** OR   %d %d failed. out: %d carryout: %d overflow: %d", a, b, out, carryout, overflow);
+    
+    address = `OR; a = 32'heeeeeeee; b = 32'h00000001; #5000
+    $display("OR  %d %d ", a, b);
+    if ((out !== 32'heeeeeeef) || (carryout !== 0) || (overflow !== 0)) $display("*** OR   %d %d failed. out: %d carryout: %d overflow: %d", a, b, out, carryout, overflow);
     
     end 
 endmodule

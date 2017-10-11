@@ -14,10 +14,10 @@ module SLT
 	input[31:0] a, b,
 	output[31:0] result
 );
-wire overflow, carryout;
+wire overflow, carryout, less_than;
 wire[31:0] subtractoroutput;
 Subtractor32bit compare(a, b, subtractoroutput, carryout, overflow);
-and32 zeros (result, 32'd0, 32'd0);
-`XOR getsign(result[0], subtractoroutput[31], overflow); 
+`XOR getsign(less_than, subtractoroutput[31], overflow); 
+assign result = {30'b0, less_than};
 
 endmodule
