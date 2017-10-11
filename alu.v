@@ -8,6 +8,12 @@
 // b101 -> NAND
 // b110 -> NOR
 // b111 -> OR
+`define AND and #30
+`define OR or #30
+`define NOT not #10
+`define XOR xor #30
+`define NOR nor #20
+`define NAND nand #20
 
 `include "alu1bit.v"
 
@@ -56,12 +62,12 @@ module ALU
   ALU1bit a30(res_premux[29], cout[29], operandA[29], operandB[29], cout[28], command);
   ALU1bit a31(res_premux[30], cout[30], operandA[30], operandB[30], cout[29], command);
   ALU1bit a32(res_premux[31], carryout, operandA[31], operandB[31], cout[30], command);
-  xor(overflow, carryout, cout[30]);
+  `XOR(overflow, carryout, cout[30]);
 
   // We're using subtraction for SLT. We have to handle additional cases
   // for the cases where we have overflow.
   wire temp;
-  xor(temp, res_premux[31], overflow);
+  `XOR(temp, res_premux[31], overflow);
 
   // This mux is necessary for handling the SLT, since the desired result of the SLT 
   // is very different from the actual output from our ALU.
