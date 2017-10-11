@@ -7,7 +7,7 @@
 
 Our plan was to sketch out a design for the ALU, then implement the testing procedures from that design and finally finish the implementation while continuously using the test benches for validation.
 
-<img src="IMG_3524.JPG" alt="bit_slice_test_cases" style="width:600px;">
+<img src="IMG_3528.JPG" alt="bit_slice_test_cases" style="width:600px;">
 
 ## Developing Test Benches
 
