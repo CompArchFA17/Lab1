@@ -84,7 +84,6 @@ input[2:0] Command
     TwoInMux mux1(OrNorXorOut, Command[0], XorNor, AorB);
 endmodule
 
-
 // this module calculates addition, subtraction, and SLT based on which command is selected. SLT happens when A<B, or when A-B < 0. SLT is only calculated with the most significant bit, so it is not used in this smaller module. We use the adder/subtractor like we discussed in class
 module MiddleAddSubSLT 
 (
@@ -112,44 +111,6 @@ input carryin
     `OR OR1(carryout, AandB, CINandAxorB); 
 endmodule
 
-// We attempted to create one bitslice that we could use 32 times, but for some reason, this module didn't work
-/*
-module Bitslice
-(
-output OneBitFinalOut, 
-output AddSubSLTSum, carryout, //overflow, 
-output OrNorXorOut,
-output AndNandOut,
-output subtract,
-input A, B, 
-input[2:0] Command,
-input carryin
-
-);
-                wire Cmd0Start;
-                wire Cmd1Start;               
-                wire nB;
-                wire BornB;
-                wire AxorB;
-                wire AandB;
-                wire CINandAxorB;
-
-                wire AnorB;
-                wire AorB;
-                wire AnandB;
-                wire nXor;
-                wire XorNor;
-                
-                MiddleAddSubSLT rottenpotato(AddSumSLTSum, carryout, subtract, A, B, Command, carryin); 
-                OrNorXor idahopotato(OrNorXorOut, A, B, Command);
-                AndNand sweetpotato(AndNandOut, A, B, Command);
-
-                FourInMux ZeroMux(Cmd0Start, Command[0], Command[1], AddSumSLTSum, AddSumSLTSum, OrNorXorOut, AddSumSLTSum);
-                FourInMux OneMux(Cmd1Start, Command[0], Command[1], AndNandOut, AndNandOut, OrNorXorOut, OrNorXorOut);
-                TwoInMux TwoMux(OneBitFinalOut, Command[2], Cmd0Start, Cmd1Start);
-endmodule 
-*/
-
 // this module creates a 32-bit AND/NAND module
 module AndNand32
 (
@@ -162,7 +123,7 @@ input[2:0] Command
 	wire AnandB;
 	wire AandB;
 
-	AndNand attempt2(AndNandOut[0], A[0], B[0], Command); // set the zeroth condition. This is only important for the ADD/SUB/SLT module, but we do it for all for consistency
+	AndNand attempt2(AndNandOut[0], A[0], B[0], Command); // set the zeroth condition. This is only important for the ADD/SUB/SLT functions, but we do it for all for consistency
 
 	genvar i; 
 	generate 
@@ -201,46 +162,26 @@ input[2:0] Command
 endmodule
 
 
-// this module creates a 32-bit ADD/SUB/SLT module
+// this module creates a 32-bit ADD/SUB module. We originally tried to combine ADD, SUB, and SLT since the three are connected, but SLT proved too tricky to include with ADD & SUB, so we moved it down to SLT32. 
 module AddSubSLT32
 (
 output [size-1:0]AddSubSLTSum, 
 output carryout,      
 output overflow, 
-output SLTflag,
 output [size-1:0]subtract, 
 input [size-1:0] A, B, 
 input [2:0] Command,
 input [size-1:0]carryin  // we think this doesn't do anything but don't want to break everything
 );
     wire [size-1:0] CarryoutWire; // this is used to internally connect each of the 32 bitslices
-    wire [size-1:0] NewVal; // this is used to internally connect each of the 32 bitslices
-
-	wire SLTon;
-	wire nOF;
-	wire nAddSubSLTSum;
-	wire Res1OF0;
-	wire Res0OF1;
-	wire SLTflag0;
-	wire SLTflag1;
-   wire nCmd2;
-               
-    `NOT n0(nCmd2, Command[2]);
-
-    //`AND subtractchoose(subtract, Command[0], nCmd2); 
-
-	`AND sltcheck0(SLTon, Command[0], Command[1], nCmd2);
-    MiddleAddSubSLT attempt2(NewVal[0], CarryoutWire[0], subtract[0], A[0], B[0], Command, subtract[0]);
-     	TwoInMux setSLTres(AddSubSLTSum[0], SLTon, NewVal[0], 0);
-         
+	MiddleAddSubSLT attempt2(AddSubSLTSum[0], CarryoutWire[0], subtract[0], A[0], B[0], Command, subtract[0]);
+      
 	genvar i; 
 	parameter size = 4; 
 	generate 
     	for (i=1; i<size; i=i+1)
         	begin: addbits
-            MiddleAddSubSLT attempt(NewVal[i], CarryoutWire[i], subtract[i], A[i], B[i], Command, CarryoutWire[i-1]); 
-	TwoInMux setSLTres(AddSubSLTSum[i], SLTon, NewVal[i], 0);
-		
+            MiddleAddSubSLT attempt(AddSubSLTSum[i], CarryoutWire[i], subtract[i], A[i], B[i], Command, CarryoutWire[i-1]); 
             end        
     endgenerate 
 
@@ -250,20 +191,9 @@ input [size-1:0]carryin  // we think this doesn't do anything but don't want to 
 
 	// check for overflow - does the final carryin = final carryout?
 	`XOR overflowcheck(overflow, carryout, CarryoutWire[size-2]);
-
-	// check for SLT - either the most significant bit = 1 and overflow = 0, or the most significant bit = 0 and overflow = 1
-
-	`NOT invOF(nOF, overflow);
-	`NOT invAddSub(nAddSubSLTSum, AddSubSLTSum[size-1]); 
-	`AND sltint0(Res1OF0, nOF, AddSubSLTSum[size-1]);
-	`AND sltint1(Res0OF1, overflow, nAddSubSLTSum);
-	`AND sltint2(SLTflag0, Res1OF0, SLTon);
-	`AND sltint3(SLTflag1, Res0OF1, SLTon);
-	`OR sltcheck1(SLTflag, SLTflag0, SLTflag1);
-
 endmodule
 
-// this module creates a 32-bit ADD/SUB/SLT module
+// this module creates a 32-bit SLT module
 module SLT32
 (
 output [size-1:0]SLTSum, 
@@ -278,7 +208,6 @@ input [size-1:0]carryin  // we think this doesn't do anything but don't want to 
     wire [size-1:0] CarryoutWire; // this is used to internally connect each of the 32 bitslices
     wire [size-1:0] NewVal; // this is used to internally connect each of the 32 bitslices
 	wire [size-1:0]AddSubSLTSum; 
-
 	wire SLTon;
 	wire nOF;
 	wire nAddSubSLTSum;
@@ -286,22 +215,24 @@ input [size-1:0]carryin  // we think this doesn't do anything but don't want to 
 	wire Res0OF1;
 	wire SLTflag0;
 	wire SLTflag1;
-   wire nCmd2;
+	wire nCmd2;
                
     `NOT n0(nCmd2, Command[2]);
 
+// we do weird things where we do subtraction to produce NewVal, then assign either NewVal or 0 to AddSubSLTSum (since if SLT is triggered, every bit except maybe the least significant will be 0), and then determine whether A<B at the very end, when we set the least significant bit to 0 or 1 depending 
+
 	`AND sltcheck0(SLTon, Command[0], Command[1], nCmd2);
     MiddleAddSubSLT attempt2(NewVal[0], CarryoutWire[0], subtract[0], A[0], B[0], Command, subtract[0]);
-     	TwoInMux setSLTres(AddSubSLTSum[0], SLTon, NewVal[0], 0);
+     TwoInMux setSLTresult(AddSubSLTSum[0], SLTon, NewVal[0], 0);
 
 	genvar i; 
 	parameter size = 4; 
 	generate 
     	for (i=1; i<size; i=i+1)
-        	begin: addbits
+        	begin: sltbits
             MiddleAddSubSLT attempt(NewVal[i], CarryoutWire[i], subtract[i], A[i], B[i], Command, CarryoutWire[i-1]); 
-	TwoInMux setSLTres2(AddSubSLTSum[i], SLTon, NewVal[i], 0);
-	TwoInMux setSLTres3(SLTSum[i], SLTon, AddSubSLTSum[i], AddSubSLTSum[i]);	
+			TwoInMux setSLTres2(AddSubSLTSum[i], SLTon, NewVal[i], 0);
+			TwoInMux setSLTres3(SLTSum[i], SLTon, AddSubSLTSum[i], AddSubSLTSum[i]);	
             end        
     endgenerate 
 	
@@ -311,52 +242,19 @@ input [size-1:0]carryin  // we think this doesn't do anything but don't want to 
 	// check for overflow - does the final carryin = final carryout?
 	`XOR overflowcheck(overflow, carryout, CarryoutWire[size-2]);
 
+	// check whether A < B
 	`NOT invOF(nOF, overflow);
 	`NOT invAddSub(nAddSubSLTSum, AddSubSLTSum[size-1]); 
-	`AND sltint0(Res1OF0, nOF, AddSubSLTSum[size-1]);
+	`AND sltint0(Res1OF0, nOF, NewVal[size-1]);
 	`AND sltint1(Res0OF1, overflow, nAddSubSLTSum);
 	`AND sltint2(SLTflag0, Res1OF0, SLTon);
 	`AND sltint3(SLTflag1, Res0OF1, SLTon);
 	`OR sltcheck1(SLTflag, SLTflag0, SLTflag1);
-     	TwoInMux FinalSLT(SLTSum[0], SLTflag, AddSubSLTSum[0], SLTflag);
+     TwoInMux FinalSLT(SLTSum[0], SLTflag, AddSubSLTSum[0], SLTflag);
+
 endmodule
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// this module combines the 32 bit ADD/SUB/SLT, 32 bit OR/NOR/XOR, and the 32 bit AND/NAND
+// this module combines the 32 bit ADD/SUB, the 32 bit SLT, 32 bit OR/NOR/XOR, and the 32 bit AND/NAND
 // We do this by using a series of final multiplexers to get the correct result based on what Command is calling for
 module Bitslice32
 (
@@ -384,7 +282,7 @@ input [size-1:0]carryin // don't think this does anything but don't want to brea
 wire [size-1:0] NewVal; 
  
 	SLT32 test(SLTSum, carryout, overflow, SLTflag, subtract, A, B, Command, carryin);
-	AddSubSLT32 trial(AddSubSLTSum, carryout, overflow, SLTflag, subtract, A, B, Command, carryin);
+	AddSubSLT32 trial(AddSubSLTSum, carryout, overflow, subtract, A, B, Command, carryin);
 	AndNand32 trial1(AndNandOut, A, B, Command);
 	OrNorXor32 trial2(OrNorXorOut, A, B, Command);
      
@@ -405,6 +303,8 @@ wire [size-1:0] NewVal;
 		end        
     endgenerate 
 
+
+	// the "zeros" flag depends on the final answer. It is only triggered when the final result is all zeros
 	`NOT invzeroflag(yeszero, ZeroFlag[size-1]);
 	`AND setzeros(AllZeros, yeszero, yeszero);
 
