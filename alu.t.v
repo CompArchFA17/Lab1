@@ -88,6 +88,10 @@ module testALU ();
     tests = tests + 1;
     passed_tests = passed_tests + test(((a - b) == out) && (overflow == 1), 1);
 
+    a=32'b10000000000000000000000000000000; b=32'b01000000000010101010000000000001;#1000
+    tests = tests + 1;
+    passed_tests = passed_tests + test(((a - b) == out) && (overflow == 1), 1);
+
     // Test XOR
     $display("\nXOR");
     $display("-----------------------------------------------------------------");
@@ -158,11 +162,23 @@ module testALU ();
     passed_tests = passed_tests + test(out == 0, 1);
 
     // positive overflow: large pos / large neg : 0
+    a=32'b01000000000000000000000000000001; b=32'b10000000000000000000000000010000;#1000
+    tests = tests + 1;
+    passed_tests = passed_tests + test(out == 0, 1);
     // negative overflow: large neg / large pos : 1
-
-    a=32'b00000000000000000000000000001000; b=32'b00000000001000000000000000000000;#2000
+    a=32'b10000000000000000000000000000001; b=32'b00000100000000000000000000000000;#1000
     tests = tests + 1;
     passed_tests = passed_tests + test(out == 1, 1);
+
+    a=32'b00000000000000000000000000001000; b=32'b00000000001000000000000000000000;#1000
+    tests = tests + 1;
+    passed_tests = passed_tests + test(out == 1, 1);
+
+    a=32'b0010000000000000000-000000000001; b=32'b10000000000000000000000000000000;#1000
+    tests = tests + 1;
+    passed_tests = passed_tests + test(out == 0, 1);
+
+
     $display("%2d/%2d Test Cases Passed", passed_tests, tests);
 
     end
