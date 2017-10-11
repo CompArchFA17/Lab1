@@ -39,7 +39,7 @@ zero_check zcheck_add(add_zero, add_out);
 zero_check zcheck_sub(sub_zero, sub_out);
 
 
-always @(command) begin
+always @(command or operandA or operandB) begin
 #2000
 	case(command) 
 		`opADD: begin
