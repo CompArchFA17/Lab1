@@ -68,4 +68,4 @@ Test Case SUB Cin:1 A:1 B:1 Failed, Got Cout:1 Expected Cout:1
 Tests Passed
 ```
 
-None of these failed afterwards; the bit slice functioned as intended.
+None of these failed after adding parentheses; the bit slice functioned as intended.
