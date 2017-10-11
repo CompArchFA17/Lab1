@@ -18,7 +18,7 @@ endmodule
 
 module full_slt_32bit
 	(
-		output out,
+		output[31:0] out,
 		input[31:0] a,
 		input[31:0] b
 	);
