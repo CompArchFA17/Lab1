@@ -25,7 +25,6 @@ module ALU
   input[2:0]    command
 );
 
-  // supose we're jsut doing Addition for now
   wire[31:0] cout;
   wire[31:0] res_premux;
   ALU1bit a1(res_premux[0], cout[0], operandA[0], operandB[0], 0, command);
@@ -62,8 +61,15 @@ module ALU
   ALU1bit a32(res_premux[31], carryout, operandA[31], operandB[31], cout[30], command);
   xor(overflow, carryout, cout[30]);
 
+  // We're using subtraction for SLT. We have to handle additional cases
+  // for the cases where we have overflow.
   wire temp;
   xor(temp, res_premux[31], overflow);
+
+  // This mux is necessary for handling the SLT, since the desired result of the SLT 
+  // is very different from the actual output from our ALU.
+  // We could have used a MUX of size 2, but that would have required conversion
+  // of the SLT command.
   wire[7:0] resMux0 = {res_premux[0], res_premux[0], res_premux[0], res_premux[0], temp, res_premux[0], res_premux[0], res_premux[0]};
   MUX3bit mux0(result[0], command, resMux0);
   wire[7:0] resMux1 = {res_premux[1], res_premux[1], res_premux[1], res_premux[1], 1'b0, res_premux[1], res_premux[1], res_premux[1]};
