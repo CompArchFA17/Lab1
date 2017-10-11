@@ -40,7 +40,6 @@ module single_bit_adder(result, carryout, A, B, carryin);
    input carryin;
 
    wire carryout, result;
-   wire A,B;
 
    assign carryout = (A && B) || (((!A && B) || (A && !B)) && carryin);
    assign result = (((!A && B) || (A && !B)) && !carryin) || (!((!A && B) || (A && !B)) && carryin);
