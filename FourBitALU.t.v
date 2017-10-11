@@ -89,7 +89,7 @@ module FourBitALUTestHarness ();
         // Loop B
         for (b_index=0; b_index<16; b_index=b_index+1) begin
             B = b_index; #1000
-            temp_sum = A + (~B) + 1; // Do a subtraction (yay 2's comp)
+            temp_sum = A + (!B) + 1; // Do a subtraction (yay 2's comp)
 
             // Set up expected carryout
             if (temp_sum > 15) begin
