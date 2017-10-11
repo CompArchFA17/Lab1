@@ -32,8 +32,8 @@ module testALU ();
     address = `XOR; a = 32'd10; b = 32'd10; #5000
     if ((out !== 32'd0) || (carryout !== 0) || (overflow !== 0)) $display("XOR %d %d failed. out: %d carryout: %d overflow: %d", a, b, out, carryout, overflow);
 
-   address = `SLT; a = 32'd15; b = 32'd10; #5000
-   if ((out !== 32'd0) || (carryout !== 0) || (overflow !== 0)) $display("SLT %d %d failed. out: %d carryout: %d overflow: %d", a, b, out, carryout, overflow);
+    address = `SLT; a = 32'd15; b = 32'd10; #5000
+    if ((out !== 32'd0) || (carryout !== 0) || (overflow !== 0)) $display("SLT %d %d failed. out: %d carryout: %d overflow: %d", a, b, out, carryout, overflow);
 
     address = `AND; a = 32'd10; b = 32'd10; #5000
     if ((out !== 32'd10) || (carryout !== 0) || (overflow !== 0)) $display("AND %d %d failed. out: %d carryout: %d overflow: %d", a, b, out, carryout, overflow);
@@ -46,6 +46,29 @@ module testALU ();
 
     address = `OR; a = 32'd10; b = 32'd10; #5000
     if ((out !== 32'd10) || (carryout !== 0) || (overflow !== 0)) $display("OR %d %d failed. out: %d carryout: %d overflow: %d", a, b, out, carryout, overflow);
+
+
+
+    // 10 - 0
+    address = `SUB; a = 32'd10; b = 32'd0; #5000
+    if ((out !== 32'd10) || (carryout !== 0) || (overflow !== 0)) $display("SUB %d %d failed. out: %d carryout: %d overflow: %d", a, b, out, carryout, overflow);
+    // 0 - 10, has problems:
+	address = `SUB; a = 32'd0; b = 32'd10; #5000
+    if ((out !== 32'b10110) || (carryout !== 0) || (overflow !== 0)) $display("SUB %d %d failed. out: %d carryout: %d overflow: %d", a, b, out, carryout, overflow);
+    // 15 - 10, has problems:
+    $display("");
+	address = `SUB; a = 32'd15; b = 32'd10; #5000
+    if ((out !== 32'd5) || (carryout !== 0) || (overflow !== 0)) $display("SUB %d %d failed. out: %d carryout: %d overflow: %d", a, b, out, carryout, overflow);
+    $display("");
+    // 10 + 0
+    address = `ADD; a = 32'd10; b = 32'd0; #5000
+    if ((out !== 32'd10) || (carryout !== 0) || (overflow !== 0)) $display("ADD %d %d failed. out: %d carryout: %d overflow: %d", a, b, out, carryout, overflow);
+    // -1 + 0, has problems:
+    address = `ADD; a = 32'b1111; b = 32'd0; #5000
+    if ((out !== 32'b1111) || (carryout !== 0) || (overflow !== 0)) $display("ADD %d %d failed. out: %d carryout: %d overflow: %d", a, b, out, carryout, overflow);
+    // 10 + 20
+    address = `ADD; a = 32'd10; b = 32'd20; #5000
+    if ((out !== 32'd30) || (carryout !== 0) || (overflow !== 0)) $display("ADD %d %d failed. out: %d carryout: %d overflow: %d", a, b, out, carryout, overflow);
 
 
     end 
