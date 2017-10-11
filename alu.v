@@ -7,10 +7,10 @@
 // Implementation of a 1-bit full adder.
 module FullAdder1bit
 (
-    output sum, 
+    output sum,
     output carryout,
-    input a, 
-    input b0, 
+    input a,
+    input b0,
     input carryin,
     input subtract
 );
@@ -29,7 +29,7 @@ module FullAdder1bit
     `OR orcarries(carryout, cout1, cout2);
 endmodule
 
-module AddSub 
+module AddSub
 (
 output[31:0] result,
 output carryout,
@@ -210,6 +210,48 @@ input[2:0]	ALUcommand
   end
 endmodule
 
+// defining macros for second LUT
+`define ADDSUB 3'd0
+`define XOR 3'd1
+`define SLT 3'd2
+`define ANDNAND 3'd3
+`define NOROR 3'd4
+
+// decides which operation to take based on the results of the previous look up table
+module ALUoutputLUT
+(
+input[31:0] operandA,
+input[31:0] operandB,
+input[2:0] muxindex,
+input invertB,
+input othercontrolsignal,
+output reg[31:0] result
+);
+wire[31:0] resAddsub;
+wire[31:0] resXor;
+wire[31:0] resSlt;
+wire[31:0] resAndnand;
+wire[31:0] resNoror;
+
+
+AddSub dut0 (resAddsub, carryout, zero, overflow, operandA, operandB, invertB);
+alu32bitxor dut1 (resXor, carryout, zero, overflow, operandA, operandB);
+alu32bitslt dut2 (resSlt, carryout, zero, overflow, operandA, operandB);
+alu32bitandn dut3 (resAndnand, carryout, zero, overflow, operandA, operandB, othercontrolsignal);
+NOROR dut4 (resNoror, carryout, zero, overflow, operandA, operandB, othercontrolsignal);
+
+  always @(muxindex) begin
+    case(muxindex)
+      `ADDSUB: begin result = resAddsub; end
+      `XOR: begin result = resXor; end
+      `SLT: begin result = resSlt; end
+      `ANDNAND: begin result = resAndnand; end
+      `NOROR: begin result = resNoror; end
+    endcase
+  end
+endmodule
+
+//module to run the alu
 module ALU
 (
 output[31:0]  result,
