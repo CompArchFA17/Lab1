@@ -4,14 +4,17 @@
 
 module BitSliceTestHarness ();
 
+    // Declare registers for inputs
     reg ADD, SUB, XOR, SLT, AND, NAND, NOR, OR, A, B, CIN;
 
+    // Declare output wires
     wire cout, sum, res;
 
+    // Instantiate DUT
     BitSlice bit_slice (cout, sum, res, ADD, SUB, XOR, SLT, AND, NAND, NOR, OR, A, B, CIN);
 
+    // Declare helper variable registers
     reg[3:0] inputs;
-    reg[6:0] index;
     reg testfailed;
 
     initial begin
