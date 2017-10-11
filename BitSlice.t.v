@@ -28,9 +28,9 @@ module BitSliceTestHarness ();
     for (inputs=4'b0; inputs<4'b1000; inputs=inputs+4'b1) begin
         {CIN, A, B} = inputs; #1000 // Set inputs and wait
         // $display( "%b %b %b", index, A, B); //
-        if (res != A|B) begin
+        if (res != (A|B)) begin
             testfailed = testfailed+1;
-            $display("Test Case OR Cin:%b A:%b B:%b Failed, Got %b Expected %b", CIN, A, B, res, A|B);
+            $display("Test Case OR Cin:%b A:%b B:%b Failed, Got %b Expected %b", CIN, A, B, res, (A|B));
         end
     end
 
@@ -39,9 +39,9 @@ module BitSliceTestHarness ();
     for (inputs=4'b0; inputs<4'b1000; inputs=inputs+4'b1) begin
         {CIN, A, B} = inputs; #1000 // Set inputs and wait
         // $display( "%b %b %b", index, A, B); //
-        if (res != A~|B) begin
+        if (res != (A~|B)) begin
             testfailed = testfailed+1;
-            $display("Test Case NOR Cin:%b A:%b B:%b Failed, Got %b Expected %b", CIN, A, B, res, A~|B);
+            $display("Test Case NOR Cin:%b A:%b B:%b Failed, Got %b Expected %b", CIN, A, B, res, (A~|B));
         end
     end
 
@@ -50,9 +50,9 @@ module BitSliceTestHarness ();
     for (inputs=4'b0; inputs<4'b1000; inputs=inputs+4'b1) begin
         {CIN, A, B} = inputs; #1000 // Set inputs and wait
         // $display( "%b %b %b", index, A, B); //
-        if (res != A~&B) begin
+        if (res != (A~&B)) begin
             testfailed = testfailed+1;
-            $display("Test Case NAND Cin:%b A:%b B:%b Failed, Got %b Expected %b", CIN, A, B, res, A~&B);
+            $display("Test Case NAND Cin:%b A:%b B:%b Failed, Got %b Expected %b", CIN, A, B, res, (A~&B));
         end
     end
 
@@ -61,9 +61,9 @@ module BitSliceTestHarness ();
     for (inputs=4'b0; inputs<4'b1000; inputs=inputs+4'b1) begin
         {CIN, A, B} = inputs; #1000 // Set inputs and wait
         // $display( "%b %b %b", index, A, B); //
-        if (res != A&B) begin
+        if (res != (A&B)) begin
             testfailed = testfailed+1;
-            $display("Test Case AND Cin:%b A:%b B:%b Failed, Got %b Expected %b", CIN, A, B, res, A&B);
+            $display("Test Case AND Cin:%b A:%b B:%b Failed, Got %b Expected %b", CIN, A, B, res, (A&B));
         end
     end
 
@@ -72,9 +72,9 @@ module BitSliceTestHarness ();
     for (inputs=4'b0; inputs<4'b1000; inputs=inputs+4'b1) begin
         {CIN, A, B} = inputs; #1000 // Set inputs and wait
         // $display( "%b %b %b", index, A, B); //
-        if (res != A^B) begin
+        if (res != (A^B)) begin
             testfailed = testfailed+1;
-            $display("Test Case XOR Cin:%b A:%b B:%b Failed, Got %b Expected %b", CIN, A, B, res, A^B);
+            $display("Test Case XOR Cin:%b A:%b B:%b Failed, Got %b Expected %b", CIN, A, B, res, (A^B));
         end
     end
 
@@ -84,15 +84,15 @@ module BitSliceTestHarness ();
     for (inputs=4'b0; inputs<4'b1000; inputs=inputs+4'b1) begin
         {CIN, A, B} = inputs; #1000 // Set inputs and wait
         // $display( "%b %b %b", index, A, B); //
-        if (sum != A^B^CIN) begin
+        if (sum != (A^B^CIN)) begin
             testfailed = testfailed+1;
             $display("Test Case ADD Cin:%b A:%b B:%b Failed, Got Sum:%b Expected Sum:%b", CIN, A, B, sum, A^B^CIN);
         end
-        if (sum != A^B^CIN) begin
+        if (sum != (A^B^CIN)) begin
             testfailed = testfailed+1;
             $display("Test Case ADD Cin:%b A:%b B:%b Failed, Got Res:%b Expected Res:%b", CIN, A, B, sum, A^B^CIN);
         end
-        if (cout != (A&B)|((A^B)&CIN)) begin // (A&B)|((A^B)&CIN) is the correct carryout logic
+        if (cout != ((A&B)|((A^B)&CIN))) begin // (A&B)|((A^B)&CIN) is the correct carryout logic
             testfailed = testfailed+1;
             $display("Test Case ADD Cin:%b A:%b B:%b Failed, Got Cout:%b Expected Cout:%b", CIN, A, B, cout, (A&B)|((A^B)&CIN));
         end
@@ -103,15 +103,15 @@ module BitSliceTestHarness ();
     for (inputs=4'b0; inputs<4'b1000; inputs=inputs+4'b1) begin
         {CIN, A, B} = inputs; #1000 // Set inputs and wait
         // $display( "%b %b %b", index, A, B); //
-        if (sum != A^(!B)^CIN) begin
+        if (sum != (A^(!B)^CIN)) begin
             testfailed = testfailed+1;
             $display("Test Case SUB Cin:%b A:%b B:%b Failed, Got Sum:%b Expected Sum:%b", CIN, A, B, sum, A^(!B)^CIN);
         end
-        if (sum != A^(!B)^CIN) begin
+        if (sum != (A^(!B)^CIN)) begin
             testfailed = testfailed+1;
             $display("Test Case SUB Cin:%b A:%b B:%b Failed, Got Res:%b Expected Res:%b", CIN, A, B, sum, A^(!B)^CIN);
         end
-        if (cout != (A&(!B))|((A^(!B))&CIN)) begin // (A&(!B))|((A^(!B))&CIN) is the correct carryout logic
+        if (cout != ((A&(!B))|((A^(!B))&CIN))) begin // (A&(!B))|((A^(!B))&CIN) is the correct carryout logic
             testfailed = testfailed+1;
             $display("Test Case SUB Cin:%b A:%b B:%b Failed, Got Cout:%b Expected Cout:%b", CIN, A, B, cout, (A&(!B))|((A^(!B))&CIN));
         end

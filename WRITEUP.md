@@ -48,3 +48,24 @@ Test Case XOR Cin:0 A:1 B:0 Failed, Got 0 Expected 1
 Test Case XOR Cin:1 A:0 B:1 Failed, Got 0 Expected 1
 Test Case XOR Cin:1 A:1 B:0 Failed, Got 0 Expected 1
 ```
+
+While writing the expected/actual comparisons in our test loops, we learned that the RTL operations didn't seem to have strictly tighter binding than the comparison operators, and explicitly needed parentheses. i.e. `res != A|B` is not the same as `res != (A|B)`
+
+```
+VCD info: dumpfile BitSlice.vcd opened for output.
+Test Case OR Cin:0 A:0 B:1 Failed, Got 1 Expected 1
+Test Case OR Cin:0 A:1 B:1 Failed, Got 1 Expected 1
+Test Case OR Cin:1 A:0 B:1 Failed, Got 1 Expected 1
+Test Case OR Cin:1 A:1 B:1 Failed, Got 1 Expected 1
+Test Case NAND Cin:0 A:0 B:0 Failed, Got 1 Expected 1
+Test Case NAND Cin:0 A:1 B:0 Failed, Got 1 Expected 1
+Test Case NAND Cin:1 A:0 B:0 Failed, Got 1 Expected 1
+Test Case NAND Cin:1 A:1 B:0 Failed, Got 1 Expected 1
+Test Case ADD Cin:1 A:0 B:1 Failed, Got Cout:1 Expected Cout:1
+Test Case ADD Cin:1 A:1 B:0 Failed, Got Cout:1 Expected Cout:1
+Test Case SUB Cin:1 A:0 B:0 Failed, Got Cout:1 Expected Cout:1
+Test Case SUB Cin:1 A:1 B:1 Failed, Got Cout:1 Expected Cout:1
+Tests Passed
+```
+
+None of these failed afterwards; the bit slice functioned as intended.
