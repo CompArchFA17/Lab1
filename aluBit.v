@@ -11,7 +11,7 @@
 `define NOT not #10
 `define XOR xor #10
 
-module aluFullBitslice
+module aluBit
 (
     output sumXOR,
     output carryAND,

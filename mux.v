@@ -1,8 +1,7 @@
 // 4 input MUX
 // takes in 4 inputs and two selects and passes through the selected input
 
-`define NAND nand #10
-`define NOR nor #10
+`define NAND nand #30
 `define NOT not #10
 
 module multiplexer
@@ -25,5 +24,12 @@ module multiplexer
   `NAND(cout, ns1, s0, c);
   `NAND(dout, ns1, ns0, d);
 
-  `NAND(out, aout, bout, cout, dout);
+  nand #40 (out, aout, bout, cout, dout);
 endmodule
+
+// propogation delays:
+// 3 layers:
+// 1: nots (10)
+// 2: nands (30)
+// 3: nand (40)
+// total: 80
