@@ -1,6 +1,6 @@
 //Test harness for exhaustively testing ADD SUB and SLT in 4-bit ALU
 
-// `include "FourBitALU.v"
+`include "FourBitALU.v"
 
 module FourBitALUTestHarness ();
 
@@ -42,7 +42,7 @@ module FourBitALUTestHarness ();
             end
 
             // set up expected overflow
-            if (a[3] == b[3] && temp_sum[3] != b[3]) begin
+            if (A[3] == B[3] && temp_sum[3] != B[3]) begin
             ex_ovf = 1;
             end else begin
             ex_ovf = 0;
@@ -97,7 +97,7 @@ module FourBitALUTestHarness ();
             end
 
             // set up expected overflow
-            if (a[3] == b[3] && temp_sum[3] != b[3]) begin
+            if (A[3] == B[3] && temp_sum[3] != B[3]) begin
             ex_ovf = 1;
             end else begin
             ex_ovf = 0;
@@ -116,19 +116,19 @@ module FourBitALUTestHarness ();
 
             // Test res
             if (out != ex_out) begin
-                $display("Test Case ADD A:%b B:%b Failed, Got Out:%b Expected Out:%b", A, B, out, ex_out);
+                $display("Test Case SUB A:%b B:%b Failed, Got Out:%b Expected Out:%b", A, B, out, ex_out);
             end
             // Test ovf
             if (ovf != ex_ovf) begin
-                $display("Test Case ADD A:%b B:%b Failed, Got OVF:%b Expected OVF:%b", A, B, ovf, ex_ovf);
+                $display("Test Case SUB A:%b B:%b Failed, Got OVF:%b Expected OVF:%b", A, B, ovf, ex_ovf);
             end
             // Test zero
             if (zero != ex_zero) begin
-                $display("Test Case ADD A:%b B:%b Failed, Got zero:%b Expected zero:%b", A, B, zero, ex_zero);
+                $display("Test Case SUB A:%b B:%b Failed, Got zero:%b Expected zero:%b", A, B, zero, ex_zero);
             end
             // Test cout
             if (cout != ex_cout) begin
-                $display("Test Case ADD A:%b B:%b Failed, Got cout:%b Expected cout:%b", A, B, cout, ex_cout);
+                $display("Test Case SUB A:%b B:%b Failed, Got cout:%b Expected cout:%b", A, B, cout, ex_cout);
             end
         end
     end

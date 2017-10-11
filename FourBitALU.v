@@ -34,7 +34,6 @@ module FourBitALU
 
     `OR add_sub (flag_enable, ADD, SUB);
     `XOR ovf_xor (ovf_raw, cout_raw, cout[2]);
-    `NOR4 zero_collector (zero_raw, res0, out);
     `OR slt_or (slt_raw, ovf_raw, sum[3]);
 
     `AND ovf_enable (ovf, ovf_raw, flag_enable);
@@ -42,5 +41,7 @@ module FourBitALU
     `AND zero_enable (zero, zero_raw, flag_enable);
     `AND slt_enable (slt_out, slt_raw, SLT);
     `OR slt_connect (out[0], res0, slt_out);
+
+    `NOR4 zero_collector (zero_raw, out[3], out[2], out[1], out[0]);
 
 endmodule

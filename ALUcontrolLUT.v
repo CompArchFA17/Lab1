@@ -15,14 +15,14 @@ input[2:0] ALUcommand
 
   always @(ALUcommand) begin
     case (ALUcommand)
-      3'd0: begin assign {ADD, SUB, XOR, SLT, AND, NAND, NOR, OR} = 8'b10000000; end
-      3'd1: begin assign {ADD, SUB, XOR, SLT, AND, NAND, NOR, OR} = 8'b01000000; end
-      3'd2: begin assign {ADD, SUB, XOR, SLT, AND, NAND, NOR, OR} = 8'b00100000; end
-      3'd3: begin assign {ADD, SUB, XOR, SLT, AND, NAND, NOR, OR} = 8'b00010000; end
-      3'd4: begin assign {ADD, SUB, XOR, SLT, AND, NAND, NOR, OR} = 8'b00001000; end
-      3'd5: begin assign {ADD, SUB, XOR, SLT, AND, NAND, NOR, OR} = 8'b00000100; end
-      3'd6: begin assign {ADD, SUB, XOR, SLT, AND, NAND, NOR, OR} = 8'b00000010; end
-      3'd7: begin assign {ADD, SUB, XOR, SLT, AND, NAND, NOR, OR} = 8'b00000001; end
+      3'd0: begin {ADD, SUB, XOR, SLT, AND, NAND, NOR, OR} = 8'b10000000; end
+      3'd1: begin {ADD, SUB, XOR, SLT, AND, NAND, NOR, OR} = 8'b01000000; end
+      3'd2: begin {ADD, SUB, XOR, SLT, AND, NAND, NOR, OR} = 8'b00100000; end
+      3'd3: begin {ADD, SUB, XOR, SLT, AND, NAND, NOR, OR} = 8'b00010000; end
+      3'd4: begin {ADD, SUB, XOR, SLT, AND, NAND, NOR, OR} = 8'b00001000; end
+      3'd5: begin {ADD, SUB, XOR, SLT, AND, NAND, NOR, OR} = 8'b00000100; end
+      3'd6: begin {ADD, SUB, XOR, SLT, AND, NAND, NOR, OR} = 8'b00000010; end
+      3'd7: begin {ADD, SUB, XOR, SLT, AND, NAND, NOR, OR} = 8'b00000001; end
     endcase
   end
 endmodule
