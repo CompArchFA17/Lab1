@@ -31,15 +31,41 @@ input[2:0]	ALUcommand
   end
 endmodule
 
-module ALU
+`define ADD/SUB 3'd0
+`define XOR 3'd1
+`define SLT 3'd2
+`define AND/NAND 3'd3
+`define NOR/OR 3'd4
+
+module ALUoutputLUT
 (
-output[31:0]  result,
-output        carryout,
-output        zero,
-output        overflow,
-input[31:0]   operandA,
-input[31:0]   operandB,
-input[2:0]    command
+input[2:0] muxindex,
+input invertB,
+input othercontrolsignal,
+output[31:0] result,
+output carryout,
+output overflow,
+output zero
 );
-	// Your code here
+wire resAddsub[31:0];
+wire resXor[31:0];
+wire resSlt[31:0];
+wire resAndnand[31:0];
+wire resNoror[31:0];
+
+32bit_addsub dut (resAddsub, carryout, zero, overflow, operandA, operandB, invertB);
+32bit_xor dut (resXor, carryout, zero, overflow, operandA, operandB);
+32bit_slt dut (resSlt, carryout, zero, overflow, operandA, operandB);
+32bit_andnand dut (resAndnand, carryout, zero, overflow, operandA, operandB, othercontrolsignal);
+32bit_andnand dut (resNoror, carryout, zero, overflow, operandA, operandB, othercontrolsignal);
+
+  always @(muxindex) begin
+    case(muxindex)
+      `ADD/SUB: begin result = resAddsub; end
+      `XOR: begin result = ; end
+      `SLT: begin result = ; end
+      `AND/NAND: begin result = ; end
+      `NOR/OR: begin result = ; end
+    endcase
+  end
 endmodule
