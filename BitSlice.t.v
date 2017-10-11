@@ -35,7 +35,7 @@ module BitSliceTestHarness ();
     end
 
     // NOR
-    {ADD, SUB, XOR, SLT, AND, NAND, NOR, OR} = 8'b00000010; // Set OR flag
+    {ADD, SUB, XOR, SLT, AND, NAND, NOR, OR} = 8'b00000010; // Set NOR flag
     for (inputs=4'b0; inputs<4'b1000; inputs=inputs+4'b1) begin
         {CIN, A, B} = inputs; #1000 // Set inputs and wait
         // $display( "%b %b %b", index, A, B); //
@@ -46,7 +46,7 @@ module BitSliceTestHarness ();
     end
 
     // NAND
-    {ADD, SUB, XOR, SLT, AND, NAND, NOR, OR} = 8'b00000100; // Set OR flag
+    {ADD, SUB, XOR, SLT, AND, NAND, NOR, OR} = 8'b00000100; // Set NAND flag
     for (inputs=4'b0; inputs<4'b1000; inputs=inputs+4'b1) begin
         {CIN, A, B} = inputs; #1000 // Set inputs and wait
         // $display( "%b %b %b", index, A, B); //
@@ -57,7 +57,7 @@ module BitSliceTestHarness ();
     end
 
     // AND
-    {ADD, SUB, XOR, SLT, AND, NAND, NOR, OR} = 8'b00001000; // Set OR flag
+    {ADD, SUB, XOR, SLT, AND, NAND, NOR, OR} = 8'b00001000; // Set AND flag
     for (inputs=4'b0; inputs<4'b1000; inputs=inputs+4'b1) begin
         {CIN, A, B} = inputs; #1000 // Set inputs and wait
         // $display( "%b %b %b", index, A, B); //
@@ -68,7 +68,7 @@ module BitSliceTestHarness ();
     end
 
     // XOR
-    {ADD, SUB, XOR, SLT, AND, NAND, NOR, OR} = 8'b00100000; // Set OR flag
+    {ADD, SUB, XOR, SLT, AND, NAND, NOR, OR} = 8'b00100000; // Set XOR flag
     for (inputs=4'b0; inputs<4'b1000; inputs=inputs+4'b1) begin
         {CIN, A, B} = inputs; #1000 // Set inputs and wait
         // $display( "%b %b %b", index, A, B); //
@@ -80,7 +80,7 @@ module BitSliceTestHarness ();
 
     // Test more complicated gates: ADD and SUB
     // ADD
-    {ADD, SUB, XOR, SLT, AND, NAND, NOR, OR} = 8'b10000000; // Set SUB flag
+    {ADD, SUB, XOR, SLT, AND, NAND, NOR, OR} = 8'b10000000; // Set ADD flag
     for (inputs=4'b0; inputs<4'b1000; inputs=inputs+4'b1) begin
         {CIN, A, B} = inputs; #1000 // Set inputs and wait
         // $display( "%b %b %b", index, A, B); //
@@ -118,29 +118,29 @@ module BitSliceTestHarness ();
     end
 
     // SLT is identical to SUB but all of the res outputs should be 0
-    {ADD, SUB, XOR, SLT, AND, NAND, NOR, OR} = 8'b01000000; // Set SUB flag
+    {ADD, SUB, XOR, SLT, AND, NAND, NOR, OR} = 8'b00010000; // Set SLT flag
     for (inputs=4'b0; inputs<4'b1000; inputs=inputs+4'b1) begin
         {CIN, A, B} = inputs; #1000 // Set inputs and wait
         // $display( "%b %b %b", index, A, B); //
         if (sum != (A^(!B)^CIN)) begin
             testfailed = testfailed+1;
-            $display("Test Case SUB Cin:%b A:%b B:%b Failed, Got Sum:%b Expected Sum:%b", CIN, A, B, sum, A^(!B)^CIN);
+            $display("Test Case SLT Cin:%b A:%b B:%b Failed, Got Sum:%b Expected Sum:%b", CIN, A, B, sum, A^(!B)^CIN);
         end
         if (res != 0) begin
             testfailed = testfailed+1;
-            $display("Test Case SUB Cin:%b A:%b B:%b Failed, Got Res:%b Expected Res:%b", CIN, A, B, res, 0);
+            $display("Test Case SLT Cin:%b A:%b B:%b Failed, Got Res:%b Expected Res:%b", CIN, A, B, res, 0);
         end
         if (cout != ((A&(!B))|((A^(!B))&CIN))) begin // (A&(!B))|((A^(!B))&CIN) is the correct carryout logic
             testfailed = testfailed+1;
-            $display("Test Case SUB Cin:%b A:%b B:%b Failed, Got Cout:%b Expected Cout:%b", CIN, A, B, cout, (A&(!B))|((A^(!B))&CIN));
+            $display("Test Case SLT Cin:%b A:%b B:%b Failed, Got Cout:%b Expected Cout:%b", CIN, A, B, cout, (A&(!B))|((A^(!B))&CIN));
         end
     end
 
-    if(testfailed) begin
-        $display("%d Test Failures", testfailed);
+    if(testfailed == 0) begin
+        $display("Tests Passed");
     end
     else begin
-        $display("Tests Passed");
+        $display("%d Test Failures", testfailed);
     end
 
     end

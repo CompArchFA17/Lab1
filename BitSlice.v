@@ -3,6 +3,7 @@
 `define NOR nor #20
 `define NOT not #10
 `define XOR xor #30
+`define OR or #30
 `define NAND7 nand #70
 
 `include "adder.v"
@@ -10,16 +11,17 @@
 module BitSlice
 (
     output cout, sum, res,
-    input ADD, SUB, XOR, AND, NAND, NOR, OR, A, B, CIN
+    input ADD, SUB, XOR, SLT, AND, NAND, NOR, OR, A, B, CIN
 );
     // internal wires
-    wire sum, b_sub, xor_ab, and_ab, nand_ab, nor_ab, or_ab;
+    wire sum, sub_slt, b_inv, xor_ab, and_ab, nand_ab, nor_ab, or_ab;
     // individual outputs into nand collector
     wire add_out, sub_out, xor_out, and_out, nand_out, nor_out, or_out;
 
     // individual operator blocks
-    `XOR sub_input (b_sub, B, SUB);
-    fullAdder adder (sum, cout, A, b_sub, CIN);
+    `OR or_sub_slt (sub_slt, SUB, SLT);
+    `XOR inv_input (b_inv, B, sub_slt);
+    fullAdder adder (sum, cout, A, b_inv, CIN);
     `XOR xor_operator (xor_ab, A, B);
     `NAND nand_operator (nand_ab, A, B);
     `NOR nor_operator (nor_ab, A, B);
