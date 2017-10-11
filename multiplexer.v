@@ -4,6 +4,8 @@
 `define NOT not #10
 `define NAND nand #10
 `define NOR nor #10
+`define NAND3 nand #20
+`define NAND4 nand #30
 
 module bitMultiplexer
 (
@@ -18,7 +20,26 @@ module bitMultiplexer
     `OR or_out(out, o0, o1);
 endmodule
 
-module structuralMultiplexer
+module Multiplexer2
+(
+    output out,
+    input [1:0] address,
+    input [3:0] in
+);
+    wire nA0, nA1;
+    wire[3:0] preout;
+    `NOT A0inv(nA0, address[0]); 
+    `NOT A1inv(nA1, address[1]);
+    `NAND3 AG0(preout[0], nA0, nA1, in[0]);
+    `NAND3 AG1(preout[1], address[0], nA1, in[1]);
+    `NAND3 AG2(preout[2], address[1], nA0, in[2]);
+    `NAND3 AG3(preout[3], address[0], address[1], in[3]);
+    `NAND4 AGT(out, preout[0], preout[1], preout[2], preout[3]);
+
+endmodule
+
+
+module Multiplexer3
 (
     output out,
     input[2:0] address,
