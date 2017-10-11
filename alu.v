@@ -39,21 +39,15 @@ or_32bit or0(orin[31:0],a[31:0],b[31:0]);
 
   always @(ALUcommand) 
   	begin
-    if (ALUcommand[0]==0 && ALUcommand[1]==0 && ALUcommand[2]==0)
-    	finalsignal[31:0]=addsub[31:0]; 
-    if (ALUcommand[0]==0 && ALUcommand[1]==0 && ALUcommand[2]==0)
-    	finalsignal[31:0]=addsub[31:0];
-    if(ALUcommand[0]==0 && ALUcommand[1]==1 && ALUcommand[2]==0)
-    	finalsignal[31:0]=xorin[31:0];
-    if(ALUcommand[0]==1 && ALUcommand[1]==1 && ALUcommand[2]==0)
-    	finalsignal[31:0]=slt[31:0];
-  	if(ALUcommand[0]==0 && ALUcommand[1]==0 && ALUcommand[2]==1)
-    	finalsignal[31:0]=andin[31:0];
-  	if(ALUcommand[0]==1 && ALUcommand[1]==0 && ALUcommand[2]==1)
-    	finalsignal[31:0]=nandin[31:0];
-  	if(ALUcommand[0]==0 && ALUcommand[1]==1 && ALUcommand[2]==1)
-    	finalsignal[31:0]=norin[31:0];
-	else
-    	finalsignal[31:0]=orin[31:0];
+    case (ALUcommand)
+      3'b000:  begin finalsignal[31:0] = addsub[31:0]; end
+      3'b001:  begin finalsignal[31:0] = addsub[31:0]; end
+      3'b010:  begin finalsignal[31:0] = xorin[31:0]; end
+      3'b011:  begin finalsignal[31:0] = slt[31:0]; end
+      3'b100:  begin finalsignal[31:0] = andin[31:0]; end
+      3'b101: begin finalsignal[31:0] = nandin[31:0]; end
+      3'b110:  begin finalsignal[31:0] = norin[31:0]; end
+      3'b111:   begin finalsignal[31:0] = orin[31:0]; end
+    endcase
     end
 endmodule
