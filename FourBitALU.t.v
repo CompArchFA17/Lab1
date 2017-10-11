@@ -25,7 +25,7 @@ module FourBitALUTestHarness ();
 
     initial begin
     $dumpfile("fourbitalu.vcd");
-    $dumpvars(0, fourbitalu);
+    $dumpvars(0, four_bit_alu);
     // Start testing ADD
     command = 3'd0;
     //Loop A
