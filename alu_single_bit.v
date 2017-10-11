@@ -8,7 +8,7 @@ module ALU_single_bit(result, carryout, operandA, operandB, carryin, command);
    input [2:0] command;
    
    reg result;
-   reg carryout =  0;
+   wire carryout =  0;
    wire operandA, operandB, carryin, addedResult, xorResult, andResult, nandResult, norResult, orResult;
 
    single_bit_adder adder(addedResult, carryout, operandA, operandB, carryin);
