@@ -1,5 +1,4 @@
 `include "logic32bits.v"
-`include "multiplexer.v"
 `include "adder.v"
 `include "slt.v"
 
@@ -92,8 +91,5 @@ always @(command or operandA or operandB) begin
 		end
 	endcase
 end
-
-// behavioralMultiplexer mux (result, command, add_out, sub_out, xor_out, slt_out, and_out, nand_out, nor_out, or_out); // Swap after testing
-
 
 endmodule

@@ -1,5 +1,7 @@
 `include "alu.v"
+// TODO: investigate, uncommenting this makes everything break.
 // `timescale 1 ns / 1 ps
+
 `define ADD  3'd0
 `define SUB  3'd1
 `define XOR  3'd2
