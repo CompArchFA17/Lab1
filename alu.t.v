@@ -2,8 +2,11 @@
 `include "alu.v"
 
 module testalu ();
-  reg operandA, operandB, command;
-  wire result, carryout, zero, overflow;
+  reg[31:0] operandA;
+  reg[31:0] operandB;
+  reg[2:0] command;
+  wire[31:0] result;
+  wire carryout, zero, overflow;
 
   ALU dut (result, carryout, zero, overflow, operandA, operandB, command);
 
@@ -19,8 +22,8 @@ module testalu ();
 
     // Xor test cases
     // two inputs the same; two inputs totally different; two inputs with some bits corresponding
-    operandA = 01010101010101010101010101010101; operandB = 01010101010101010101010101010101; command = 3'b010;
-    if (result !== 00000000000000000000000000000000) $display("Xor test case 1 (inputs same) failed");
+    operandA = 32'b01010101010101010101010101010101; operandB = 32'b01010101010101010101010101010101; command = 3'b010;
+    if (result !== 00000000000000000000000000000000) $display(result); //("Xor test case 1 (inputs same) failed");
     operandA = 01010101010101010101010101010101; operandB = 10101010101010101010101010101010; command = 3'b010;
     if (result !== 11111111111111111111111111111111) $display("Xor test case 2 (inputs different) failed");
     operandA = 01010101010101010101010101010101; operandB = 01011010010110100101101001011010; command = 3'b010;
@@ -64,3 +67,5 @@ module testalu ();
     if (result !== 11111111111111111111111111111111) $display("Nor test case 2 (inputs different) failed");
     operandA = 01010101010101010101010101010101; operandB = 01011010010110100101101001011010; command = 3'b111;
     if (result !== 01011111010111110101111101011111) $display("Nor test case 3 (inputs somewhat corresponding) failed");
+end
+endmodule // testalu

@@ -102,7 +102,7 @@ wire subzero;
 wire suboverflow;
 
 //set invertB to 1 because subtraction is needed
-AddSub subtractor (subresult, subcarryout, subzero, suboverflow, operandA, operandB, 1);
+AddSub subtractor (subresult, subcarryout, subzero, suboverflow, operandA, operandB, 1'b1);
 
 assign result = 32'b0;
 
@@ -225,7 +225,10 @@ input[31:0] operandB,
 input[2:0] muxindex,
 input invertB,
 input othercontrolsignal,
-output reg[31:0] result
+output reg[31:0] result,
+output reg carryout,
+output reg zero,
+output reg overflow
 );
 wire[31:0] resAddsub;
 wire[31:0] resXor;
@@ -233,20 +236,37 @@ wire[31:0] resSlt;
 wire[31:0] resAndnand;
 wire[31:0] resNoror;
 
+wire carryoutAddSub;
+wire carryoutXor;
+wire carryoutSLT;
+wire carryoutAND;
+wire carryoutOR;
 
-AddSub dut0 (resAddsub, carryout, zero, overflow, operandA, operandB, invertB);
-alu32bitxor dut1 (resXor, carryout, zero, overflow, operandA, operandB);
-alu32bitslt dut2 (resSlt, carryout, zero, overflow, operandA, operandB);
-alu32bitandn dut3 (resAndnand, carryout, zero, overflow, operandA, operandB, othercontrolsignal);
-NOROR dut4 (resNoror, carryout, zero, overflow, operandA, operandB, othercontrolsignal);
+wire zeroAddSub;
+wire zeroXor;
+wire zeroSLT;
+wire zeroAND;
+wire zeroOR;
+
+wire overflowAddSub;
+wire overflowXor;
+wire overflowSLT;
+wire overflowAND;
+wire overflowOR;
+
+AddSub dut0 (resAddsub, carryoutAddSub, zeroAddSub, overflowAddSub, operandA, operandB, invertB);
+alu32bitxor dut1 (resXor, carryoutXor, zeroXor, overflowXor, operandA, operandB);
+alu32bitslt dut2 (resSlt, carryoutSLT, zeroSLT, overflowSLT, operandA, operandB);
+alu32bitandn dut3 (resAndnand, carryoutAND, zeroAND, overflowAND, operandA, operandB, othercontrolsignal);
+NOROR dut4 (resNoror, carryoutOR, zeroOR, overflowOR, operandA, operandB, othercontrolsignal);
 
   always @(muxindex) begin
     case(muxindex)
-      `ADDSUB: begin result = resAddsub; end
-      `XOR: begin result = resXor; end
-      `SLT: begin result = resSlt; end
-      `ANDNAND: begin result = resAndnand; end
-      `NOROR: begin result = resNoror; end
+      `ADDSUB: begin result = resAddsub; carryout = carryoutAddSub; zero = zeroAddSub; overflow = overflowAddSub; end
+      `XOR: begin result = resXor; carryout = carryoutXor; zero = zeroXor; overflow = overflowXor; end
+      `SLT: begin result = resSlt; carryout = carryoutSLT; zero = zeroSLT; overflow = overflowSLT; end
+      `ANDNAND: begin result = resAndnand; carryout = carryoutAND; zero = zeroAND; overflow = overflowAND; end
+      `NOROR: begin result = resNoror; carryout = carryoutOR; zero = zeroOR; overflow = overflowOR; end
     endcase
   end
 endmodule
@@ -262,5 +282,34 @@ input[31:0]   operandA,
 input[31:0]   operandB,
 input[2:0]    command
 );
-	// Your code here
+
+wire[2:0]   muxindex;
+wire  invertB;
+wire othercontrolsignal;
+
+ALUcontrolLUT controlLookup (muxindex, invertB, othercontrolsignal, command);
+
+ALUoutputLUT outputLookup (operandA, operandB, muxindex, invertB, othercontrolsignal, result, carryout, zero, overflow);
 endmodule
+
+ module TEST();
+   reg[31:0] operandA;
+   reg[31:0] operandB;
+//   reg[2:0] command;
+
+   wire[31:0] result;
+   wire carryout;
+   wire zero;
+   wire overflow;
+
+   AddSub add(result, carryout, zero, overflow, operandA, operandB, 1'b0);
+//   ALU alu(result, carryout, zero, overflow, operandA, operandB, command);
+   initial begin
+     operandA = 32'd10;
+     operandB = 32'd18;
+     //command = 'b001;
+
+     $display(result);
+
+   end
+ endmodule
