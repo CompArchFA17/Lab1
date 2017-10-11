@@ -8,22 +8,25 @@
 `include "nor_32bit.v"
 `include "or_32bit.v"
 
-module ALUcontrolLUT //Ben Hill's code
+module ALUcontrolLUT 
 (
-	output reg	[31:0]controlsignal, //final 32-bit output
 	output cout, //addsub only
 	output flag, //addsub only
 	output reg[31:0] finalsignal,
 	input [2:0]ALUcommand,
 	input [31:0]a,
-	input [31:0]b,
-	input [31:0]xorin, //placeholders
-	input [31:0]andin,
-	input [31:0]nandin,
-	input [31:0]norin,
-	input [31:0]orin
+	input [31:0]b
+
 
 );
+//everything going through the different parts
+wire [31:0]addsub;
+wire [31:0]xorin;
+wire [31:0]slt;
+wire [31:0]andin;
+wire [31:0]nandin;
+wire [31:0]norin;
+wire [31:0]orin;
 
 adder_subtracter addsub0(addsub[31:0],cout,flag,a[31:0],b[31:0],ALUcommand[2:0]);
 xor_32bit xor0(xorin[31:0],a[31:0],b[31:0]);
