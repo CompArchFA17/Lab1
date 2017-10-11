@@ -14,12 +14,12 @@
 
 module ALU
 (
-output reg[31:0] result,
+output reg [31:0] result,
 output reg       carryout,
 output reg       zero,
 output reg       overflow,
-input[31:0]   operandA,
-input[31:0]   operandB,
+input [31:0]   operandA,
+input [31:0]   operandB,
 input[2:0]    command
 );
 
