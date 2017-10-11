@@ -124,7 +124,7 @@ endmodule
 */
 
 module test32Adder();
-parameter size = 4; 
+parameter size = 32; 
 wire  [size-1:0] OneBitFinalOut;
 wire [size-1:0] OrNorXorOut;
 wire [size-1:0] AndNandOut;
@@ -144,6 +144,13 @@ wire Cmd0Start [size-1:0];
 wire Cmd1Start [size-1:0]; 
 wire [size-1:0] CarryoutWire;
 
+// creating new variables for ALU to make sure nothing gets mixed up
+wire  [size-1:0] OneBitFinalOut2;
+wire AllZeros2;
+wire carryout2;
+wire overflow2;
+
+ 
 AddSubSLT32 trial(AddSubSLTSum, carryout, overflow, subtract, A, B, Command, carryin);
 
 SLT32 test2(SLTSum, carryout, overflow, SLTflag1, subtract, A, B, Command, carryin);
@@ -153,6 +160,8 @@ AndNand32 trial1(AndNandOut, A, B, Command);
 OrNorXor32 trial2(OrNorXorOut, A, B, Command);
 
 Bitslice32 superalu(OneBitFinalOut, AddSubSLTSum, SLTSum, carryout, overflow, SLTflag,  OrNorXorOut, AndNandOut, subtract, ZeroFlag, AllZeros, A, B, Command, carryin);
+
+ALU testALU(OneBitFinalOut2, carryout2, AllZeros2, overflow2, A, B, Command);
 
 initial begin
 	$dumpfile("FullALU.vcd");
@@ -439,6 +448,15 @@ A = 4'b0010; B = 4'b0010; Command =3'b001; #1000
 A = 4'b0000; B = 4'b0000; Command =3'b011; #1000
     $display("%b | %b | %b - SLT  |  %b   | 0000       | %b    | %b  | %b | %b", A, B, Command, OneBitFinalOut, carryout, overflow, SLTflag, AllZeros);
  
+
+
+
+// test the ALU module (should be same as BitSlice32)
+$display(" A  				 | B 			  	 |Command    	 | Out 	   				 |ExpectedOut 	| COut | OF |Zero"); 
+A = 32'b11111111111111111111111111111111; B = 32'b11111111111111111111111111111110; Command =3'b011; #1000
+    $display("%b | %b | %b - SLT  |  %b   | 00000000000000000000000000000001       | %b    | %b  | %b", A, B, Command, OneBitFinalOut2, carryout2, overflow2, AllZeros2);
+
+
 end
 
 endmodule

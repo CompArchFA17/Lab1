@@ -5,6 +5,107 @@
 `define NOR nor #10     // base is 10 
 `define XOR xor #40     // and with or is 40
 
+module ALU
+(
+output[31:0]  result, // OneBitFinalOut
+output        carryout,
+output        zero, //AllZeros
+output        overflow,
+input[31:0]   operandA, // A
+input[31:0]   operandB, // B
+input[2:0]    command //Command
+);
+	// Your code here
+/*
+output  [size-1:0] OneBitFinalOut, 
+output  [size-1:0]AddSubSLTSum, 
+output  [size-1:0]SLTSum, 
+output carryout, 
+output overflow, 
+output SLTflag,
+output  [size-1:0] OrNorXorOut,
+output  [size-1:0] AndNandOut,
+output  [size-1:0] subtract,
+output [size-1:0] ZeroFlag,
+output AllZeros,
+input  [size-1:0] A, 
+input  [size-1:0] B, 
+input[2:0] Command,
+input [size-1:0]carryin // don't think this does anything but don't want to break it!
+);
+*/
+	parameter size = 32;
+	wire [size-1:0] Cmd0Start;
+    wire [size-1:0] Cmd1Start; 
+    wire [size-1:0] CarryoutWire;
+	wire yeszero;
+	wire [size-1:0] NewVal; 
+	wire [size-1:0] SLTSum;
+	wire [size-1:0] ZeroFlag;
+	wire [size-1:0] carryin;
+	wire [size-1:0] subtract;
+	wire SLTflag;
+	wire [size-1:0] AndNandOut;
+	wire [size-1:0] OrNorXorOut;
+	wire [size-1:0] AddSubSLTSum;
+ 
+	SLT32 test(SLTSum, carryout, overflow, SLTflag, subtract, operandA, operandB, command, carryin);
+	AddSubSLT32 trial(AddSubSLTSum, carryout, overflow, subtract, operandA, operandB, command, carryin);
+	AndNand32 trial1(AndNandOut, operandA, operandB, command);
+	OrNorXor32 trial2(OrNorXorOut, operandA, operandB, command);
+     
+	FourInMux ZeroMux0case(Cmd0Start[0], command[0], command[1], AddSubSLTSum[0], AddSubSLTSum[0], OrNorXorOut[0], SLTSum[0]);	 			
+	FourInMux OneMux0case(Cmd1Start[0], command[0], command[1], AndNandOut[0], AndNandOut[0], OrNorXorOut[0], OrNorXorOut[0]);
+	TwoInMux TwoMux0case(result[0], command[2], Cmd0Start[0], Cmd1Start[0]);
+	`AND setZerothZero(ZeroFlag[0], result[0], result[0]);	
+           
+	genvar i; 
+	generate 
+    	for (i=1; i<size; i=i+1)
+        	begin: muxbits
+            	FourInMux ZeroMux(Cmd0Start[i], command[0], command[1], AddSubSLTSum[i], AddSubSLTSum[i], OrNorXorOut[i], SLTSum[i]);	 			
+				FourInMux OneMux(Cmd1Start[i], command[0], command[1], AndNandOut[i], AndNandOut[i], OrNorXorOut[i], OrNorXorOut[i]);
+                TwoInMux TwoMux(result[i], command[2], Cmd0Start[i], Cmd1Start[i]);
+
+		`OR zeroflagtest(ZeroFlag[i], ZeroFlag[i-1], result[i]);     
+		end        
+    endgenerate 
+
+
+	// the "zeros" flag depends on the final answer. It is only triggered when the final result is all zeros
+	`NOT invzeroflag(yeszero, ZeroFlag[size-1]);
+	`AND setzeros(zero, yeszero, yeszero);
+
+endmodule
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 module TwoInMux // this module is a two input mux that takes in two inputs (in0 and in1) and uses switch S to pick the value for outfinal
 (
     output outfinal,
@@ -119,7 +220,7 @@ input [size-1:0] A,
 input [size-1:0] B, 
 input[2:0] Command
 );
-	parameter size = 4; // set the parameter size to whatever length you want
+	parameter size = 32; // set the parameter size to whatever length you want
 	wire AnandB;
 	wire AandB;
 
@@ -142,7 +243,7 @@ input [size-1:0] A,
 input [size-1:0] B,
 input[2:0] Command
 );
-	parameter size = 4; // set the parameter size to whatever length you want
+	parameter size = 32; // set the parameter size to whatever length you want
 	wire AnorB;
 	wire AorB;
 	wire AnandB;
@@ -177,7 +278,7 @@ input [size-1:0]carryin  // we think this doesn't do anything but don't want to 
 	MiddleAddSubSLT attempt2(AddSubSLTSum[0], CarryoutWire[0], subtract[0], A[0], B[0], Command, subtract[0]);
       
 	genvar i; 
-	parameter size = 4; 
+	parameter size = 32; 
 	generate 
     	for (i=1; i<size; i=i+1)
         	begin: addbits
@@ -226,7 +327,7 @@ input [size-1:0]carryin  // we think this doesn't do anything but don't want to 
      TwoInMux setSLTresult(AddSubSLTSum[0], SLTon, NewVal[0], 0);
 
 	genvar i; 
-	parameter size = 4; 
+	parameter size = 32; 
 	generate 
     	for (i=1; i<size; i=i+1)
         	begin: sltbits
@@ -274,7 +375,7 @@ input  [size-1:0] B,
 input[2:0] Command,
 input [size-1:0]carryin // don't think this does anything but don't want to break it!
 );
-	parameter size = 4;
+	parameter size = 32;
 	wire [size-1:0] Cmd0Start;
     wire [size-1:0] Cmd1Start; 
     wire [size-1:0] CarryoutWire;
@@ -307,8 +408,6 @@ wire [size-1:0] NewVal;
 	// the "zeros" flag depends on the final answer. It is only triggered when the final result is all zeros
 	`NOT invzeroflag(yeszero, ZeroFlag[size-1]);
 	`AND setzeros(AllZeros, yeszero, yeszero);
-
-
 
 endmodule 
 
