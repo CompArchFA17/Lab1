@@ -6,7 +6,6 @@ module ALUTestBench();
   reg[31:0]   operandA;
   reg[31:0]   operandB;
   reg[31:0]   expected;
-  wire[1:0]   muxindex;
   wire[31:0]  result;
   wire        carryout;
   wire        zero;
@@ -18,7 +17,7 @@ module ALUTestBench();
 
   initial begin
     $dumpfile("alu.vcd");
-    $dumpvars(0, operandA, operandB, result, overflow, command, muxindex);
+    $dumpvars(0, operandA, operandB, result, overflow, zero, carryout, command, expected);
 
     $display("            A  |            B  |  Com |            Out  |            Exp  ");
     operandA = -5358; //Set register a.
@@ -44,7 +43,7 @@ module ALUTestBench();
     command = 3;
     expected = 1;
     #10000 //Delay.
-    $display("  %d  |  %d  |  %d  |    %d    |   %d   ", $signed(operandA), $signed(operandB), command, $signed(result), $signed(expected));
+    $display("  %d  |  %d  |  %d  |    %d    |   %d   |   %b   |   %b   ", $signed(operandA), $signed(operandB), command, $signed(result), $signed(expected), overflow, zero);
     operandA = 360; //Set register a.
     operandB = 111; //Set register b.
     command = 4;
@@ -78,13 +77,60 @@ module ALUTestBench();
     command = 3;
     expected = 0;
     #10000 //Delay.
-    $display("  %d  |  %d  |  %d  |    %d    |   %d   ", $signed(operandA), $signed(operandB), command, $signed(result), $signed(expected));
+    $display("  %d  |  %d  |  %d  |    %d    |   %d   |   %b   |   %b   ", $signed(operandA), $signed(operandB), command, $signed(result), $signed(expected), overflow, zero);
     operandA = -10505; //Set register a.
     operandB = 2; //Set register b.
     command = 3;
     expected = 1;
     #10000 //Delay.
-    $display("  %d  |  %d  |  %d  |    %d    |   %d   ", $signed(operandA), $signed(operandB), command, $signed(result), $signed(expected));
-
+    $display("  %d  |  %d  |  %d  |    %d    |   %d   |   %b   |   %b   ", $signed(operandA), $signed(operandB), command, $signed(result), $signed(expected), overflow, zero);
+    operandA = 1; //Set register a.
+    operandB = 2; //Set register b.
+    command = 3;
+    expected = 1;
+    #10000 //Delay.
+    $display("  %d  |  %d  |  %d  |    %d    |   %d   |   %b   |   %b   ", $signed(operandA), $signed(operandB), command, $signed(result), $signed(expected), overflow, zero);
+    operandA = 1; //Set register a.
+    operandB = 2; //Set register b.
+    command = 1;
+    expected = -1;
+    #10000 //Delay.
+    $display("  %d  |  %d  |  %d  |    %d    |   %d   |   %b   |   %b   ", $signed(operandA), $signed(operandB), command, $signed(result), $signed(expected), overflow, zero);
+    operandA = -1; //Set register a.
+    operandB = 2; //Set register b.
+    command = 3;
+    expected = 1;
+    #10000 //Delay.
+    $display("  %d  |  %d  |  %d  |    %d    |   %d   |   %b   |   %b   ", $signed(operandA), $signed(operandB), command, $signed(result), $signed(expected), overflow, zero);
+    operandA = -1; //Set register a.
+    operandB = 2; //Set register b.
+    command = 1;
+    expected = -3;
+    #10000 //Delay.
+    $display("  %d  |  %d  |  %d  |    %d    |   %d   |   %b   |   %b   ", $signed(operandA), $signed(operandB), command, $signed(result), $signed(expected), overflow, zero);
+    operandA = 1; //Set register a.
+    operandB = -2; //Set register b.
+    command = 3;
+    expected = 0;
+    #10000 //Delay.
+    $display("  %d  |  %d  |  %d  |    %d    |   %d   |   %b   |   %b   ", $signed(operandA), $signed(operandB), command, $signed(result), $signed(expected), overflow, zero);
+    operandA = 1; //Set register a.
+    operandB = -2; //Set register b.
+    command = 1;
+    expected = 3;
+    #10000 //Delay.
+    $display("  %d  |  %d  |  %d  |    %d    |   %d   |   %b   |   %b   ", $signed(operandA), $signed(operandB), command, $signed(result), $signed(expected), overflow, zero);
+    operandA = -3; //Set register a.
+    operandB = -2; //Set register b.
+    command = 3;
+    expected = 1;
+    #10000 //Delay.
+    $display("  %d  |  %d  |  %d  |    %d    |   %d   |   %b   |   %b   ", $signed(operandA), $signed(operandB), command, $signed(result), $signed(expected), overflow, zero);
+    operandA = -3; //Set register a.
+    operandB = -2; //Set register b.
+    command = 1;
+    expected = -1;
+    #10000 //Delay.
+    $display("  %d  |  %d  |  %d  |    %d    |   %d   |   %b   |   %b   ", $signed(operandA), $signed(operandB), command, $signed(result), $signed(expected), overflow, zero);
   end
 endmodule

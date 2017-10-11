@@ -59,7 +59,7 @@ input[2:0]	ALUcommand
       `opADD:  begin muxindex = 0; invertB=0; flagger = 1; end
       `opSUB:  begin muxindex = 0; invertB=1; flagger = 1; end
       `opXOR:  begin muxindex = 1; invertB=0; flagger = 0; end
-      `opSLT:  begin muxindex = 0; invertB=0; flagger = 0; end
+      `opSLT:  begin muxindex = 0; invertB=1; flagger = 0; end
       `opAND:  begin muxindex = 2; invertB=1; flagger = 0; end
       `opNAND: begin muxindex = 2; invertB=0; flagger = 0; end
       `opNOR:  begin muxindex = 3; invertB=0; flagger = 0; end
@@ -92,6 +92,7 @@ input[2:0]    command
   wire[31:0] preresult;
   wire preflow;
   wire prezero;
+  wire nzero;
 
   //integer i = 0;
   //for the 0th bit slice, pass in invertB for Cin too (add one if subtracting)
@@ -106,18 +107,19 @@ input[2:0]    command
     end
   endgenerate
   //BitSliceALU bit31(result[31], Cout[31], invertB, Cout[30], mux, operandA[31], operandB[31]);
-  TheBigOR bigger(prezero, preresult); //a bit wise OR on all bits of result, might not be allowed to do this
+  TheBigOR bigger(nzero, preresult); //a bit wise OR on all bits of result, might not be allowed to do this
   `XOR (preflow, Cout[31], Cout[30]); //determine overflow
 
+  `NOT (prezero, nzero);
   `AND (zero, flagger, prezero); //set zero if flagger
   `AND (carryout, flagger, Cout[31]); //set carryout if flagger
   `AND (overflow, flagger, preflow); //set overflow if flagger
+  //`OR(overflow, preflow, 1'b0);
 
-  bitMultiplexer sltSL(slt, preflow, {preresult[31], operandA[31]}); //compute is less than
+  bitMultiplexer sltSL(slt, preflow, {operandA[31], preresult[31]}); //compute is less than
   `OR (muxidec, muxindex[0], muxindex[1]);
   `NOR (isSlt, flagger, muxidec);
-  bitMultiplexer sltOut(result[0], isSlt, {preresult[0], slt});
-  //`OR(result[0], preresult[0], 1'b0);
+  bitMultiplexer sltOut(result[0], isSlt, {slt, preresult[0]});
 
   `NOT (nSlt, isSlt);
   genvar j;
