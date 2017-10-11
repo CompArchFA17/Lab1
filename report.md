@@ -6,9 +6,9 @@
 
 We decided to create modules for 32 bit logic. The base of these were NAND, NOR, and NOT gates, where individual bits were compared or negated. Each major gate, then, contained 32 1- or 2-input gates. For AND and OR, we sent the input through the 32-bit NAND and NOR respectively, then through the 32-bit NOT to negate it. XOR we treated as we did the basic gates, with each 2-input XOR having a longer delay. Similarly, we created a 32-bit adder and subtractor. The adder used 4-bit adders, and the subtractor took the inputs, inverted the second one with the 32-bit NOT, added a 32’b1 with the 32-bit adder, and then added the two numbers together. For overflow, it checked both whether there was overflow in the inversion (true when starting with the largest possible negative value) or in the final result.
 
-!(https://github.com/kuannie1/Lab1/blob/master/blockdiagram1.png)
+![](https://github.com/kuannie1/Lab1/blob/master/blockdiagram1.png)
 
-!(https://github.com/kuannie1/Lab1/blob/master/blockdiagram2.png)
+![](https://github.com/kuannie1/Lab1/blob/master/blockdiagram2.png)
 
 We decided to implement subtractor this was as opposed to using the invertB flag that was suggested in the Control Logic LUT. This was because we decided that the invertB flag was best used when either creating new gates not used in previous homeworks (thus having adder accept slightly different inputs) or when bit-slicing within the ALU itself, which would make it simpler to invert and add that initial carry-in. This might make it take more space overall, but it simplified the ALU control, which we implemented using a switch statement that checks for changes in the command or either input value.
 
@@ -29,11 +29,12 @@ Finally, we added significant delays (2500 time units) to allow time for the pro
 **Timing:** We counted a single-input basic gate (NOT) as a delay of 10, and a two-input basic gate (NAND and NOR) as delay of 20. As the 32-input gates run all the inputs simultaneously through their respective gates, this did not increase the timing for the 32-bit gates. AND and OR inverted NAND and NOR, so took 30 each. XOR we guessed at 30, because we knew there was more complicated logic going on behind the scenes (likely each input would go through a not, an and, and then another not (with the first two in parallel with a non-inverted and) for output). However, we decided our time was better spent on other aspects of the ALU, since the general delay of XOR would not cause significant delay in the face of SUB or SLT. Below is the by-hand calculations of the gate delays.
 
 | OPERATION | ADD | SUB | XOR | SLT | AND | NAND | NOR | OR |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | DELAY | 1090 | 2220 | 30 | 2250 | 30 | 20 | 20 | 30 |
 
 Below is the GTKwave timing analysis.
 
-!(https://github.com/kuannie1/Lab1/blob/master/timing_analysis.png)
+![](https://github.com/kuannie1/Lab1/blob/master/timing_analysis.png)
 
 ### Work Plan Reflection
 
