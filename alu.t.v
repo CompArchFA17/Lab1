@@ -9,7 +9,7 @@ module testALU32bit();
   wire flag;
   wire cout;
   
-  ALUcontrolLUT alu(cout, flag, finalALUsig, ALUcommand, a, b);
+  ALUcontrolLUT alu(cout, flag, finalALUsig[31:0], ALUcommand[2:0], a[31:0], b[31:0]);
   initial begin
   $display("ALU Command  Input A                          Input B                           | Output                           Flag  Carryout");
   //Test cases add
@@ -152,13 +152,13 @@ module testALU32bit();
   #25000
   $display("%b           %b %b | %b %b     %b", ALUcommand, a, b, finalALUsig, flag, cout);   
 
-  //a>b, all negative
+  //a<b, all negative
   a = 32'b10000000000000000000000000000001;
 	b = 32'b10000000000000000000000000000010;
   #25000
   $display("%b           %b %b | %b %b     %b", ALUcommand, a, b, finalALUsig, flag, cout);   
            
-  //a<b, all negative
+  //a>b, all negative
   a = 32'b10000000000000000000000000000010;
 	b = 32'b10000000000000000000000000000001;
   #25000
@@ -170,9 +170,9 @@ module testALU32bit();
   #25000
   $display("%b           %b %b | %b %b     %b", ALUcommand, a, b, finalALUsig, flag, cout);   
 
-  //a>b, a positive, b negative
-  a = 32'b00000000000000000000000000000001;
-	b = 32'b10000000000000000000000000000001;
+  //a<b, a negative, b positive
+  a = 32'b10000000000000000000000000000001;
+  b = 32'b00000000000000000000000000000001;
   #25000
   $display("%b           %b %b | %b %b     %b", ALUcommand, a, b, finalALUsig, flag, cout);   
          
