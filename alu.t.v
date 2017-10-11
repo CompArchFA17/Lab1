@@ -138,10 +138,9 @@ module testALU ();
     $display("SUB %d %d ", a, b);
     if ((out !== 32'h80000001) || (carryout !== 0) || (overflow !== 0)) $display("*** SUB %d %d failed. out: %d carryout: %d overflow: %d", a, b, out, carryout, overflow);
     
-    // WEIRD CASE - subtracting the largest negative number (doesn't convert cleanly to positive)
     address = `SUB; a = 32'h0; b = 32'h80000000; #5000
     $display("SUB %d %d ", a, b);
-    if ((out !== 32'h80000000) || (carryout !== 0) || (overflow !== 0)) $display("*** SUB %d %d failed. out: %d carryout: %d overflow: %d", a, b, out, carryout, overflow);
+    if ((out !== 32'h80000000) || (carryout !== 0) || (overflow !== 1)) $display("*** SUB %d %d failed. out: %d carryout: %d overflow: %d", a, b, out, carryout, overflow);
     
     address = `XOR; a = 32'h1; b = 32'hffffffff; #5000
     $display("XOR %d %d ", a, b);
@@ -217,7 +216,6 @@ module testALU ();
 
 
     /*** kaitlyn's test cases ***/
-    $display("Kaitlyn's Tests");
 
     address = `ADD; a = 32'h7fffffff; b = 32'h7fffffff; #5000
     $display("ADD %d %d ", a, b);
@@ -242,11 +240,6 @@ module testALU ();
     address = `SUB; a = 32'hffffffff; b = 32'h7fffffff; #5000
     $display("SUB %d %d ", a, b);
     if ((out !== 32'h80000000) || (carryout !== 1) || (overflow !== 0)) $display("*** SUB %d %d failed. out: %d carryout: %d overflow: %d", a, b, out, carryout, overflow);
-    
-    // THIS IS WRONG AND IS CAUSING OTHER PROBLEMS. INVERTING THIS HAS AN OVERFLOW. WHAT DO.
-    address = `SUB; a = 32'h0; b = 32'h80000000; #5000
-    $display("SUB %d %d ", a, b);
-    if ((out !== 32'h80000000) || (carryout !== 0) || (overflow !== 0)) $display("*** SUB %d %d failed. out: %d carryout: %d overflow: %d", a, b, out, carryout, overflow);
     
     address = `XOR; a = 32'hffffffff; b = 32'hffffffff; #5000
     $display("XOR %d %d ", a, b);

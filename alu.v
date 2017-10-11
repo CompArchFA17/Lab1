@@ -39,7 +39,7 @@ zero_check zcheck_sub(sub_zero, sub_out);
 
 
 always @(command or operandA or operandB) begin
-#2000
+#2500
 	case(command) 
 		`opADD: begin
 			result = add_out;

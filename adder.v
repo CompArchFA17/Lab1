@@ -97,9 +97,10 @@ module Subtractor32bit
 );
 
   wire[31:0] notb, b2comp;
-  wire unusedCarryout, unusedOverflow;
+  wire unusedCarryout, invertingOverflow, totalOverflow;
 
   not32 notbgate (notb, b);
-  FullAdder32bit add1tob(b2comp, unusedCarryout, unusedOverflow, notb, 32'd1);
-  FullAdder32bit getsum(sum, carryout, overflow, a, b2comp);
+  FullAdder32bit add1tob(b2comp, unusedCarryout, invertingOverflow, notb, 32'd1);
+  FullAdder32bit getsum(sum, carryout, totalOverflow, a, b2comp);
+  `OR overflowgate(overflow, totalOverflow, invertingOverflow);
 endmodule
