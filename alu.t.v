@@ -11,8 +11,14 @@
 `define NOR  3'd6
 `define OR   3'd7
 
+
+ /* 
+Module: testALU
+Applies all of our required modules to various address (3-bit input) and numeric values (a and b)
+Displays text if any of our test cases fail
+*/
+
 module testALU ();
-  // Your test code here
     reg[2:0] address;
     reg signed [31:0] a,b;
     wire carryout, overflow, zero;
@@ -58,7 +64,7 @@ module testALU ();
     if ((out !== 32'd10) || (carryout !== 0) || (overflow !== 0)) $display("*** OR %d %d failed. out: %d carryout: %d overflow: %d", a, b, out, carryout, overflow);
 
 
-
+    // Annie's Test Cases
     // 10 - 0
     address = `SUB; a = 32'd10; b = 32'd0; #5000
     $display("SUB %d %d ", a, b);

@@ -11,6 +11,12 @@
 `define opNOR  3'd6
 `define opOR   3'd7
 
+ /* 
+Module: ALU
+Selects the right operation to run based on the command input (3-bit) and two 32-bit inputs (operandA and operandB)
+Returns the 32-bit output (result) and 1-bit outputs if required (carryout, zero, and overflow)
+*/
+
 module ALU
 (
 output reg [31:0] result,
