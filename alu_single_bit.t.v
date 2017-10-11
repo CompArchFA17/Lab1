@@ -6,7 +6,7 @@ module testSingleBitALU ();
     reg operandA, operandB, carryin, command, correct;
     wire result, carryout;
 
-    ALUsinglebit alusinglebittest(result,carryout,operandA,operandB,carryin,command); 
+    ALU_single_bit alusinglebittest(result,carryout,operandA,operandB,carryin,command); 
 
     initial begin
     $display("command | carryin operandA operandB| result carryout | correct");

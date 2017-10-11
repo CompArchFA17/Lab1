@@ -6,8 +6,7 @@ module testSingleBitALU ();
     reg operandA, operandB, carryin, correct;
     reg [2:0] command;
     wire result, carryout;
-
-    assign correct = result == 
+ 
     ALU_single_bit alusinglebittest(result,carryout,operandA,operandB,carryin,command); 
 
     initial begin
