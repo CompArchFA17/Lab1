@@ -8,6 +8,12 @@
 `define NOR nor #20
 `define XOR xor #30
 
+
+ /* 
+Module: structuralFullAdder
+Adds three bits(a, b, and carryin) and returns the sum of those bits with output (sum and carryout) 
+using two XOR gates for the sum and two AND gates and one OR gate for the carryout
+  */
 module structuralFullAdder // Full Adder using XOR gates
 (
     output sum, // Single bit inputs and outputs
@@ -28,6 +34,11 @@ module structuralFullAdder // Full Adder using XOR gates
     
 endmodule
 
+ /* 
+Module: FullAdder4bit
+Takes advantage of the structuralFullAdder module by inputting corresponding (same-index) bits of a and b
+outputs the 4-bit sum and 1-bit carryout and overflow
+  */
 module FullAdder4bit
 (
   output[3:0] sum, // 2's complement sum of a and b
@@ -46,6 +57,11 @@ module FullAdder4bit
     `XOR overflowCheck(overflow, carry2, carryout); // Returns 1 if there is overflow by comparing carryin and carryout of last adder
 endmodule
 
+ /* 
+Module: FullAdder32bit
+Takes advantage of the FullAdder4bit module by inputting corresponding 4-bit groups of a and b 
+outputs the 32-bit sum and 1-bit carryout and overflow
+*/
 module FullAdder32bit
 (
   output[31:0] sum, // 2's complement sum of a and b
@@ -68,6 +84,11 @@ module FullAdder32bit
     `XOR overflowCheck(overflow, carry[6], carryout); // Returns 1 if there is overflow by comparing carryin and carryout of last adder
 endmodule
 
+ /* 
+Module: Subtractor32bit
+Takes advantage of the FullAdder32bit module by converting input b to the signed negation of itself
+outputs the 32-bit sum (or subtraction in this case) and 1-bit carryout and overflow
+*/
 module Subtractor32bit
 (
   input[31:0] a, b,

@@ -6,6 +6,11 @@
 `define NOR nor #20
 `define XOR xor #30
 
+ /* 
+Module: nand32
+Applies the NAND gate to each corresponding (same-index) bit in input variables a and b
+Outputs each NAND gate result to the corresponding index in output variable out.
+*/
 module nand32(
 	output[31:0] out,
 	input[31:0] a,b
@@ -45,6 +50,11 @@ module nand32(
 
 endmodule
 
+ /* 
+Module: nor32
+Applies the NOR gate to each corresponding (same-index) bit in input variables a and b
+Outputs each NOR gate result to the corresponding index in output variable out.
+*/
 module nor32(
 	output[31:0] out,
 	input[31:0] a,b
@@ -84,8 +94,11 @@ module nor32(
 
 endmodule
 
-
-
+ /* 
+Module: not32
+Applies the NOT gate to each bit in input variable a
+Outputs each NOT gate result to the corresponding index in output variable out.
+*/
 module not32(
 
 	output[31:0] out,
@@ -125,6 +138,12 @@ module not32(
 `NOT get31thbit(out[31],a[31]);
 endmodule
 
+
+ /* 
+Module: and32
+First obtains the 32-bit output from applying the nand32 module to input variables a and b
+Then applies the not32 module to that 32-bit nand32 module to obtain the output variable out
+*/
 module and32 (
 	output[31:0] out,
 	input[31:0] a,b
@@ -135,6 +154,11 @@ not32 notgate (out, nand_out);
 
 endmodule
 
+ /* 
+Module: or32
+First obtains the 32-bit output from applying the nor32 module to input variables a and b
+Then applies the not32 module to that 32-bit nor32 module to obtain the output variable out
+*/
 module or32 (
 	output[31:0] out,
 	input[31:0] a,b
@@ -144,6 +168,12 @@ nor32 norgate (nor_out, a, b);
 not32 notgate (out, nor_out);
 
 endmodule
+
+ /* 
+Module: xor32
+Applies the XOR gate to each bit in input variables a and b
+Outputs each XOR gate result to the corresponding index in output variable out.
+*/
 
 module xor32(
 	output[31:0] out,
@@ -184,6 +214,12 @@ module xor32(
 
 endmodule
 
+
+ /* 
+Module: zero_check
+Uses the OR gate to feed every bit in the check input variable to the carryout wire
+If the carry_out values are all 0, then the output is inverted to flag 1 for True (that the number has value zero)
+*/
 module zero_check(
 	output out,
 	input[31:0] check
