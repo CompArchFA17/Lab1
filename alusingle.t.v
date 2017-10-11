@@ -3,16 +3,18 @@
 `include "alu_single_bit.v"
 
 module testSingleBitALU ();
-    reg operandA, operandB, carryin, command, correct;
+    reg operandA, operandB, carryin, correct;
+    reg [2:0] command;
     wire result, carryout;
 
-    ALUsinglebit alusinglebittest(result,carryout,operandA,operandB,carryin,command); 
+    assign correct = result == 
+    ALU_single_bit alusinglebittest(result,carryout,operandA,operandB,carryin,command); 
 
     initial begin
     $display("command | carryin operandA operandB| result carryout | correct");
     
     //Add
-    command = 3'b000; carryin = 0; operandA=0; operandB=0; correct = result==0; #50 
+    command = 3'b000; carryin = 0; operandA=0; operandB=0; #50 
     $display("%b| %b %b  %b|%b  %b| %b", command, carryin, operandA, operandB, result, carryout, correct);
     command = 3'b000; carryin = 0; operandA=0; operandB=1; correct = result==1; #50 
     $display("%b| %b %b  %b|%b  %b| %b", command, carryin, operandA, operandB, result, carryout, correct);   
@@ -91,8 +93,6 @@ module testSingleBitALU ();
     command = 3'b000; operandA=1; operandB=1; correct = result==0; #50 
     $display("%b| %b  %b|%b  %b| %b", command, operandA, operandB, result, carryout, correct);
   	
-
-    
     end
 
 endmodule
