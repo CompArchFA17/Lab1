@@ -210,7 +210,7 @@ Test SLT A:10000000000000000000000000000000 B:00000000000000000000000000000001 P
 Test SLT A:00000000000000000000000000000000 B:00000000000000000000000000000000 Passed, Expected Out:00000000000000000000000000000000, Got Out:00000000000000000000000000000000
 ```
 
-Extrapolating the calculations from our 4-bit full adder out to 32 bits and appending the `SLT` logic, we calculated a worst-case delay of 1480 time units. Our test bench was only waiting 1000 time units, so we had to increase the clock period.
+Extrapolating the calculations from our 4-bit full adder out to 32 bits and appending the `SLT` logic, we calculated a worst-case delay of 1480 time units. Our test bench was only waiting 1000 time units, so we had to increase the clock period. The marked section on the diagram below is our estimated worst-case scenario.
 
 <img src="worst_case_slt_delay.png" alt="worst_case_timing_diagram" style="width:800px;">
 
