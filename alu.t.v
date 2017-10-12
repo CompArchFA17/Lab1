@@ -22,30 +22,53 @@ module testALU32bit();
     #25000
     $display("%b           %b %b | %b %b     %b", ALUcommand, a, b, finalALUsig, flag, cout);
 
+    // Verify expectations and report test result
+    if((finalALUsig != 32'b00000000000000000000000000000000) || (flag != 0) || (cout != 0)) begin
+      $display("Test Case Failed");
+    end 
+
   	// 1 + 1
     a = 32'b00000000000000000000000000000001;
     b = 32'b00000000000000000000000000000001;
     #25000
     $display("%b           %b %b | %b %b     %b", ALUcommand, a, b, finalALUsig, flag, cout);
     
+    // Verify expectations and report test result
+    if((finalALUsig != 32'b00000000000000000000000000000010) || (flag != 0) || (cout != 0)) begin
+      $display("Test Case Failed");
+    end 
+
   	// positive overflow
     a = 32'b01111111111111111111111111111111;
     b = 32'b01111111111111111111111111111111;
     #25000
     $display("%b           %b %b | %b %b     %b", ALUcommand, a, b, finalALUsig, flag, cout);
-    
+
+    if((finalALUsig != 32'b11111111111111111111111111111110) || (flag != 1) || (cout != 0)) begin
+      $display("Test Case Failed");
+    end 
+
   	// negative overflow
     a = 32'b10000000000000000000000000000001;
     b = 32'b10000000000000000000000000000001;
     #25000
     $display("%b           %b %b | %b %b     %b", ALUcommand, a, b, finalALUsig, flag, cout);   
-             
+    
+    if((finalALUsig != 32'b00000000000000000000000000000010) || (flag != 1) || (cout != 1)) begin
+      $display("Test Case Failed");
+    end 
+
     // carryout
     a = 32'b11111111111111111111111111111111;
     b = 32'b00000000000000000000000000000001;
     #25000
     $display("%b           %b %b | %b %b     %b", ALUcommand, a, b, finalALUsig, flag, cout);   
     
+    if((finalALUsig != 32'b00000000000000000000000000000000) || (flag != 0) || (cout != 1)) begin
+      $display("Test Case Failed");
+    end 
+
+
     //Test cases sub
     ALUcommand = 3'b001;
              
@@ -55,54 +78,87 @@ module testALU32bit();
     #25000
     $display("%b           %b %b | %b %b     %b", ALUcommand, a, b, finalALUsig, flag, cout);   
     
+    if((finalALUsig != 32'b00000000000000000000000000000000) || (flag != 0) || (cout != 1)) begin
+      $display("Test Case Failed");
+    end 
+
     // a=b
     a = 32'b00000000000000000000000000000001;
     b = 32'b00000000000000000000000000000001;
     #25000
     $display("%b           %b %b | %b %b     %b", ALUcommand, a, b, finalALUsig, flag, cout);   
 
+    if((finalALUsig != 32'b00000000000000000000000000000000) || (flag != 0) || (cout != 1)) begin
+      $display("Test Case Failed");
+    end 
+
     // a>b, both positive
     a = 32'b00000000000000000000000000000111;
     b = 32'b00000000000000000000000000000101;
     #25000
     $display("%b           %b %b | %b %b     %b", ALUcommand, a, b, finalALUsig, flag, cout);   
-           
+    if((finalALUsig != 32'b00000000000000000000000000000010) || (flag != 0) || (cout != 1)) begin
+      $display("Test Case Failed");
+    end       
+
     // a<b, both positive
     a = 32'b00000001000000000000000000000101;
     b = 32'b00000010000000000000000000000101;
     #25000
     $display("%b           %b %b | %b %b     %b", ALUcommand, a, b, finalALUsig, flag, cout);   
-             
+    
+    if((finalALUsig != 32'b11111111000000000000000000000000) || (flag != 0) || (cout != 0)) begin
+      $display("Test Case Failed");
+    end            
+       
     // |a|>|b|, both negative
     a = 32'b11111111111111111111111111111101;
     b = 32'b11111111111111111111111111111110;
     #25000
     $display("%b           %b %b | %b %b     %b", ALUcommand, a, b, finalALUsig, flag, cout);   
-               
+
+    if((finalALUsig != 32'b11111111111111111111111111111111) || (flag != 0) || (cout != 0)) begin
+      $display("Test Case Failed");
+    end 
+
     // |a|<|b|, both negative
     a = 32'b111111111111111111111111111111110;
     b = 32'b111111111111111111111111111111000;
     #25000
     $display("%b           %b %b | %b %b     %b", ALUcommand, a, b, finalALUsig, flag, cout);   
              
+    if((finalALUsig != 32'b00000000000000000000000000000110) || (flag != 0) || (cout != 1)) begin
+      $display("Test Case Failed");
+    end 
+
     // a negative, b positive, no overflow
     a = 32'b11111111111111111111111111111101;
     b = 32'b00000000000000000000000000000101;
     #25000
     $display("%b           %b %b | %b %b     %b", ALUcommand, a, b, finalALUsig, flag, cout);   
 
+    if((finalALUsig != 32'b11111111111111111111111111111000) || (flag != 0) || (cout != 1)) begin
+      $display("Test Case Failed");
+    end 
+
     // a negative, b positive, overflow
     a = 32'b10000000000000000000000000000101;
     b = 32'b01111100000000000000000000000000;
     #25000
     $display("%b           %b %b | %b %b     %b", ALUcommand, a, b, finalALUsig, flag, cout);   
+
+    if((finalALUsig != 32'b00000100000000000000000000000101) || (flag != 1) || (cout != 1)) begin
+      $display("Test Case Failed");
+    end 
              
     // a positive, b negative, no overflow
     a = 32'b00000000000000000000000000000101;
     b = 32'b11111111111111111111111111111111;
     #25000
     $display("%b           %b %b | %b %b     %b", ALUcommand, a, b, finalALUsig, flag, cout);   
-                    
+      
+         //Here
+               
     // Verify expectations and report test result
     if((finalALUsig != 32'b00000000000000000000000000000110) || (flag != 0) || (cout != 0)) begin
       $display("Test Case Failed");
@@ -115,7 +171,7 @@ module testALU32bit();
     $display("%b           %b %b | %b %b     %b", ALUcommand, a, b, finalALUsig, flag, cout);   
       
     // Verify expectations and report test result
-    if((flag != 1)) begin
+    if((finalALUsig != 32'b11111111111111110011101111111111) || (flag != 1) || (cout != 0)) begin
       $display("Test Case Failed");
     end 
 
