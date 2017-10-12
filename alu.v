@@ -1,5 +1,4 @@
 `include "adder.v"
-`include "multiplexer.v"
 `include "lut.v"
 `include "aluFullBit.v"
 
@@ -27,17 +26,13 @@ wire [2:0] command;
 
 wire [1:0] select;
 
-ALULut (select, invert, command);
 
-//invert B
-
-aluFullBit (result[0], cOut[0], operandA[0], operandB[0], 1'b0, command[0], select[1:0]);
-
+aluFullBit bit1(result[0], cOut[0], operandA[0], operandB[0], 1'b0, command[0], select[1:0]);
 
 genvar i;
     generate
         for (i=1; i < 32; i=i+1) begin : aluBits
-            aluFullBit (result[i], cOut[i], operandA[i], operandB[i], cIn[i], command[0], select[1:0]
+            aluFullBit _bit(result[i], cOut[i], operandA[i], operandB[i], cIn[i], command[0], select[1:0]);
         end
     endgenerate
 	
@@ -45,11 +40,11 @@ wire partialOverflow;
 `XOR (partialOverflow, cOut[30], cOut[31]);
 
 wire [1:0] nSelect;
-`NOT (notSel[0], sel[0]);
-`NOT (notSel[1], sel[1]);
+`NOT (nSelect[0], select[0]);
+`NOT (nSelect[1], select[1]);
 
-and #40 (carryout, carryoutSlice[31], notSel[0], notSel[1]);
-and #40 (overflow, initialOverflow, notSel[0], notSel[1]);
+and #40 (carryout, cOut[31], nSelect[0], nSelect[1]);
+and #40 (overflow, partialOverflow, nSelect[0], nSelect[1]);
 
 wire [30:0] ors;
 `OR (ors[0], result[0], result[1]);
