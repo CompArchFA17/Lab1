@@ -92,7 +92,7 @@ Once the four-bit design was complete and the exhaustive tests all passed, it wa
 
 We were pretty confident that our design would function largely identically to the exhaustively-tested four-bit case, with the exception of timing. We formulated the worst-case delay that we could come up with, along with a handful of other interesting cases to validate the functionality of all bit slices.
 
-Exhaustively testing all boolean logic blocks. Each bit slice produces entirely independent output for these operations, so these serve as exhaustive tests.
+Testing all boolean logic blocks. Each bit slice produces entirely independent output for these operations, so these serve as exhaustive tests.
 
 ```
 
@@ -122,15 +122,17 @@ Zero-flag tests, for addition and subtraction.
 
 ```
 
-Worst-case delay: starting with `ovf` and `SLT` high from one operation `-8 SLT 1`, we move directly to a case `0 SLT 0` in which the result from the first bit slice propagates all the way to the final `COUT`, setting `ovf` to low and propagating through the `SLT` logic.
+Worst-case delay: starting with `ovf` and `SLT` high from one operation `-2147483648 SLT 1`, we move directly to a case `0 SLT 0` in which the result from the first bit slice propagates all the way to the final `COUT`, setting `ovf` to low and propagating through the `SLT` logic.
 
 ```
 
 ```
 
-Extrapolating the calculations from our 4-bit full adder out to 32 bits and appending the `SLT` logic, we calculated a worst-case delay of 1380 time units. Our test bench was only waiting 1000 time units, so we had to increase the clock period.
+Extrapolating the calculations from our 4-bit full adder out to 32 bits and appending the `SLT` logic, we calculated a worst-case delay of 1480 time units. Our test bench was only waiting 1000 time units, so we had to increase the clock period.
 
 <img src=" " alt="worst_case_timing_diagram" style="width:600px;">
+
+Additions and subtractions should all be slightly faster (as they lack the extra SLT logic), coming out to 1440 for worst-case addition, and 1470 for subtraction. All the boolean logic is constant-time, as there is no chaining between bit slices, and has a worst-case delay of 110 for `NAND` and `NOR`, and 120 for `XOR`, `AND`, and `OR`.
 
 ## Work Plan Reflection
 
