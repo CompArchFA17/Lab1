@@ -101,31 +101,91 @@ Testing all boolean logic blocks. Each bit slice produces entirely independent o
 Testing individual carryouts, on the end cases. All the middle cases are identical, so we used the first two and the last two to validate this functionality.
 
 ```
+Test ADD A:00000000000000000000000000000001 B:00000000000000000000000000000001 Passed, Expected Out:00000000000000000000000000000010 Got Out:00000000000000000000000000000010
+Test ADD A:00000000000000000000000000000010 B:00000000000000000000000000000010 Passed, Expected Out:00000000000000000000000000000100 Got Out:00000000000000000000000000000100
+Test ADD A:01000000000000000000000000000000 B:01000000000000000000000000000000 Passed, Expected Out:10000000000000000000000000000000 Got Out:10000000000000000000000000000000
+Test ADD A:10000000000000000000000000000000 B:10000000000000000000000000000000 Passed, Expected Out:00000000000000000000000000000000 Got Out:00000000000000000000000000000000
+```
 
+"All-bit" and simple overflow case.
+```
+Test ADD A:01111111111111111111111111111111 B:11111111111111111111111111111111 Passed, Expected Out:01111111111111111111111111111110 Got Out:01111111111111111111111111111110
+Test ADD A:11111111111111111111111111111111 B:10000000000000000000000000000000 Passed, Expected Out:01111111111111111111111111111111 Got Out:01111111111111111111111111111111
 ```
 
 Cases chosen to result in all possible combinations of inputs to the SLT logic: neither negative nor overflow, only negative, only overflow, and both.
 
 ```
-
+Test SLT A:       5000 B:       5000 Passed, Expected Out: 0 Got Out:         0
+Test SLT A:-2147483647 B: 2147483647 Passed, Expected Out: 1 Got Out:         1
+Test SLT A:-1000000000 B:-2000000000 Passed, Expected Out: 0 Got Out:         0
+Test SLT A: -300000000 B: -100000000 Passed, Expected Out: 1 Got Out:         1
+Test SLT A: 1500000000 B: 1000000000 Passed, Expected Out: 0 Got Out:         0
 ```
 
 Generic addition and subtraction cases, using positive-positive and negative-negative pairs.
 
 ```
+Test ADD A:       5000 B:       5000 Passed, Expected Out:      10000 Got Out:     10000
+Test ADD A:       5000 B:       5000 Passed, Expected cout:0 Got cout:0
+Test ADD A:       5000 B:       5000 Passed, Expected ovf:0 Got ovf:0
+Test ADD A:       5000 B:       5000 Passed, Expected zero:0 Got zero:0
 
+Test ADD A:-1000000000 B:-2000000000 Passed, Expected Out: 1294967296 Got Out:1294967296
+Test ADD A:-1000000000 B:-2000000000 Passed, Expected cout:1 Got cout:1
+Test ADD A:-1000000000 B:-2000000000 Passed, Expected ovf:1 Got ovf:1
+Test ADD A:-1000000000 B:-2000000000 Passed, Expected zero:0 Got zero:0
+
+Test ADD A: -300000000 B: -100000000 Passed, Expected Out: -400000000 Got Out:3894967296
+Test ADD A: -300000000 B: -100000000 Passed, Expected cout:1 Got cout:1
+Test ADD A: -300000000 B: -100000000 Passed, Expected ovf:0 Got ovf:0
+Test ADD A: -300000000 B: -100000000 Passed, Expected zero:0 Got zero:0
+
+Test ADD A: 1500000000 B: 1000000000 Passed, Expected Out:-1794967296 Got Out:2500000000
+Test ADD A: 1500000000 B: 1000000000 Passed, Expected cout:0 Got cout:0
+Test ADD A: 1500000000 B: 1000000000 Passed, Expected ovf:1 Got ovf:1
+Test ADD A: 1500000000 B: 1000000000 Passed, Expected zero:0 Got zero:0
+
+Test SUB A:-2147483647 B: 2147483647 Passed, Expected Out:          2 Got Out:         2
+Test SUB A:-2147483647 B: 2147483647 Passed, Expected cout:1 Got cout:1
+Test SUB A:-2147483647 B: 2147483647 Passed, Expected ovf:1 Got ovf:1
+Test SUB A:-2147483647 B: 2147483647 Passed, Expected zero:0 Got zero:0
+
+Test SUB A:-1000000000 B:-2000000000 Passed, Expected Out: 1000000000 Got Out:1000000000
+Test SUB A:-1000000000 B:-2000000000 Passed, Expected cout:1 Got cout:1
+Test SUB A:-1000000000 B:-2000000000 Passed, Expected ovf:0 Got ovf:0
+Test SUB A:-1000000000 B:-2000000000 Passed, Expected zero:0 Got zero:0
+
+Test SUB A: -300000000 B: -100000000 Passed, Expected Out: -200000000 Got Out:4094967296
+Test SUB A: -300000000 B: -100000000 Passed, Expected cout:0 Got cout:0
+Test SUB A: -300000000 B: -100000000 Passed, Expected ovf:0 Got ovf:0
+Test SUB A: -300000000 B: -100000000 Passed, Expected zero:0 Got zero:0
+
+Test SUB A: 1500000000 B: 1000000000 Passed, Expected Out:  500000000 Got Out: 500000000
+Test SUB A: 1500000000 B: 1000000000 Passed, Expected cout:1 Got cout:1
+Test SUB A: 1500000000 B: 1000000000 Passed, Expected ovf:0 Got ovf:0
+Test SUB A: 1500000000 B: 1000000000 Passed, Expected zero:0 Got zero:0
 ```
 
 Zero-flag tests, for addition and subtraction.
 
 ```
+Test ADD A:-2147483647 B: 2147483647 Passed, Expected Out:          0 Got Out:         0
+Test ADD A:-2147483647 B: 2147483647 Passed, Expected cout:1 Got cout:1
+Test ADD A:-2147483647 B: 2147483647 Passed, Expected ovf:0 Got ovf:0
+Test ADD A:-2147483647 B: 2147483647 Passed, Expected zero:1 Got zero:1
 
+Test SUB A:       5000 B:       5000 Passed, Expected Out:          0 Got Out:         0
+Test SUB A:       5000 B:       5000 Passed, Expected cout:1 Got cout:1
+Test SUB A:       5000 B:       5000 Passed, Expected ovf:0 Got ovf:0
+Test SUB A:       5000 B:       5000 Passed, Expected zero:1 Got zero:1
 ```
 
 Worst-case delay: starting with `ovf` and `SLT` high from one operation `-2147483648 SLT 1`, we move directly to a case `0 SLT 0` in which the result from the first bit slice propagates all the way to the final `COUT`, setting `ovf` to low and propagating through the `SLT` logic.
 
 ```
-
+Test SLT A:10000000000000000000000000000000 B:00000000000000000000000000000001 Passed, Expected Out:00000000000000000000000000000001, Got Out:00000000000000000000000000000001
+Test SLT A:00000000000000000000000000000000 B:00000000000000000000000000000000 Passed, Expected Out:00000000000000000000000000000000, Got Out:00000000000000000000000000000000
 ```
 
 Extrapolating the calculations from our 4-bit full adder out to 32 bits and appending the `SLT` logic, we calculated a worst-case delay of 1480 time units. Our test bench was only waiting 1000 time units, so we had to increase the clock period.
