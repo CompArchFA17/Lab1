@@ -139,7 +139,49 @@ module FourBitALUTestHarness ();
 
     //Test SLT
     command = 3'd3;
+    //Loop A
+    for (a_index=0; a_index<16; a_index=a_index+1) begin
+        A = a_index;
+        // Loop B
+        for (b_index=0; b_index<16; b_index=b_index+1) begin
+            B = b_index; #1000
+            temp_sum = {1'b0, A} + {1'b0,(~B)} + 1;
 
+            // Set up expected carryout
+            ex_cout = 0;
+
+            // set up expected overflow
+            ex_ovf = 0;
+
+            // set up expected zero
+            ex_zero = 0;
+
+            // set up expected output
+            if ( (A[3] == 1 && B[3] == 0) || (A[3] == B[3]) && (A < B) ) begin
+                ex_out = 1;
+            end else begin
+                ex_out = 0;
+            end
+
+
+            // Test res
+            if (out != ex_out) begin
+                $display("Test Case SLT A:%b B:%b Failed, Got Out:%b Expected Out:%b", A, B, out, ex_out);
+            end
+            // Test ovf
+            if (ovf != ex_ovf) begin
+                $display("Test Case SLT A:%b B:%b Failed, Got OVF:%b Expected OVF:%b", A, B, ovf, ex_ovf);
+            end
+            // Test zero
+            if (zero != ex_zero) begin
+                $display("Test Case SLT A:%b B:%b Failed, Got zero:%b Expected zero:%b", A, B, zero, ex_zero);
+            end
+            // Test cout
+            if (cout != ex_cout) begin
+                $display("Test Case SUB A:%b B:%b Failed, Got cout:%b Expected cout:%b", A, B, cout, ex_cout);
+            end
+        end
+    end
 
 
 
