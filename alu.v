@@ -67,7 +67,7 @@ module ALUunit // The bitslice ALU unit
 	`NORgate norgate(muxinput[`NOR], bitA, bitB);
 	`NOTgate not_or_gate(muxinput[`OR], result[`NOR]);
 
-	mux3bit mux(bitR, muxindex, muxinput);
+	threeBitMux mux(bitR, muxindex, muxinput);
 
 
 endmodule
