@@ -24,7 +24,12 @@ input[2:0]    command
 wire [31:0] operandA, operandB, result, cIn, cOut;
 wire [2:0] command;
 
+wire[1:0] tmp_s; 
 wire [1:0] select;
+`OR(tmp_s[0], command[0], command[1]);
+`NOT(tmp_s[1], command[1]);
+`NAND(select[0], command[2], tmp_s[0]);
+`NAND(select[1], command[2], tmp_s[1]);
 
 
 aluFullBit bit1(result[0], cOut[0], operandA[0], operandB[0], 1'b0, command[0], select[1:0]);
