@@ -47,18 +47,13 @@ genvar i;
 for (i = 1; i < 31; i = i + 1) begin
 	FullAdder1bit addermid (result[i], carryoutmid[i], operandA[i], operandB[i], subtract, carryoutmid[i- 1]);
 end
-FullAdder1bit adderfinal (result[31], carryout, operandA[31], operandB[31], subtract, carryout);
+FullAdder1bit adderfinal (result[31], carryout, operandA[31], operandB[31], subtract, carryoutmid[30]);
 
 `XOR overflowdetection(overflow, carryoutmid[30], carryout);
 
 `NOR zeroinit(zeromid[0], result[0], result[1]);
 
-genvar j;
-for (j = 0; j < 29; j = j + 1) begin
-	`NOR (zeromid[j + 1],  zeromid[j], result[j + 1]);
-end
-
-`NOR (zero, zeromid[30], result[31]);
+`NOR norall(zero, result[31:0], 32'b0);
 endmodule
 
 module alu32bitxor
@@ -103,10 +98,12 @@ wire suboverflow;
 
 //set invertB to 1 because subtraction is needed
 AddSub subtractor (subresult, subcarryout, subzero, suboverflow, operandA, operandB, 1'b1);
+// AddSub subtractor (result, subcarryout, subzero, suboverflow, operandA, operandB, 1'b1);
 
 assign result = 32'b0;
 
-`XOR final (result[0], subresult[0], suboverflow);
+// `XOR final (result[0], subresult[31], suboverflow);
+`XOR final (result[0], subresult[31] , subresult[31]);
 
 //doesn't need to set a flag
 assign carryout = 0;
