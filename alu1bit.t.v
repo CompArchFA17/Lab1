@@ -1,19 +1,19 @@
 `include "alu1bit.v"
 `define ADD  3'd0
-`define SUB  3'd1
-`define XOR  3'd2
-`define SLT  3'd3
-`define AND  3'd4
-`define NAND 3'd5
-`define NOR  3'd6
-`define OR   3'd7
+`define SUB  3'd0
+`define XOR  3'd1
+`define SLT  3'd2
+`define AND  3'd3
+`define NOR  3'd3
+`define NAND 3'd4
+`define OR   3'd4
 
 module alu1bit_test();
   reg A, B, carryin, Ainvert, Binvert, less;
   reg [2:0] muxindex;
   wire result,carryout;
 
-  ALU1bit alu1bit(result,carryout,carryin,Ainvert,Binvert,less,A,B,muxindex[2:0]);
+  ALU1bit alu1bit(result, carryout, muxindex, A, B, Ainvert, Binvert,carryin, less);
 
   reg testAVals [29:0];
   reg testBVals [29:0];
@@ -28,18 +28,19 @@ module alu1bit_test();
   task testALU;
     input cin,Ainv,Binv,Less,a, b, expectedOut, expectedOverflow;
     input [2:0] MuxIndex;
+    input integer testIndex;
     begin
-      A=a; B=b; carryin=cin; Ainvert=Ainv; Binvert=Binv;less=Less; muxindex=MuxIndex; #500
+      A=a; B=b; carryin=cin; Ainvert=Ainv; Binvert=Binv;less=Less; muxindex=MuxIndex; #5000
       if (result == expectedOut && carryout == expectedOverflow)
-        $display("Test succeeded");
-      else if (result == expectedOut && carryout)
-        $display("Output matches, unexpected overflow for inputs %b and %b", a, b);
+        $display("Test %d succeeded", testIndex);
       else
-        $display("Expected %b for inputs %b and %b, got %b.", carryout, a, b, result);
+        $display("Test %d failed", testIndex);
+      $display("Operation: %d, Invert A: %b, Invert B: %b, Inputs: %b and %b, Carry in: %b, Output: %b, Carry out: %b", muxindex, Ainv, Binv, a, b, carryin, result, carryout);
+      $display("\n");
     end
   endtask
 
-  reg i;
+  integer i;
 
   initial begin
 
@@ -53,13 +54,13 @@ module alu1bit_test();
 
 
 
-    testAVals[4] = 0; testBVals[4] = 0; testcarryin[4] = 1; testAinvert[4]=0; testBinvert[4] = 1; testless[4] = 0; testmuxindex[4] = `SUB; testresults[4] = 0; testcarryouts[4] = 0;
+    testAVals[4] = 0; testBVals[4] = 0; testcarryin[4] = 1; testAinvert[4]=0; testBinvert[4] = 1; testless[4] = 0; testmuxindex[4] = `SUB; testresults[4] = 0; testcarryouts[4] = 1;
 
-    testAVals[5] = 1; testBVals[5] = 0; testcarryin[5] = 1; testAinvert[5]=0; testBinvert[5] = 1; testless[5] = 0; testmuxindex[5] = `SUB; testresults[5] = 1; testcarryouts[5] = 0;
+    testAVals[5] = 1; testBVals[5] = 0; testcarryin[5] = 1; testAinvert[5]=0; testBinvert[5] = 1; testless[5] = 0; testmuxindex[5] = `SUB; testresults[5] = 1; testcarryouts[5] = 1;
 
-    testAVals[6] = 0; testBVals[6] = 1; testcarryin[6] = 1; testAinvert[6]=0; testBinvert[6] = 1; testless[6] = 0; testmuxindex[6] = `SUB; testresults[6] = 0; testcarryouts[6] = 1;
+    testAVals[6] = 0; testBVals[6] = 1; testcarryin[6] = 1; testAinvert[6]=0; testBinvert[6] = 1; testless[6] = 0; testmuxindex[6] = `SUB; testresults[6] = 1; testcarryouts[6] = 0;
 
-    testAVals[7] = 1; testBVals[7] = 1; testcarryin[7] = 1; testAinvert[7]=0; testBinvert[7] = 1; testless[7] = 0; testmuxindex[7] = `SUB; testresults[7] = 0; testcarryouts[7] = 0;
+    testAVals[7] = 1; testBVals[7] = 1; testcarryin[7] = 1; testAinvert[7]=0; testBinvert[7] = 1; testless[7] = 0; testmuxindex[7] = `SUB; testresults[7] = 0; testcarryouts[7] = 1;
 
 
 
@@ -89,23 +90,23 @@ module alu1bit_test();
 
 
 
-    testAVals[18] = 0; testBVals[18] = 0; testcarryin[18] = 0; testAinvert[18]=1; testBinvert[18] = 0; testless[18] = 0; testmuxindex[18] = `NAND; testresults[18] = 1; testcarryouts[18] = 0;
+    testAVals[18] = 0; testBVals[18] = 0; testcarryin[18] = 0; testAinvert[18]=1; testBinvert[18] = 1; testless[18] = 0; testmuxindex[18] = `NAND; testresults[18] = 1; testcarryouts[18] = 0;
 
-    testAVals[19] = 0; testBVals[19] = 1; testcarryin[19] = 0; testAinvert[19]=1; testBinvert[19] = 0; testless[19] = 0; testmuxindex[19] = `NAND; testresults[19] = 1; testcarryouts[19] = 0;
+    testAVals[19] = 0; testBVals[19] = 1; testcarryin[19] = 0; testAinvert[19]=1; testBinvert[19] = 1; testless[19] = 0; testmuxindex[19] = `NAND; testresults[19] = 1; testcarryouts[19] = 0;
 
-    testAVals[20] = 1; testBVals[20] = 0; testcarryin[20] = 0; testAinvert[20]=1; testBinvert[20] = 0; testless[20] = 0; testmuxindex[20] = `NAND; testresults[20] = 1; testcarryouts[20] = 0;
+    testAVals[20] = 1; testBVals[20] = 0; testcarryin[20] = 0; testAinvert[20]=1; testBinvert[20] = 1; testless[20] = 0; testmuxindex[20] = `NAND; testresults[20] = 1; testcarryouts[20] = 0;
 
-    testAVals[21] = 1; testBVals[21] = 1; testcarryin[21] = 0; testAinvert[21]=1; testBinvert[21] = 0; testless[21] = 0; testmuxindex[21] = `NAND; testresults[21] = 0; testcarryouts[21] = 0;
+    testAVals[21] = 1; testBVals[21] = 1; testcarryin[21] = 0; testAinvert[21]=1; testBinvert[21] = 1; testless[21] = 0; testmuxindex[21] = `NAND; testresults[21] = 0; testcarryouts[21] = 0;
 
 
 
-    testAVals[22] = 0; testBVals[22] = 0; testcarryin[22] = 0; testAinvert[22]=1; testBinvert[22] = 0; testless[22] = 0; testmuxindex[22] = `NOR; testresults[22] = 1; testcarryouts[22] = 0;
+    testAVals[22] = 0; testBVals[22] = 0; testcarryin[22] = 0; testAinvert[22]=1; testBinvert[22] = 1; testless[22] = 0; testmuxindex[22] = `NOR; testresults[22] = 1; testcarryouts[22] = 0;
 
-    testAVals[23] = 0; testBVals[23] = 1; testcarryin[23] = 0; testAinvert[23]=1; testBinvert[23] = 0; testless[23] = 0; testmuxindex[23] = `NOR; testresults[23] = 0; testcarryouts[23] = 0;
+    testAVals[23] = 0; testBVals[23] = 1; testcarryin[23] = 0; testAinvert[23]=1; testBinvert[23] = 1; testless[23] = 0; testmuxindex[23] = `NOR; testresults[23] = 0; testcarryouts[23] = 0;
 
-    testAVals[24] = 1; testBVals[24] = 0; testcarryin[24] = 0; testAinvert[24]=1; testBinvert[24] = 0; testless[24] = 0; testmuxindex[24] = `NOR; testresults[24] = 0; testcarryouts[24] = 0;
+    testAVals[24] = 1; testBVals[24] = 0; testcarryin[24] = 0; testAinvert[24]=1; testBinvert[24] = 1; testless[24] = 0; testmuxindex[24] = `NOR; testresults[24] = 0; testcarryouts[24] = 0;
 
-    testAVals[25] = 1; testBVals[25] = 1; testcarryin[25] = 0; testAinvert[25]=1; testBinvert[25] = 0; testless[25] = 0; testmuxindex[25] = `NOR; testresults[25] = 0; testcarryouts[25] = 0;
+    testAVals[25] = 1; testBVals[25] = 1; testcarryin[25] = 0; testAinvert[25]=1; testBinvert[25] = 1; testless[25] = 0; testmuxindex[25] = `NOR; testresults[25] = 0; testcarryouts[25] = 0;
 
 
 
@@ -118,10 +119,8 @@ module alu1bit_test();
     testAVals[29] = 1; testBVals[29] = 1; testcarryin[29] = 0; testAinvert[29]=0; testBinvert[29] = 0; testless[29] = 0; testmuxindex[29] = `OR; testresults[29] = 1; testcarryouts[29] = 0;
 
 
-
-    $display("  A  |  B  |  carryin  | Ainvert | Binvert | less | muxindex | result | carryout ");
-    for (i = 0; i < 16; i = i + 1) begin
-      testALU(testcarryin[i],testBinvert[i],testless[i],testAVals[i], testBVals[i], testresults[i], testcarryouts[i], testmuxindex[i]);
+    for (i = 0; i < 30; i = i + 1) begin
+      testALU(testcarryin[i],testAinvert[i],testBinvert[i],testless[i],testAVals[i], testBVals[i], testresults[i], testcarryouts[i], testmuxindex[i], i);
     end
   end
 endmodule
