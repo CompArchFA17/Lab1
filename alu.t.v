@@ -110,8 +110,8 @@ module ALUTestHarness ();
 
     command = `code_AND;
     for (logic_index = 0; logic_index < 4; logic_index = logic_index + 1) begin
-        A = (logic_index[0]==0) ? 32'd0 : 32'd65535;
-        B = (logic_index[1]==0) ? 32'd0 : 32'd65535;#2000
+        A = (logic_index[0]==0) ? 32'd0 : -32'd1;
+        B = (logic_index[1]==0) ? 32'd0 : -32'd1;#2000
         if (out != (A&B)) begin
             testfailed = testfailed +1;
             $display("Test AND A:%b B:%b Failed, Expected Out:%b Got Out:%b", A, B, A&B, out);
@@ -124,8 +124,8 @@ module ALUTestHarness ();
 
     command = `code_NAND;
     for (logic_index = 0; logic_index < 4; logic_index = logic_index + 1) begin
-        A = (logic_index[0]==0) ? 32'd0 : 32'd65535;
-        B = (logic_index[1]==0) ? 32'd0 : 32'd65535;#2000
+        A = (logic_index[0]==0) ? 32'd0 : -32'd1;
+        B = (logic_index[1]==0) ? 32'd0 : -32'd1;#2000
         if (out != (A~&B)) begin
             testfailed = testfailed +1;
             $display("Test NAND A:%b B:%b Failed, Expected Out:%b Got Out:%b", A, B, A~&B, out);
@@ -138,8 +138,8 @@ module ALUTestHarness ();
 
     command = `code_NOR;
     for (logic_index = 0; logic_index < 4; logic_index = logic_index + 1) begin
-        A = (logic_index[0]==0) ? 32'd0 : 32'd65535;
-        B = (logic_index[1]==0) ? 32'd0 : 32'd65535;#2000
+        A = (logic_index[0]==0) ? 32'd0 : -32'd1;
+        B = (logic_index[1]==0) ? 32'd0 : -32'd1;#2000
         if (out != (A~|B)) begin
             testfailed = testfailed +1;
             $display("Test NOR A:%b B:%b Failed, Expected Out:%b Got Out:%b", A, B, A~|B, out);
@@ -152,8 +152,8 @@ module ALUTestHarness ();
 
     command = `code_OR;
     for (logic_index = 0; logic_index < 4; logic_index = logic_index + 1) begin
-        A = (logic_index[0]==0) ? 32'd0 : 32'd65535;
-        B = (logic_index[1]==0) ? 32'd0 : 32'd65535;#2000
+        A = (logic_index[0]==0) ? 32'd0 : -32'd1;
+        B = (logic_index[1]==0) ? 32'd0 : -32'd1;#2000
         if (out != (A|B)) begin
             testfailed = testfailed +1;
             $display("Test OR A:%b B:%b Failed, Expected Out:%b Got Out:%b", A, B, A|B, out);
