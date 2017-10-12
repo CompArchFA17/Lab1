@@ -96,8 +96,8 @@ module ALUTestHarness ();
     // Test block logic to check all of the bits
     command = `code_XOR;
     for (logic_index = 0; logic_index < 4; logic_index = logic_index + 1) begin
-        A = (logic_index[0]==0) ? 32'd0 : 32'd65535;
-        B = (logic_index[1]==0) ? 32'd0 : 32'd65535;#2000
+        A = (logic_index[0]==0) ? 32'd0 : 32'd2147483647;
+        B = (logic_index[1]==0) ? 32'd0 : 32'd2147483647;#2000
         if (out != (A^B)) begin
             testfailed = testfailed +1;
             $display("Test XOR A:%b B:%b Failed, Expected Out:%b Got Out:%b", A, B, A^B, out);
