@@ -6,7 +6,7 @@
 module aluFullBit
 (
   output res,
-  output cout,
+  output carryAND,
   input a,
   input b,
   input cin,
@@ -14,7 +14,7 @@ module aluFullBit
   input[1:0] sel
 );
 
-  wire sumXOR, carryAND, nab, orNOR;
+  wire sumXOR, nab, orNOR;
   aluBit alu (sumXOR, carryAND, nab, orNOR, a, b, cin, ctrl0);
 
   multiplexer mux (res, sumXOR, orNOR, carryAND, nab, sel[1], sel[0]);

@@ -49,8 +49,8 @@ initial begin
           end
           if (carry^((a&b)|(a&c)|(b&c)))
           begin
-            $display("failed carry: a b c i0 sel result");
-            $display("              %b %b %b  %b  %b   %b", a, b, c, i0, sel, out);
+            $display("failed carry: a b c i0 sel result carry");
+            $display("              %b %b %b  %b  %b   %b     %b", a, b, c, i0, sel, out, carry);
             err = 1;
           end
         end
