@@ -54,46 +54,69 @@ module testALU();
 	// 5 - 3 = 2
         operandA=32'd5;operandB=32'd3;command=`SUB;
         #10000;
-        $display("| %b | %b | AND  | %b | 00000000000000000000000000000010 | %b    | 1     | %b        | 0         | %b    | 0 |", operandA, operandB, result, carryout, overflow, zero);
+        $display("| %b | %b | SUB  | %b | 00000000000000000000000000000010 | %b    | 1     | %b        | 0         | %b    | 0 |", operandA, operandB, result, carryout, overflow, zero);
 	// -30 - 50 = -80
 	operandA=-32'd30;operandB=32'd50;command=`SUB;
         #10000;
-        $display("| %b | %b | AND  | %b | 11111111111111111111111110110000 | %b    | 1     | %b        | 0         | %b    | 0 |", operandA, operandB, result, carryout, overflow, zero);
+        $display("| %b | %b | SUB  | %b | 11111111111111111111111110110000 | %b    | 1     | %b        | 0         | %b    | 0 |", operandA, operandB, result, carryout, overflow, zero);
 	// 2 - (-5) = 7
 	operandA=32'd2;operandB=-32'd5;command=`SUB;
         #10000;
-        $display("| %b | %b | AND  | %b | 00000000000000000000000000000111 | %b    | 0     | %b        | 0         | %b    | 0 |", operandA, operandB, result, carryout, overflow, zero);
+        $display("| %b | %b | SUB  | %b | 00000000000000000000000000000111 | %b    | 0     | %b        | 0         | %b    | 0 |", operandA, operandB, result, carryout, overflow, zero);
 	// -200 - (-200) = 0
 	operandA=-32'd200;operandB=-32'd200;command=`SUB;
         #10000;
-        $display("| %b | %b | AND  | %b | 00000000000000000000000000000000 | %b    | 1     | %b        | 0         | %b    | 1 |", operandA, operandB, result, carryout, overflow, zero);
+        $display("| %b | %b | SUB  | %b | 00000000000000000000000000000000 | %b    | 1     | %b        | 0         | %b    | 1 |", operandA, operandB, result, carryout, overflow, zero);
 	// 2 - 5 = -3
 	operandA=32'd2;operandB=32'd5;command=`SUB;
         #10000;
-        $display("| %b | %b | AND  | %b | 11111111111111111111111111111101 | %b    | 0     | %b        | 0         | %b    | 0 |", operandA, operandB, result, carryout, overflow, zero);
+        $display("| %b | %b | SUB  | %b | 11111111111111111111111111111101 | %b    | 0     | %b        | 0         | %b    | 0 |", operandA, operandB, result, carryout, overflow, zero);
 	$display("-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
 
 	$display("XOR COMMAND -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
 	//
         operandA=32'b00101110000110101010101010101101;operandB=32'b10101010100001001001110100010111;command=`XOR;
         #10000;
-        $display("| %b | %b | AND  | %b | 10000100100111100011011110111010 | %b    | 1     | %b        | 0         | %b    | 0 |", operandA, operandB, result, carryout, overflow, zero);
+        $display("| %b | %b | XOR  | %b | 10000100100111100011011110111010 | %b    | 1     | %b        | 0         | %b    | 0 |", operandA, operandB, result, carryout, overflow, zero);
 	//
 	operandA=32'd0;operandB=32'd0;command=`XOR;
         #10000;
-        $display("| %b | %b | AND  | %b | --- | %b    | -     | %b        | -         | %b    | - |", operandA, operandB, result, carryout, overflow, zero);
+        $display("| %b | %b | XOR  | %b | --- | %b    | -     | %b        | -         | %b    | - |", operandA, operandB, result, carryout, overflow, zero);
 	//
 	operandA=32'd0;operandB=32'd0;command=`XOR;
         #10000;
-        $display("| %b | %b | AND  | %b | --- | %b    | -     | %b        | -         | %b    | - |", operandA, operandB, result, carryout, overflow, zero);
+        $display("| %b | %b | XOR  | %b | --- | %b    | -     | %b        | -         | %b    | - |", operandA, operandB, result, carryout, overflow, zero);
 	//
 	operandA=32'd0;operandB=32'd0;command=`XOR;
         #10000;
-        $display("| %b | %b | AND  | %b | --- | %b    | -     | %b        | -         | %b    | - |", operandA, operandB, result, carryout, overflow, zero);
+        $display("| %b | %b | XOR  | %b | --- | %b    | -     | %b        | -         | %b    | - |", operandA, operandB, result, carryout, overflow, zero);
 	//
 	operandA=32'd0;operandB=32'd0;command=`XOR;
         #10000;
-        $display("| %b | %b | AND  | %b | --- | %b    | -     | %b        | -         | %b    | - |", operandA, operandB, result, carryout, overflow, zero);
+        $display("| %b | %b | XOR  | %b | --- | %b    | -     | %b        | -         | %b    | - |", operandA, operandB, result, carryout, overflow, zero);
+	$display("-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
+	
+	$display("SLT COMMAND -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
+	//
+        operandA=32'b00101110000110101010101010101101;operandB=32'b10101010100001001001110100010111;command=`XOR;
+        #10000;
+        $display("| %b | %b | XOR  | %b | 10000100100111100011011110111010 | %b    | 1     | %b        | 0         | %b    | 0 |", operandA, operandB, result, carryout, overflow, zero);
+	//
+	operandA=32'd2;operandB=32'd1;command=`SLT;
+        #10000;
+        $display("| %b | %b | XOR  | %b | --- | %b    | -     | %b        | -         | %b    | - |", operandA, operandB, result, carryout, overflow, zero);
+	//
+	operandA=32'd3;operandB=32'd5;command=`SLT;
+        #10000;
+        $display("| %b | %b | XOR  | %b | --- | %b    | -     | %b        | -         | %b    | - |", operandA, operandB, result, carryout, overflow, zero);
+	//
+	operandA=32'd0;operandB=32'd0;command=`XOR;
+        #10000;
+        $display("| %b | %b | XOR  | %b | --- | %b    | -     | %b        | -         | %b    | - |", operandA, operandB, result, carryout, overflow, zero);
+	//
+	operandA=32'd0;operandB=32'd0;command=`XOR;
+        #10000;
+        $display("| %b | %b | XOR  | %b | --- | %b    | -     | %b        | -         | %b    | - |", operandA, operandB, result, carryout, overflow, zero);
 	$display("-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
 
         // $dumpflush;
