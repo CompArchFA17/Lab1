@@ -36,6 +36,8 @@ module FourBitALUTestHarness ();
             B = b_index; #1000
             temp_sum = A + B; // Do an add
 
+            ex_out = temp_sum[3:0];
+
             // Set up expected carryout
             if (temp_sum > 15) begin
             ex_cout = 1;
@@ -63,18 +65,22 @@ module FourBitALUTestHarness ();
 
             // Test res
             if (out != ex_out) begin
+                testfailed = testfailed + 1;
                 $display("Test Case ADD A:%b B:%b Failed, Got Out:%b Expected Out:%b", A, B, out, ex_out);
             end
             // Test ovf
             if (ovf != ex_ovf) begin
+                testfailed = testfailed + 1;
                 $display("Test Case ADD A:%b B:%b Failed, Got OVF:%b Expected OVF:%b", A, B, ovf, ex_ovf);
             end
             // Test zero
             if (zero != ex_zero) begin
+                testfailed = testfailed + 1;
                 $display("Test Case ADD A:%b B:%b Failed, Got zero:%b Expected zero:%b", A, B, zero, ex_zero);
             end
             // Test cout
             if (cout != ex_cout) begin
+                testfailed = testfailed + 1;
                 $display("Test Case ADD A:%b B:%b Failed, Got cout:%b Expected cout:%b", A, B, cout, ex_cout);
             end
         end
@@ -89,7 +95,9 @@ module FourBitALUTestHarness ();
         // Loop B
         for (b_index=0; b_index<16; b_index=b_index+1) begin
             B = b_index; #1000
-            temp_sum = {1'b0, A} + {1'b0,(~B)} + 1;
+            temp_sum = {1'b0, A} + {1'b0,(~B)} + 1; //Carefully widen and do a subtract to preserve sign
+
+            ex_out = temp_sum[3:0];
 
             // Set up expected carryout
             if (temp_sum > 15) begin
@@ -118,18 +126,22 @@ module FourBitALUTestHarness ();
 
             // Test res
             if (out != ex_out) begin
+                testfailed = testfailed + 1;
                 $display("Test Case SUB A:%b B:%b ~B:%b temp_sum:%b Failed, Got Out:%b Expected Out:%b", A, B, (~B), temp_sum, out, ex_out);
             end
             // Test ovf
             if (ovf != ex_ovf) begin
+                testfailed = testfailed + 1;
                 $display("Test Case SUB A:%b B:%b ~B:%b temp_sum:%b Failed, Got OVF:%b Expected OVF:%b", A, B, (~B), temp_sum, ovf, ex_ovf);
             end
             // Test zero
             if (zero != ex_zero) begin
+                testfailed = testfailed + 1;
                 $display("Test Case SUB A:%b B:%b ~B:%b temp_sum:%b Failed, Got zero:%b Expected zero:%b", A, B, (~B), temp_sum, zero, ex_zero);
             end
             // Test cout
             if (cout != ex_cout) begin
+                testfailed = testfailed + 1;
                 $display("Test Case SUB A:%b B:%b ~B:%b temp_sum:%b Failed, Got cout:%b Expected cout:%b", A, B, (~B), temp_sum, cout, ex_cout);
             end
         end
@@ -165,23 +177,32 @@ module FourBitALUTestHarness ();
 
             // Test res
             if (out != ex_out) begin
+                testfailed = testfailed + 1;
                 $display("Test Case SLT A:%b B:%b Failed, Got Out:%b Expected Out:%b", A, B, out, ex_out);
             end
             // Test ovf
             if (ovf != ex_ovf) begin
+                testfailed = testfailed + 1;
                 $display("Test Case SLT A:%b B:%b Failed, Got OVF:%b Expected OVF:%b", A, B, ovf, ex_ovf);
             end
             // Test zero
             if (zero != ex_zero) begin
+                testfailed = testfailed + 1;
                 $display("Test Case SLT A:%b B:%b Failed, Got zero:%b Expected zero:%b", A, B, zero, ex_zero);
             end
             // Test cout
             if (cout != ex_cout) begin
+                testfailed = testfailed + 1;
                 $display("Test Case SUB A:%b B:%b Failed, Got cout:%b Expected cout:%b", A, B, cout, ex_cout);
             end
         end
     end
 
+    if (testfailed > 0) begin
+        $display("%d Tests Failed", testfailed);
+    end else begin
+        $display("Tests Passed");
+    end
 
 
     end
