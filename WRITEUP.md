@@ -65,7 +65,6 @@ Test Case ADD Cin:1 A:0 B:1 Failed, Got Cout:1 Expected Cout:1
 Test Case ADD Cin:1 A:1 B:0 Failed, Got Cout:1 Expected Cout:1
 Test Case SUB Cin:1 A:0 B:0 Failed, Got Cout:1 Expected Cout:1
 Test Case SUB Cin:1 A:1 B:1 Failed, Got Cout:1 Expected Cout:1
-Tests Passed
 ```
 
 None of these failed after adding parentheses; the bit slice functioned as intended. The only change we made to the bit slice design after this point was to add the `SLT` flag (in the `SLT||SUB` component at the top of the above diagram) to the adder input. Previously, the only input to the `XOR` with `B` was `SUB`, but we wanted to make our control logic simpler by adopting a purely "one-hot" design for control line inputs.
