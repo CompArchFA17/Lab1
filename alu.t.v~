@@ -81,19 +81,19 @@ module testALU();
 	//
 	operandA=32'd0;operandB=32'd0;command=`XOR;
         #10000;
-        $display("| %b | %b | AND  | %b | --- | %b    | -     | %b        | -         | %b    | - |", operandA, operandB, result, carryout, overflow, zero);
+        $display("| %b | %b | AND  | %b | --- | %b    | 1     | %b        | 0         | %b    | 0 |", operandA, operandB, result, carryout, overflow, zero);
 	//
 	operandA=32'd0;operandB=32'd0;command=`XOR;
         #10000;
-        $display("| %b | %b | AND  | %b | --- | %b    | -     | %b        | -         | %b    | - |", operandA, operandB, result, carryout, overflow, zero);
+        $display("| %b | %b | AND  | %b | --- | %b    | 0     | %b        | 0         | %b    | 0 |", operandA, operandB, result, carryout, overflow, zero);
 	//
 	operandA=32'd0;operandB=32'd0;command=`XOR;
         #10000;
-        $display("| %b | %b | AND  | %b | --- | %b    | -     | %b        | -         | %b    | - |", operandA, operandB, result, carryout, overflow, zero);
+        $display("| %b | %b | AND  | %b | --- | %b    | 1     | %b        | 0         | %b    | 0 |", operandA, operandB, result, carryout, overflow, zero);
 	//
 	operandA=32'd0;operandB=32'd0;command=`XOR;
         #10000;
-        $display("| %b | %b | AND  | %b | --- | %b    | -     | %b        | -         | %b    | - |", operandA, operandB, result, carryout, overflow, zero);
+        $display("| %b | %b | AND  | %b | --- | %b    | 0     | %b        | 0         | %b    | 0 |", operandA, operandB, result, carryout, overflow, zero);
 	$display("-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
 
         // $dumpflush;

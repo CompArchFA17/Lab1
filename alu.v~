@@ -33,7 +33,7 @@ wire [1:0] select;
 */
 
 wire sltFlag;
-//wire aLessB;
+wire aLessB;
 wire nCommand;
 
 ALULut _lut(select[1:0], invert, carry, command[2:0]);
@@ -45,15 +45,15 @@ ALULut _lut(select[1:0], invert, carry, command[2:0]);
 `NOR (sltFlag, command[2], command[1], nCommand);
 //`AND (result[0], partialResult[0], sltFlag, aLessB);
 
-aluFullBit _bit(result[0], cOut[0], operandA[0], finalB[0], cIn[0], command[0], select[1:0]);
+aluFullBit _bit(partialResult[0], cOut[0], operandA[0], finalB[0], cIn[0], command[0], select[1:0]);
 
 genvar i;
     generate
         for (i=1; i < 32; i=i+1) begin : aluBits
 			`XOR (finalB[i], operandB[i], invert);
 			`AND (cIn[i], carry, cOut[i-1]);
-			//`AND (result[i], partialResult[i], sltFlag);
-            aluFullBit _bit(result[i], cOut[i], operandA[i], finalB[i], cIn[i], command[0], select[1:0]);
+			`AND (result[i], partialResult[i], sltFlag);
+            aluFullBit _bit(partialResult[i], cOut[i], operandA[i], finalB[i], cIn[i], command[0], select[1:0]);
         end
     endgenerate
 	
