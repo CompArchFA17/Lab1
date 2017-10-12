@@ -62,10 +62,10 @@ module ALUunit // The bitslice ALU unit
 
 	assign muxinput[`SLT] = less;
 	`XORgate nand_xor_gate(muxinput[`XOR], bitA, bitB);
-	`NOTgate not_and_gate(muxinput[`AND], result[`NAND]);
+	`NOTgate not_and_gate(muxinput[`AND], muxinput[`NAND]);
 	`NANDgate nandgate(muxinput[`NAND], bitA, bitB);
 	`NORgate norgate(muxinput[`NOR], bitA, bitB);
-	`NOTgate not_or_gate(muxinput[`OR], result[`NOR]);
+	`NOTgate not_or_gate(muxinput[`OR], muxinput[`NOR]);
 
 	threeBitMux mux(bitR, muxindex, muxinput);
 
@@ -89,7 +89,7 @@ module lastALUunit // last ALU unit, which has an ALU unit with outputs of SLT v
 
 	ALUunit basic_unit(bitR, carryout, bitA, bitB, carryin, less, muxindex, invertBflag);
 
-	`XORgate overflowxorgate(overflow, result[31], carryout);
+	`XORgate overflowxorgate(overflow, bitR, carryout);
 	`XORgate slt_xorgate(slt, bitR, overflow);
 
 endmodule
