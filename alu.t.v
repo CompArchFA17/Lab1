@@ -67,11 +67,11 @@ module ALU_test();
 
 
 
-    testAVals[9] = 32'd15422; testBVals[9] = 32'd15421; testcommand[9] = `SLT; testresults[9] = 32'h0000; testcarryouts[9] = 0; testzero[9]=1; testoverflow[9]=0;
+    testAVals[9] = 32'd15422; testBVals[9] = 32'd15421; testcommand[9] = `SLT; testresults[9] = 32'b0000000000000001; testcarryouts[9] = 0; testzero[9]=0; testoverflow[9]=0;
 
-    testAVals[10] = 32'd15422; testBVals[10] = 32'd15421; testcommand[10] = `SLT; testresults[10] = 32'h0000; testcarryouts[10] = 0; testzero[10]=1; testoverflow[10]=0;
+    testAVals[10] = 32'd15422; testBVals[10] = 32'd15422; testcommand[10] = `SLT; testresults[10] = 32'h0000; testcarryouts[10] = 0; testzero[10]=1; testoverflow[10]=0;
 
-    testAVals[11] = 32'd15422; testBVals[11] = 32'd15421; testcommand[11] = `SLT; testresults[11] = 32'h0000; testcarryouts[11] = 0; testzero[11]=1; testoverflow[11]=0;
+    testAVals[11] = 32'd15422; testBVals[11] = 32'd15423; testcommand[11] = `SLT; testresults[11] = 32'h0000; testcarryouts[11] = 0; testzero[11]=0; testoverflow[11]=0;
 
 
 
