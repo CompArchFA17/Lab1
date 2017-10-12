@@ -5,6 +5,8 @@
 `define NOR nor #10     // base is 10 
 `define XOR xor #40     // and with or is 40
 
+
+// This module is the same as the BitSlice32 module at the very end. We wrote BitSlice32 before ALU, and we only created ALU at the end as the cleanest version of our work.
 module ALU
 (
 output[31:0]  result, // OneBitFinalOut
@@ -15,29 +17,11 @@ input[31:0]   operandA, // A
 input[31:0]   operandB, // B
 input[2:0]    command //Command
 );
-	// Your code here
-/*
-output  [size-1:0] OneBitFinalOut, 
-output  [size-1:0]AddSubSLTSum, 
-output  [size-1:0]SLTSum, 
-output carryout, 
-output overflow, 
-output SLTflag,
-output  [size-1:0] OrNorXorOut,
-output  [size-1:0] AndNandOut,
-output  [size-1:0] subtract,
-output [size-1:0] ZeroFlag,
-output AllZeros,
-input  [size-1:0] A, 
-input  [size-1:0] B, 
-input[2:0] Command,
-input [size-1:0]carryin // don't think this does anything but don't want to break it!
-);
-*/
+
 	parameter size = 32;
 	wire [size-1:0] Cmd0Start;
-    wire [size-1:0] Cmd1Start; 
-    wire [size-1:0] CarryoutWire;
+    	wire [size-1:0] Cmd1Start; 
+    	wire [size-1:0] CarryoutWire;
 	wire yeszero;
 	wire [size-1:0] NewVal; 
 	wire [size-1:0] SLTSum;
@@ -77,31 +61,6 @@ input [size-1:0]carryin // don't think this does anything but don't want to brea
 	`AND setzeros(zero, yeszero, yeszero);
 
 endmodule
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
