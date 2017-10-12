@@ -42,6 +42,7 @@ input subtract
 wire carryoutmid[30:0];
 wire zeromid[30:0];
 FullAdder1bit adderinit (result[0], carryoutmid[0], operandA[0], operandB[0], subtract, subtract);
+
 genvar i;
 generate
   for (i = 1; i < 31; i = i + 1)
@@ -49,6 +50,7 @@ generate
   	FullAdder1bit addermid (result[i], carryoutmid[i], operandA[i], operandB[i], subtract, carryoutmid[i- 1]);
   end
 endgenerate
+
 FullAdder1bit adderfinal (result[31], carryout, operandA[31], operandB[31], subtract, carryoutmid[30]);
 
 `XOR overflowdetection(overflow, carryoutmid[30], carryout);
@@ -99,7 +101,8 @@ wire subzero;
 wire suboverflow;
 
 //set invertB to 1 because subtraction is needed
-AddSub subtractor (subresult, subcarryout, subzero, suboverflow, operandA, operandB, 1);
+AddSub subtractor (subresult, subcarryout, subzero, suboverflow, operandA, operandB, 1'b1);
+// AddSub subtractor (result, subcarryout, subzero, suboverflow, operandA, operandB, 1'b1);
 
 assign result[31:1] = 31'b0;
 
@@ -273,7 +276,6 @@ always @(muxindex or resAddsub or resXor or resSlt or resAndnand or resNoror) be
   endcase
 end
 
-
 endmodule
 
 //module to run the alu
@@ -314,10 +316,9 @@ module TEST();
 
   initial begin
     operandA = 32'b10101010101010101010101010101010; operandB = 32'b01000000000000000000000000001010; command = 3'b111; #100000
-
     $displayb("operandA: %b", operandA);
     $displayb("operandB: %b", operandB);
     $displayb("result:   %b", result);
-
   end
+
 endmodule
