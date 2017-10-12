@@ -48,24 +48,36 @@ module ALU
   wire invertB;
   wire[2:0] operation;
   wire[31:0] carryins;
-  assign carryins[0] = 0;
 
   ALUcontrolLUT control(operation, invertA, invertB, command);
 
   generate
     genvar i;
-    for (i=0; i<30; i=i+1) begin
-      ALU1bit bitSliceALU(
-        result[i],
-        carryins[i+1],
-        operation,
-        operandA[i],
-        operandB[i],
-        invertA,
-        invertB,
-        carryins[i],
-        set
-      );
+    for (i=0; i<31; i=i+1) begin
+      if (i == 0)
+        ALU1bit bitSliceALU(
+          result[i],
+          carryins[i+1],
+          operation,
+          operandA[i],
+          operandB[i],
+          invertA,
+          invertB,
+          invertB,
+          set
+        );
+      else
+        ALU1bit bitSliceALU(
+          result[i],
+          carryins[i+1],
+          operation,
+          operandA[i],
+          operandB[i],
+          invertA,
+          invertB,
+          carryins[i],
+          1'b0
+        );
     end
   endgenerate
 
@@ -75,6 +87,8 @@ module ALU
     overflow,
     set,
     operation,
+    operandA[31],
+    operandB[31],
     invertA,
     invertB,
     carryins[31],
