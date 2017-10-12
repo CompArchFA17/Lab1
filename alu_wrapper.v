@@ -66,6 +66,7 @@ module alu_wrapper
 );
 
     wire[31:0] opA, opB;       // Stored inputs to ALU
+    wire[2:0] command;
     wire[31:0] res0;
     wire[3:0] res1;     // Output display options
     wire res_sel;             // Select between display options
@@ -77,13 +78,14 @@ module alu_wrapper
     // Memory for stored operands (parametric width set to 4 bits)
     dff #(4) opA_mem(.trigger(clk), .enable(btn[0]), .d(sw), .q(opA[0 +:4]));
     dff #(4) opB_mem(.trigger(clk), .enable(btn[1]), .d(sw), .q(opB[0 +:4]));
+    dff #(3) cmd_mem(.trigger(clk), .enable(btn[2]), .d(sw[0+:3]), .q(command));
 
     // Capture button input to switch which MUX input to LEDs
     jkff1 src_sel(.trigger(clk), .j(btn[3]), .k(btn[2]), .q(res_sel));
     mux2 #(4) output_select(.in0(res0[0 +:4]), .in1(res1), .sel(res_sel), .out(led));
 
     // TODO: You write this in your adder.v
-    ALU alu(.result(res0), .carryout(cout), .zero(zero), .overflow(ovf), .operandA(opA), .operandB(opB));
+    ALU alu(.result(res0), .carryout(cout), .zero(zero), .overflow(ovf), .operandA(opA), .operandB(opB), .command(command));
 
     // Assign bits of second display output to show carry out and overflow
     assign res1[0] = cout;
