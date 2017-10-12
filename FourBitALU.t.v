@@ -145,7 +145,6 @@ module FourBitALUTestHarness ();
         // Loop B
         for (b_index=0; b_index<16; b_index=b_index+1) begin
             B = b_index; #1000
-            temp_sum = {1'b0, A} + {1'b0,(~B)} + 1;
 
             // Set up expected carryout
             ex_cout = 0;

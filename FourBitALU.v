@@ -3,7 +3,6 @@
 `define AND and #30
 `define OR or #30
 `define XOR xor #30
-`define NOR4 nor #40
 
 `include "BitSlice.v"
 `include "ALUcontrolLUT.v"
@@ -16,11 +15,13 @@ module FourBitALU
     input[3:0] b,
     input[2:0] cmd
 );
+    genvar j;
     // control lines
     wire ADD, SUB, XOR, SLT, AND, NAND, NOR, OR;
     // other wires
     wire[3:0] cout;
     wire[3:0] sum;
+    wire[2:0] zero_out;
     wire cin, res0, ovf_raw, zero_raw, slt_raw, slt_out, flag_enable;
 
     ALUcontrolLUT controlLUT(ADD, SUB, XOR, SLT, AND, NAND, NOR, OR, cmd);
@@ -32,6 +33,10 @@ module FourBitALU
     BitSlice bitslice2(cout[2], sum[2], out[2], ADD, SUB, XOR, SLT, AND, NAND, NOR, OR, a[2], b[2], cout[1]);
     BitSlice bitslice3(cout[3], sum[3], out[3], ADD, SUB, XOR, SLT, AND, NAND, NOR, OR, a[3], b[3], cout[2]);
 
+    `OR zero_or1(zero_out[1], sum[0], sum[1]);
+    `OR zero_or (zero_out[2], zero_out[1], sum[2]);
+    `NOR zero_nor3(zero_raw, zero_out[2], sum[3]);
+
     `OR add_sub (flag_enable, ADD, SUB);
     `XOR ovf_xor (ovf_raw, cout[3], cout[2]);
     `XOR slt_xor (slt_raw, ovf_raw, sum[3]);
@@ -41,7 +46,5 @@ module FourBitALU
     `AND zero_enable (zero, zero_raw, flag_enable);
     `AND slt_enable (slt_out, slt_raw, SLT);
     `OR slt_connect (out[0], res0, slt_out);
-
-    `NOR4 zero_collector (zero_raw, out[3], out[2], out[1], out[0]);
 
 endmodule
