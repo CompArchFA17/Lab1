@@ -1,30 +1,37 @@
 
 
-module ALU(result, carryout, operandA, operandB, carryin, command);
+module ALU(result, carryout, overflow, zero, operandA, operandB, command);
 
-   output result[31:0];
+   output [31:0] result;
    output carryout;
-   input operandA[31:0];
-   input operandB[31:0];
-   input carryin;
+   output overflow;
+   output zero; 
+   input [31:0] operandA;
+   input [31:0] operandB;
    input [2:0] command;
    
-   reg result;
+   reg [31:0] result;
    wire carryout =  0;
-   wire operandA, operandB, carryin, addedResult, xorResult, andResult, nandResult, norResult, orResult;
+   wire overflow =  0; 
+   wire zero = 0;
+   wire operandA, operandB, carryin, addedResult, subResult, xorResult, sltResult, andResult, nandResult, norResult, orResult;
 
-   multi_bit_adder adder(addedResult, carryout, operandA, operandB, carryin);
+   multi_bit_adder adder(addedResult, carryout, overflow, operandA, operandB);
+   multi_bit_subtracter subtracter(subResult, carryout, overflow, operandA, operandB);
+   multi_bit_SLT slt(sltResult,operandA,operandB);
    xor xorgate(xorResult, operandA, operandB);
    and andgate(andResult, operandA, operandB);
    nand nandgate(nandResult, operandA, operandB);
    nor norgate(norResult, operandA, operandB);
    or orgate(orResult, operandA, operandB);
-   
+   and zeros(zero, !(0||result[0]), !(0||result[1]) ,!(0||result[2]) ,!(0||result[3]) ,!(0||result[4]) ,          !(0||result[5]) ,!(0||result[6]) ,!(0||result[7]) ,!(0||result[8]) ,!(0||result[9]) ,!(0||result[10]) ,        !(0||result[11]) ,!(0||result[12]) ,!(0||result[13]) ,!(0||result[14]) ,!(0||result[15]) ,!(0||result[16]),    !(0||result[17]) ,!(0||result[18]) ,!(0||result[19]) ,!(0||result[20]) ,!(0||result[21]) ,!(0||result[22]),    !(0||result[23]) ,!(0||result[24]) ,!(0||result[25]) ,!(0||result[26]) ,!(0||result[27]) ,!(0||result[28]) ,   !(0||result[29]) ,!(0||result[30]) ,!(0||result[31]) );
+
    always @ (command) begin
       case(command)
          3'b000: result = addedResult;
+         3'b001: result = subResult;
          3'b010: result = xorResult;
-         3'b011: result = operandA<operandB;
+         3'b011: result = sltResult;
          3'b100: result = andResult;
          3'b101: result = nandResult;
          3'b110: result = norResult;
@@ -33,88 +40,115 @@ module ALU(result, carryout, operandA, operandB, carryin, command);
    end
 endmodule
 
-module multi_bit_SLT(result,A,B);
+//We can check if A<B by checking starting at the most significant bit and moving to the right checking for following cases
+//If A[n]<B[n] @ n then stop and return 1
+//If A[n]>B[n] @ n then stop and return 0 
+//If A[n]=B[n] @ n continue until the end 
+//If A = B , return 0
+
+module multi_bit_SLT(sltresult,A,B);
+  
+   output sltresult;
+   input [31:0] A;
+   input [31:0] B;
+   integer i;
+
+   reg sltresult = 0;
    initial begin
-   
+
+      for (i = 0 ; i < 31; i = i+1) begin
+
+         //If A[n]<B[n] @ n then stop and return 1 b/c A<B
+         if ( (!A && B) )  begin
+            sltresult = 1;
+         end
+
+      end
+   end
 endmodule
 
-module multi_bit_adder(result, carryout, A, B, carryin);
+module multi_bit_adder(result, carryout, overflow, A, B);
    
-   output result[31:0];
+   output [31:0] result;
    output carryout;
-   input A[31:0];
-   input B[31:0];
-   input carryin;
+   output overflow;
+   input [31:0] A;
+   input [31:0] B;
 
-   wire carryout, result;
-   wire A,B;
+   wire [31:0] result; 
+   wire carryout, overflow;
+   wire [31:0] A,B;
 
-   single_bit_adder adder0 (sum[0], carryout0, a[0], b[0], 0);
-   single_bit_adder adder1 (sum[1], carryout1, a[1], b[1], carryout0);
-   single_bit_adder adder2 (sum[2], carryout2, a[2], b[2], carryout1);
-   single_bit_adder adder3 (sum[3], carryout3, a[3], b[3], carryout2);
+   single_bit_adder adder0 (sum[0], carryout0, A[0], B[0], 0);
+   single_bit_adder adder1 (sum[1], carryout1, A[1], B[1], carryout0);
+   single_bit_adder adder2 (sum[2], carryout2, A[2], B[2], carryout1);
+   single_bit_adder adder3 (sum[3], carryout3, A[3], B[3], carryout2);
 
-   single_bit_adder adder1 (sum[4], carryout4, a[4], b[4], carryout3);
-   single_bit_adder adder2 (sum[5], carryout5, a[5], b[5], carryout4);
-   single_bit_adder adder3 (sum[6], carryout6, a[6], b[6], carryout5);
-   single_bit_adder adder1 (sum[7], carryout7, a[7], b[7], carryout6);
+   single_bit_adder adder4 (sum[4], carryout4, A[4], B[4], carryout3);
+   single_bit_adder adder5 (sum[5], carryout5, A[5], B[5], carryout4);
+   single_bit_adder adder6 (sum[6], carryout6, A[6], B[6], carryout5);
+   single_bit_adder adder7 (sum[7], carryout7, A[7], B[7], carryout6);
 
-   single_bit_adder adder2 (sum[8], carryout8, a[8], b[8], carryout7);
-   single_bit_adder adder3 (sum[9], carryout9, a[9], b[9], carryout8);
-   single_bit_adder adder1 (sum[10], carryout10, a[10], b[10], carryout9);
-   single_bit_adder adder2 (sum[11], carryout11, a[11], b[11], carryout10);
-   single_bit_adder adder3 (sum[12], carryout12, a[12], b[12], carryout11);
-   single_bit_adder adder1 (sum[13], carryout13, a[13], b[13], carryout12);
-   single_bit_adder adder2 (sum[14], carryout14, a[14], b[14], carryout13);
-   single_bit_adder adder3 (sum[15], carryout15, a[15], b[15], carryout14);
+   single_bit_adder adder8 (sum[8], carryout8, A[8], B[8], carryout7);
+   single_bit_adder adder9 (sum[9], carryout9, A[9], B[9], carryout8);
+   single_bit_adder adder10 (sum[10], carryout10, A[10], B[10], carryout9);
+   single_bit_adder adder11 (sum[11], carryout11, A[11], B[11], carryout10);
+   single_bit_adder adder12 (sum[12], carryout12, A[12], B[12], carryout11);
+   single_bit_adder adder13 (sum[13], carryout13, A[13], B[13], carryout12);
+   single_bit_adder adder14 (sum[14], carryout14, A[14], B[14], carryout13);
+   single_bit_adder adder15 (sum[15], carryout15, A[15], B[15], carryout14);
 
-   single_bit_adder adder1 (sum[16], carryout16, a[16], b[16], carryout15);
-   single_bit_adder adder2 (sum[17], carryout17, a[17], b[17], carryout16);
-   single_bit_adder adder3 (sum[18], carryout18, a[18], b[18], carryout17);
-   single_bit_adder adder1 (sum[19], carryout19, a[19], b[19], carryout18);
+   single_bit_adder adder16 (sum[16], carryout16, A[16], B[16], carryout15);
+   single_bit_adder adder17 (sum[17], carryout17, A[17], B[17], carryout16);
+   single_bit_adder adder18 (sum[18], carryout18, A[18], B[18], carryout17);
+   single_bit_adder adder19 (sum[19], carryout19, A[19], B[19], carryout18);
 
-   single_bit_adder adder2 (sum[20], carryout20, a[20], b[20], carryout19);
-   single_bit_adder adder3 (sum[21], carryout21, a[21], b[21], carryout20);
-   single_bit_adder adder1 (sum[22], carryout22, a[22], b[22], carryout21);
-   single_bit_adder adder2 (sum[23], carryout23, a[23], b[23], carryout22);
+   single_bit_adder adder20 (sum[20], carryout20, A[20], B[20], carryout19);
+   single_bit_adder adder21 (sum[21], carryout21, A[21], B[21], carryout20);
+   single_bit_adder adder22 (sum[22], carryout22, A[22], B[22], carryout21);
+   single_bit_adder adder23 (sum[23], carryout23, A[23], B[23], carryout22);
 
-   single_bit_adder adder3 (sum[24], carryout24, a[24], b[24], carryout23);
-   single_bit_adder adder1 (sum[25], carryout25, a[25], b[25], carryout24);
-   single_bit_adder adder2 (sum[26], carryout26, a[26], b[26], carryout25);
-   single_bit_adder adder3 (sum[27], carryout27, a[27], b[27], carryout26);
+   single_bit_adder adder24 (sum[24], carryout24, A[24], B[24], carryout23);
+   single_bit_adder adder25 (sum[25], carryout25, A[25], B[25], carryout24);
+   single_bit_adder adder26 (sum[26], carryout26, A[26], B[26], carryout25);
+   single_bit_adder adder27 (sum[27], carryout27, A[27], B[27], carryout26);
 
-   single_bit_adder adder1 (sum[28], carryout28, a[28], b[28], carryout27);
-   single_bit_adder adder2 (sum[29], carryout29, a[29], b[29], carryout28);
-   single_bit_adder adder3 (sum[30], carryout30, a[30], b[30], carryout29);
-   single_bit_adder adder1 (sum[31], carryout, a[31], b[31], carryout30);
+   single_bit_adder adder28 (sum[28], carryout28, A[28], B[28], carryout27);
+   single_bit_adder adder29 (sum[29], carryout29, A[29], B[29], carryout28);
+   single_bit_adder adder30 (sum[30], carryout30, A[30], B[30], carryout29);
+   single_bit_adder adder31 (sum[31], carryout, A[31], B[31], carryout30);
+
+   xor getoverflow(overflow, carryout30, carryout);
 
 endmodule
 
-module multi_bit_subtracter(result, carryout, A, B, carryin)
+module multi_bit_subtracter(result, carryout, overflow, A, B);
    
-   output result[31:0];
+   output [31:0] result;
    output carryout;
-   input A[31:0];
-   input B{31:0];
-   input carryin;
+   output overflow;
+   input [31:0] A;
+   input [31:0] B;
    
-   wire carryout, result;
-   wire A,B;
+   wire [31:0] result;
+   wire carryout, overflow;
+   wire [31:0] A,B;
+   wire [31:0] nB;
 
-   not notA(nA,A);
    not notB(nB,B);
 
-   multi_bit_adder subtract1(result,carryout,nA,nB,carryin)
+   multi_bit_adder subtract1(result, carryout, overflow, A, nB);
 
 endmodule
 
-module single_bit_adder(result, carryout, A, B, carryin);
+module single_bit_adder(result, carryout, overflow, A, B) ;
    
    output result;
    output carryout;
+   output overflow;
    input A;
    input B;
-   input carryin;
+  
 
    wire carryout, result;
    wire A,B;
