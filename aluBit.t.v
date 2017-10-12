@@ -10,7 +10,7 @@ module testBitslice();
   wire val;
   reg[4:0] count;
 
-  aluFullBitslice bitslice (sumXOR, carryAND, nab, orNOR, a, b, c, i0);
+  aluBit bitslice (sumXOR, carryAND, nab, orNOR, a, b, c, i0);
 
 initial begin
   count = 0;

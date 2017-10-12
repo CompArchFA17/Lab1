@@ -6,10 +6,10 @@
 // external reqirements:
 //    i0 is the 2^0 digit of the control signal (according to the spec)
 //    c can only be true if carryout is allowed (for all bits)
-`define NAND nand #10
-`define NOR nor #10
-`define NOT not #10
-`define XOR xor #10
+`define NAND nand #20
+`define NOR nor #20
+`define XOR2 xor #20
+`define XOR3 xor #30
 
 module aluBit
 (
@@ -36,12 +36,12 @@ module aluBit
     `NAND bNANDc(nbc, b, carryin);
     `NAND aNANDc(nac, a, carryin);
     // level 2 for plus/minus, and
-    `NAND cand(carryAND, nab, nac, nbc);
+    nand #30 cand(carryAND, nab, nac, nbc);
     // xor/sum
-    `XOR sumxor(sumXOR, a, b, carryin);
+    `XOR3 sumxor(sumXOR, a, b, carryin);
     // or/nor
     `NOR aNORb(anorb, a, b);
-    `XOR ornor(orNOR, anorb, i0);
+    `XOR2 ornor(orNOR, anorb, i0);
     
     
 endmodule
