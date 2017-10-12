@@ -12,17 +12,15 @@ module ALU(result, carryout, overflow, zero, operandA, operandB, command);
    wire carryout =  0;
    wire overflow =  0; 
    wire zero = 0;
-   wire [31:0] carryin, addedResult, subResult, xorResult, sltResult, andResult, nandResult, norResult, orResult;
+   wire [31:0] carryin, addedResult, subResult, xorResult, andResult, nandResult, norResult, orResult;
+   wire sltResult;
 
    multi_bit_adder adder(addedResult, carryout, overflow, operandA, operandB);
    multi_bit_subtracter subtracter(subResult, carryout, overflow, operandA, operandB);
    multi_bit_SLT slt(sltResult,operandA,operandB);
-   //xor xorgate(xorResult, operandA, operandB);
-   //and andgate(andResult, operandA, operandB);
-   //nand nandgate(nandResult, operandA, operandB);
-   //nor norgate(norResult, operandA, operandB);
-   //or orgate(orResult, operandA, operandB);
-   and zeros(zero, !(0||result[0]), !(0||result[1]) ,!(0||result[2]) ,!(0||result[3]) ,!(0||result[4]), !(0||result[5]) ,!(0||result[6]) ,!(0||result[7]) ,!(0||result[8]) ,!(0||result[9]) ,!(0||result[10]) ,        !(0||result[11]) ,!(0||result[12]) ,!(0||result[13]) ,!(0||result[14]) ,!(0||result[15]) ,!(0||result[16]),    !(0||result[17]) ,!(0||result[18]) ,!(0||result[19]) ,!(0||result[20]) ,!(0||result[21]) ,!(0||result[22]),    !(0||result[23]) ,!(0||result[24]) ,!(0||result[25]) ,!(0||result[26]) ,!(0||result[27]) ,!(0||result[28]) ,   !(0||result[29]) ,!(0||result[30]) ,!(0||result[31]) );
+
+   //Check for zeros 
+   and zeros(zero, !(0||result[0]), !(0||result[1]) ,!(0||result[2]) ,!(0||result[3]) ,!(0||result[4]),           !(0||result[5]) ,!(0||result[6]) ,!(0||result[7]) ,!(0||result[8]) ,!(0||result[9]) ,!(0||result[10]) ,        !(0||result[11]) ,!(0||result[12]) ,!(0||result[13]) ,!(0||result[14]) ,!(0||result[15]) ,!(0||result[16]),    !(0||result[17]) ,!(0||result[18]) ,!(0||result[19]) ,!(0||result[20]) ,!(0||result[21]) ,!(0||result[22]),    !(0||result[23]) ,!(0||result[24]) ,!(0||result[25]) ,!(0||result[26]) ,!(0||result[27]) ,!(0||result[28]) ,   !(0||result[29]) ,!(0||result[30]) ,!(0||result[31]) );
 
    always @ (command) begin
       case(command)
@@ -80,7 +78,7 @@ module multi_bit_adder(sum, carryout, overflow, A, B);
    wire carryout19,carryout20,carryout21,carryout22,carryout23,carryout24,carryout25,carryout26,carryout27;
    wire carryout28,carryout29,carryout30;
 
-   single_bit_adder adder0 (sum[0], carryout0, A[0], B[0], 0);
+   single_bit_adder adder0 (sum[0], carryout0, A[0], B[0], 1'b0);
    single_bit_adder adder1 (sum[1], carryout1, A[1], B[1], carryout0);
    single_bit_adder adder2 (sum[2], carryout2, A[2], B[2], carryout1);
    single_bit_adder adder3 (sum[3], carryout3, A[3], B[3], carryout2);
@@ -134,10 +132,12 @@ module multi_bit_subtracter(result, carryout, overflow, A, B);
    wire [31:0] result;
    wire carryout, overflow;
    wire [31:0] A;
-   reg [31:0] B;
+   wire [31:0] B;
    wire [31:0] nB;
-
-   nB = !B;
+  
+   //initial nB[31:0] = ~B[31:0];
+   //invert second operand B for subtraction
+   assign nB = !B[31] && !B[30] && !B[29] && !B[28] && !B[27]&& !B[26] && !B[25] && !B[24] && !B[23] && !B[22] && !B[21]&& !B[20] && !B[19] && !B[18] && !B[17] && !B[16] && !B[15] && !B[14] && !B[13] && !B[12] && !B[11] && !B[10] && !B[9] && !B[8] && !B[7] && !B[6] && !B[5] && !B[4] && !B[3] && !B[2] && !B[1] && !B[0] ;
 
    multi_bit_adder subtract1(result, carryout, overflow, A, nB);
 

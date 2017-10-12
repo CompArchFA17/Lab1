@@ -7,7 +7,7 @@ module testALU ();
    wire [31:0] result;
    wire carryout, ofl, zero;
    
-   ALU testALU(.result (result), .carryout (carryout), .ofl (ofl), .zero (zero), .operandA (operandA), .operandB (operandB), .command (command));
+   ALU testALU(.result (result), .carryout (carryout), .overflow (ofl), .zero (zero), .operandA (operandA), .operandB (operandB), .command (command));
    
    task checkTestCase;
    input expectedResult, expectedCarryout, expectedOfl, expectedZero;
