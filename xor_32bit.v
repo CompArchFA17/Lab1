@@ -3,6 +3,7 @@ module xor_32bit
         input[31:0] a,
         input[31:0] b
     );
+    // xor each bit
     xor #10 bit0(out[0], a[0], b[0]);
     xor #10 bit1(out[1], a[1], b[1]);
     xor #10 bit2(out[2], a[2], b[2]);

@@ -1,5 +1,6 @@
 `include "adder.v"
 
+// 32 bit mux
 module mux
   (
     output[31:0] out,
@@ -73,7 +74,9 @@ module mux
   wire in130addr;
   wire in131addr;
 
+  // inverting address
   not #10 inv(invaddr, address);
+  // and all bits in input 0 with inverted address
   and #20 and00(in00addr, in0[0], invaddr);
   and #20 and01(in01addr, in0[1], invaddr);
   and #20 and02(in02addr, in0[2], invaddr);
@@ -106,6 +109,7 @@ module mux
   and #20 and029(in029addr, in0[29], invaddr);
   and #20 and030(in030addr, in0[30], invaddr);
   and #20 and031(in031addr, in0[31], invaddr);
+  // and all bits in input 1 with address
   and #20 and10(in10addr, in1[0], address);
   and #20 and11(in11addr, in1[1], address);
   and #20 and12(in12addr, in1[2], address);
@@ -139,6 +143,7 @@ module mux
   and #20 and130(in130addr, in1[30], address);
   and #20 and131(in131addr, in1[31], address);
 
+  // or the and gates
   or #20 or0(out[0], in00addr, in10addr);
   or #20 or1(out[1], in01addr, in11addr);
   or #20 or2(out[2], in02addr, in12addr);
@@ -200,6 +205,7 @@ module adder_subtracter
   wire _5;
   wire _6;
   
+  // invert B in the case of two's complement
   not #10 invertB0(invertedB[0], opB[0]);
   not #10 invertB1(invertedB[1], opB[1]);
   not #10 invertB2(invertedB[2], opB[2]);
@@ -233,9 +239,11 @@ module adder_subtracter
   not #10 invertB30(invertedB[30], opB[30]);
   not #10 invertB31(invertedB[31], opB[31]);
 
+  // mux chooses between inverted B or normal B based on addition or subtraction
   mux addsubmux(finalB[31:0],command[0],opB[31:0], invertedB[31:0]);
   
-  FullAdder4bit #50 adder0(ans[3:0], cout0, _, opA[3:0], finalB[3:0], command[0]); //coupling 4 adders makes a 32-bit adder, note that overflow flags do not matter except for the last one
+  // coupling 4 adders makes a 32-bit adder, note that overflow flags do not matter except for the last one
+  FullAdder4bit #50 adder0(ans[3:0], cout0, _, opA[3:0], finalB[3:0], command[0]);  // put least significant command bit into the adder carryin since it adds 1 for when subtracting, and 0 when adding
   FullAdder4bit #50 adder1(ans[7:4], cout1, _1, opA[7:4], finalB[7:4], cout0);
   FullAdder4bit #50 adder2(ans[11:8], cout2, _2, opA[11:8], finalB[11:8], cout1);
   FullAdder4bit #50 adder3(ans[15:12], cout3, _3, opA[15:12], finalB[15:12], cout2);

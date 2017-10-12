@@ -3,6 +3,7 @@ module nand_32bit
 		input[31:0] a,
 		input[31:0] b
 	);
+    // nand each bit
 	nand #10 bit0(out[0], a[0], b[0]);
 	nand #10 bit1(out[1], a[1], b[1]);
     nand #10 bit2(out[2], a[2], b[2]);

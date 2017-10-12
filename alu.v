@@ -39,13 +39,14 @@ nor_32bit nor0(norin[31:0],a[31:0],b[31:0]);
 or_32bit or0(orin[31:0],a[31:0],b[31:0]);
 
 
+  // update on changes to ALUcommand, a, or b
   always @(ALUcommand or a or b) 
   	begin
     #5000
     case (ALUcommand)
       3'b000:  begin finalsignal[31:0] = addsub[31:0]; cout = adder_cout; flag = adder_flag; end
       3'b001:  begin finalsignal[31:0] = addsub[31:0]; cout = adder_cout; flag = adder_flag; end
-      3'b010:  begin finalsignal[31:0] = xorin[31:0]; cout = 0; flag = 0; end
+      3'b010:  begin finalsignal[31:0] = xorin[31:0]; cout = 0; flag = 0; end // carryout and flag should be 0 for all non-add/sub operations
       3'b011:  begin finalsignal[31:0] = slt[31:0]; cout = 0; flag = 0; end
       3'b100:  begin finalsignal[31:0] = andin[31:0]; cout = 0; flag = 0; end
       3'b101: begin finalsignal[31:0] = nandin[31:0]; cout = 0; flag = 0; end

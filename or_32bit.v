@@ -3,6 +3,7 @@ module or_32bit
         input[31:0] a,
         input[31:0] b
     );
+    // or each bit
     or #20 bit0(out[0], a[0], b[0]);
     or #20 bit1(out[1], a[1], b[1]);
     or #20 bit2(out[2], a[2], b[2]);

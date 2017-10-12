@@ -1,3 +1,4 @@
+// single bit slt that performs (a<b)?1:0
 module single_slt
 	(
 		output out,
@@ -16,6 +17,7 @@ module single_slt
 	or #20 compare(out, bxorand, xornotand);
 endmodule
 
+// single bit slt that performs (b<a)?1:0
 module single_slt_reversed
     (
         output out,
@@ -34,6 +36,7 @@ module single_slt_reversed
     or #20 compare(out, axorand, xornotand);
 endmodule
 
+// 32bit slt that handles two's complement
 module full_slt_32bit
 	(
 		output[31:0] out,
@@ -71,6 +74,7 @@ module full_slt_32bit
     wire slt28;
     wire slt29;
     wire slt30;
+    // each smaller slt feeds into one higher significant bit
     single_slt bit0(slt0, a[0], b[0], 0);
     single_slt bit1(slt1, a[1], b[1], slt0);
     single_slt bit2(slt2, a[2], b[2], slt1);

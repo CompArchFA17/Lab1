@@ -3,6 +3,7 @@ module nor_32bit
 		input[31:0] a,
 		input[31:0] b
 	);
+    //  nor each bit
 	nor #10 bit0(out[0], a[0], b[0]);
 	nor #10 bit1(out[1], a[1], b[1]);
     nor #10 bit2(out[2], a[2], b[2]);
