@@ -54,7 +54,21 @@ initial begin
             err = 1;
           end
         end
-        `SUB: begin end
+        `SUB:
+        begin
+          if (out^(a^b^c))
+          begin
+            $display("failed subtract: a b c i0 sel result");
+            $display("                 %b %b %b  %b  %b   %b", a, b, c, i0, sel, out);
+            err = 1;
+          end
+          if (carry^((a&b)|(a&c)|(b&c)))
+          begin
+            $display("failed carry: a b c i0 sel result");
+            $display("              %b %b %b  %b  %b   %b", a, b, c, i0, sel, out);
+            err = 1;
+          end
+        end
         `XOR:
         begin
           if ((out^(a^b))&~c)
@@ -64,7 +78,21 @@ initial begin
             err = 1;
           end
         end
-        `SLT: begin end
+        `SLT:
+        begin
+          if (out^(a^b^c))
+          begin
+            $display("failed slt: a b c i0 sel result");
+            $display("            %b %b %b  %b  %b   %b", a, b, c, i0, sel, out);
+            err = 1;
+          end
+          if (carry^((a&b)|(a&c)|(b&c)))
+          begin
+            $display("failed carry: a b c i0 sel result");
+            $display("              %b %b %b  %b  %b   %b", a, b, c, i0, sel, out);
+            err = 1;
+          end
+        end
         `AND:
         begin
           if ((out^(a&b))&~c)
