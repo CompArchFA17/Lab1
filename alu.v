@@ -120,9 +120,9 @@ module ALU
 	// needed to input 1 on carryin only if command is SUB or SLT.
 	ALUunit firstunit(result[0], operandA[0], operandB[0], , set_SLT, command);
 	
-	genvar i;
 	generate
-		for(i=1; i<31; i++) begin
+		genvar i;
+		for(i=1; i<31; i=i+1) begin
 			ALUunit unit(
 				result[i],
 				result[i+1],//carryout
