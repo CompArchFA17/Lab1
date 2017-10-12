@@ -5,9 +5,9 @@
 
 ## Initial Planning Phase
 
-Our plan was to sketch out a design for the ALU, then implement the testing procedures from that design and finally finish the implementation while continuously using the test benches for validation.
+Our plan was to sketch out a design for the ALU, then implement the testing procedures from that design, and finally finish the implementation while continuously using the test benches for validation. We started by planning the structure of a single bit slice, as shown.
 
-<img src="IMG_3528.JPG" alt="bit_slice_test_cases" style="width:600px;">
+<img src="IMG_3528.JPG" alt="bit_slice" style="width:600px;">
 
 ## Developing Test Benches
 
@@ -24,7 +24,7 @@ To verify our test benches were detecting failures, first we added dummy code to
 ```
 
 
-As expected, we achieved the following failures for the logic-gate only portion of the exhaustive tests. Since the output is always zero, we expected six failures for OR and NAND, two failures for NOR and AND, and four failures for XOR.
+As expected, we achieved the following failures for the logic-gate only portion of the exhaustive tests. Since the output is always zero, we expected six failures for `OR` and `NAND`, two failures for `NOR` and `AND`, and four failures for `XOR`.
 ```
 VCD info: dumpfile BitSlice.vcd opened for output.
 Test Case OR Cin:0 A:0 B:1 Failed, Got 0 Expected 1
@@ -49,7 +49,7 @@ Test Case XOR Cin:1 A:0 B:1 Failed, Got 0 Expected 1
 Test Case XOR Cin:1 A:1 B:0 Failed, Got 0 Expected 1
 ```
 
-While writing the expected/actual comparisons in our test loops, we learned that the RTL operations didn't seem to have strictly tighter binding than the comparison operators, and explicitly needed parentheses. i.e. `res != A|B` is not the same as `res != (A|B)`
+While writing the expected/actual comparisons in our actual test loops, we learned that the RTL operations didn't seem to have strictly tighter binding than the comparison operators, and explicitly needed parentheses. i.e. `res != A|B` is not the same as `res != (A|B)`
 
 ```
 VCD info: dumpfile BitSlice.vcd opened for output.
@@ -68,4 +68,72 @@ Test Case SUB Cin:1 A:1 B:1 Failed, Got Cout:1 Expected Cout:1
 Tests Passed
 ```
 
-None of these failed after adding parentheses; the bit slice functioned as intended.
+None of these failed after adding parentheses; the bit slice functioned as intended. The only change we made to the bit slice design after this point was to add the `SLT` flag (in the `SLT||SUB` component at the top of the above diagram) to the adder input. Previously, the only input to the `XOR` with `B` was `SUB`, but we wanted to make our control logic simpler by adopting a purely "one-hot" design for control line inputs.
+
+## Four Bit ALU
+
+We then sketched out an initial plan for the constant-time logic outside of the bit slices, as below. We decided to first implement a 4-bit ALU to validate this logic exhaustively before moving on to 32 bits.
+
+<img src="IMG_3527.JPG" alt="alu_block_diagram" style="width:600px;">
+
+Much of the constant-time logic was familiar from our previous 4-bit adder design, with the exception of the set-less-than logic, and the `ADD||SUB` line for selectively enabling the `cout`, `ovf` and `zero` flags. We had some syntax trouble writing the test benches for this design, to the point where we noticed a flaw in the set-less-than logic before getting any useful information from the test suite.
+
+In the above diagram, the input to the `SLT` enable line is an `OR` gate connected to the overflow line and the most-significant-bit sum line, under the assumption that the subtraction of a larger number from a smaller number would always result in a negative number or an overflow. We failed to account for the case in which a negative number subtracted from a positive number may also overflow, in which case both `ovf` and the final `sum` would be high, incorrectly triggering `SLT`. We fixed this by replacing the `OR` with an `XOR`.
+
+The other design change we made at this point was to re-engineer our logic for triggering the `zero` flag. Realizing that our many-input `NOR` gate connected to all the output lines would result in a massive constant delay *after* the final sum line was calculated, we expanded the logic to a series of `OR` gates connected to each sum line in series, and a final `NOR` gate to ensure that the `zero` flag would only be set if all outputs are zero.
+
+This is our final ALU design, with these changes incorporated.
+
+<img src=" " alt="revised_alu_block_diagram" style="width:600px;">
+
+## 32-bit ALU
+
+Once the four-bit design was complete and the exhaustive tests all passed, it was fairly simple to expand the design to 32 bits. With the exception of the first bit slice, which requires I/O slightly different from all other cases, we automated the creation of the bit slices with a `generate` block, connecting each `CIN` to the previous `cout`. We also wrote a `generate` statement for the chain of zero-flag-checking `OR` gates, which required slightly different formats for the first and last in the series. Otherwise, the code is identical to that of the four-bit case.
+
+We were pretty confident that our design would function largely identically to the exhaustively-tested four-bit case, with the exception of timing. We formulated the worst-case delay that we could come up with, along with a handful of other interesting cases to validate the functionality of all bit slices.
+
+Exhaustively testing all boolean logic blocks. Each bit slice produces entirely independent output for these operations, so these serve as exhaustive tests.
+
+```
+
+```
+
+Testing individual carryouts, on the end cases. All the middle cases are identical, so we used the first two and the last two to validate this functionality.
+
+```
+
+```
+
+Cases chosen to result in all possible combinations of inputs to the SLT logic: neither negative nor overflow, only negative, only overflow, and both.
+
+```
+
+```
+
+Generic addition and subtraction cases, using positive-positive and negative-negative pairs.
+
+```
+
+```
+
+Zero-flag tests, for addition and subtraction.
+
+```
+
+```
+
+Worst-case delay: starting with `ovf` and `SLT` high from one operation `-8 SLT 1`, we move directly to a case `0 SLT 0` in which the result from the first bit slice propagates all the way to the final `COUT`, setting `ovf` to low and propagating through the `SLT` logic.
+
+```
+
+```
+
+Extrapolating the calculations from our 4-bit full adder out to 32 bits and appending the `SLT` logic, we calculated a worst-case delay of 1380 time units. Our test bench was only waiting 1000 time units, so we had to increase the clock period.
+
+<img src=" " alt="worst_case_timing_diagram" style="width:600px;">
+
+## Work Plan Reflection
+
+We were somewhat conservative on our time estimates for the actual ALU design, and made the questionable decision of subdividing the expected work by operation, which didn't correspond to how we actually spent our time. In reality, we designed an entire bit slice with all operations, then scaled it up gradually to a 32-bit ALU with appropriate constant-time logic. Overall, we probably spent somewhat less time than we expected on ALU design, just in a different distribution.
+
+However, writing the test benches took way, way longer than we expected. The original time estimate for test benches was three hours, but over the course of our three phases of testing, we probably spent closer to ten hours just writing and debugging tests. A lot of problems arose simply from our shaky knowledge of Verilog, which was rather frustrating. The time spent there greatly outweighed the underestimate for the circuit design, so overall, we ended up spending many more hours on the lab than we budgeted for.
