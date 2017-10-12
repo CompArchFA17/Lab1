@@ -12,22 +12,23 @@
 
 module ALULut
 (
-    output reg[2:0] select,
+    output reg[1:0] select,
     output reg invert,
+	output reg carry,
     input[2:0] operation
 );
     wire[2:0] operation;
 
     always @(operation) begin
         case (operation)
-            `ADD:  begin select = 0; invert = 0; end    
-            `SUB:  begin select = 0; invert = 1; end
-            `AND:  begin select = 1; invert = 0; end
-            `NAND: begin select = 2; invert = 0; end
-            `NOR:  begin select = 3; invert = 0; end
-            `OR:   begin select = 4; invert = 0; end
-            `XOR:  begin select = 5; invert = 0; end
-            `SLT:  begin select = 6; invert = 0; end   
+            `ADD:  begin select = 3; invert = 0; carry = 1; end    
+            `SUB:  begin select = 3; invert = 1; carry = 1; end
+            `AND:  begin select = 1; invert = 0; carry = 0; end
+            `NAND: begin select = 0; invert = 0; carry = 0; end
+            `NOR:  begin select = 2; invert = 0; carry = 0; end
+            `OR:   begin select = 2; invert = 0; carry = 0; end
+            `XOR:  begin select = 3; invert = 0; carry = 0; end
+            `SLT:  begin select = 3; invert = 1; carry = 1; end   
         endcase
     end
 

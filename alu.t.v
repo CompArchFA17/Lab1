@@ -26,10 +26,10 @@ module testALU();
     initial begin
 
         $display();
-        $display("operandA                          operandB                          cmd  | result                            cOut Overflow Zero");
-        operandA=32'b11010101110101010001010111110000;operandB=32'b10101010010001110111101110010000;command=`AND;
+        $display("operandA                          operandB                          cmd  | result                            | cOut | Overflow | Zero");
+        operandA=32'b00000000000000000000000000000010;operandB=32'b00000000000000000000000000000011;command=`SLT;
         #10000;
-        $display("%b  %b  AND  | %b  %b  %b  %b", operandA, operandB, result, carryout, overflow, zero);
+        $display("%b  %b  AND  | %b  %b  	%b  	%b", operandA, operandB, result, carryout, overflow, zero);
 
         // $dumpflush;
     end
