@@ -117,6 +117,7 @@ module ALU // total ALU which has 32 basic ALU units and control unit.
 		result[0], result[1], // output: result, carryout
 		operandA[0], operandB[0], invertBflag, set_SLT, muxindex, invertBflag
 	);
+	
 	generate // 2nd to 31st adder instantiation 
 		genvar i;
 		for(i=1; i<31; i=i+1) begin: generate_alu_unit
@@ -132,9 +133,39 @@ module ALU // total ALU which has 32 basic ALU units and control unit.
 			);
 		end
 	endgenerate
-	lastALUunit lastunit(
+	/*ALUunit unit1(result[1],result[2],operandA[1],operandB[1],result[0],0,muxindex,invertBflag);
+	ALUunit unit1(result[2],result[3],operandA[2],operandB[2],result[1],0,muxindex,invertBflag);
+	ALUunit unit1(result[3],result[4],operandA[3],operandB[3],result[2],0,muxindex,invertBflag);
+	ALUunit unit1(result[4],result[5],operandA[4],operandB[4],result[3],0,muxindex,invertBflag);
+	ALUunit unit1(result[5],result[6],operandA[5],operandB[5],result[4],0,muxindex,invertBflag);
+	ALUunit unit1(result[6],result[7],operandA[6],operandB[6],result[5],0,muxindex,invertBflag);
+	ALUunit unit1(result[7],result[8],operandA[7],operandB[7],result[6],0,muxindex,invertBflag);
+	ALUunit unit1(result[8],result[9],operandA[8],operandB[8],result[7],0,muxindex,invertBflag);
+	ALUunit unit1(result[9],result[10],operandA[9],operandB[9],result[8],0,muxindex,invertBflag);
+	ALUunit unit1(result[10],result[11],operandA[10],operandB[10],result[9],0,muxindex,invertBflag);
+	ALUunit unit1(result[11],result[12],operandA[11],operandB[11],result[10],0,muxindex,invertBflag);
+	ALUunit unit1(result[12],result[13],operandA[12],operandB[12],result[11],0,muxindex,invertBflag);
+	ALUunit unit1(result[13],result[14],operandA[13],operandB[13],result[12],0,muxindex,invertBflag);
+	ALUunit unit1(result[14],result[15],operandA[14],operandB[14],result[13],0,muxindex,invertBflag);
+	ALUunit unit1(result[15],result[16],operandA[15],operandB[15],result[14],0,muxindex,invertBflag);
+	ALUunit unit1(result[16],result[17],operandA[16],operandB[16],result[15],0,muxindex,invertBflag);
+	ALUunit unit1(result[17],result[18],operandA[17],operandB[17],result[16],0,muxindex,invertBflag);
+	ALUunit unit1(result[18],result[19],operandA[18],operandB[18],result[17],0,muxindex,invertBflag);
+	ALUunit unit1(result[19],result[20],operandA[19],operandB[19],result[18],0,muxindex,invertBflag);
+	ALUunit unit1(result[20],result[21],operandA[20],operandB[20],result[19],0,muxindex,invertBflag);
+	ALUunit unit1(result[21],result[22],operandA[21],operandB[1],result[0],0,muxindex,invertBflag);
+	ALUunit unit1(result[22],result[23],operandA[22],operandB[1],result[0],0,muxindex,invertBflag);
+	ALUunit unit1(result[23],result[24],operandA[23],operandB[1],result[0],0,muxindex,invertBflag);
+	ALUunit unit1(result[24],result[25],operandA[24],operandB[1],result[0],0,muxindex,invertBflag);
+	ALUunit unit1(result[25],result[26],operandA[25],operandB[1],result[0],0,muxindex,invertBflag);
+	ALUunit unit1(result[26],result[27],operandA[26],operandB[1],result[0],0,muxindex,invertBflag);
+	ALUunit unit1(result[27],result[28],operandA[27],operandB[1],result[0],0,muxindex,invertBflag);
+	ALUunit unit1(result[28],result[29],operandA[28],operandB[1],result[0],0,muxindex,invertBflag);
+	ALUunit unit1(result[29],result[30],operandA[29],operandB[1],result[0],0,muxindex,invertBflag);
+	ALUunit unit1(result[30],result[31],operandA[30],operandB[1],result[0],0,muxindex,invertBflag);
+*/	lastALUunit lastunit(
 		result[31], carryout, // output: result, carryout
-		overflow, set_SLT, operandA[31], operandB[i], result[30], 0, muxindex, invertBflag
+		overflow, set_SLT, operandA[31], operandB[31], result[30], 0, muxindex, invertBflag
 	);
 
 endmodule
