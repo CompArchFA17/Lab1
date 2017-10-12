@@ -18,7 +18,7 @@ module FourBitALUTestHarness ();
 
     // Declare helper variable registers
     reg[4:0] a_index, b_index;
-    reg[4:0] temp_sum;
+    reg signed [4:0] temp_sum;
     reg[3:0] ex_out;
     reg ex_ovf, ex_cout, ex_zero;
     reg testfailed;
@@ -89,7 +89,7 @@ module FourBitALUTestHarness ();
         // Loop B
         for (b_index=0; b_index<16; b_index=b_index+1) begin
             B = b_index; #1000
-            temp_sum = A + (!B) + 1; // Do a subtraction (yay 2's comp)
+            temp_sum = {1'b0, A} + {1'b0,(~B)} + 1;
 
             // Set up expected carryout
             if (temp_sum > 15) begin
@@ -99,10 +99,10 @@ module FourBitALUTestHarness ();
             end
 
             // set up expected overflow
-            if (A[3] == B[3] && temp_sum[3] != B[3]) begin
-            ex_ovf = 1;
+            if ((A[3] != B[3]) && (temp_sum[3] == B[3])) begin
+                ex_ovf = 1;
             end else begin
-            ex_ovf = 0;
+                ex_ovf = 0;
             end
 
             // set up expected zero
@@ -118,19 +118,19 @@ module FourBitALUTestHarness ();
 
             // Test res
             if (out != ex_out) begin
-                $display("Test Case SUB A:%b B:%b Failed, Got Out:%b Expected Out:%b", A, B, out, ex_out);
+                $display("Test Case SUB A:%b B:%b ~B:%b temp_sum:%b Failed, Got Out:%b Expected Out:%b", A, B, (~B), temp_sum, out, ex_out);
             end
             // Test ovf
             if (ovf != ex_ovf) begin
-                $display("Test Case SUB A:%b B:%b Failed, Got OVF:%b Expected OVF:%b", A, B, ovf, ex_ovf);
+                $display("Test Case SUB A:%b B:%b ~B:%b temp_sum:%b Failed, Got OVF:%b Expected OVF:%b", A, B, (~B), temp_sum, ovf, ex_ovf);
             end
             // Test zero
             if (zero != ex_zero) begin
-                $display("Test Case SUB A:%b B:%b Failed, Got zero:%b Expected zero:%b", A, B, zero, ex_zero);
+                $display("Test Case SUB A:%b B:%b ~B:%b temp_sum:%b Failed, Got zero:%b Expected zero:%b", A, B, (~B), temp_sum, zero, ex_zero);
             end
             // Test cout
             if (cout != ex_cout) begin
-                $display("Test Case SUB A:%b B:%b Failed, Got cout:%b Expected cout:%b", A, B, cout, ex_cout);
+                $display("Test Case SUB A:%b B:%b ~B:%b temp_sum:%b Failed, Got cout:%b Expected cout:%b", A, B, (~B), temp_sum, cout, ex_cout);
             end
         end
     end
