@@ -84,7 +84,7 @@ The other design change we made at this point was to re-engineer our logic for t
 
 This is our final ALU design, with these changes incorporated.
 
-<img src=" " alt="revised_alu_block_diagram" style="width:600px;">
+<img src="IMG_3531.JPG" alt="revised_alu_block_diagram" style="width:600px;">
 
 ## 32-bit ALU
 
@@ -130,7 +130,7 @@ Worst-case delay: starting with `ovf` and `SLT` high from one operation `-214748
 
 Extrapolating the calculations from our 4-bit full adder out to 32 bits and appending the `SLT` logic, we calculated a worst-case delay of 1480 time units. Our test bench was only waiting 1000 time units, so we had to increase the clock period.
 
-<img src=" " alt="worst_case_timing_diagram" style="width:600px;">
+<img src="worst_case_slt_delay.png" alt="worst_case_timing_diagram" style="width:800px;">
 
 Additions and subtractions should all be slightly faster (as they lack the extra SLT logic), coming out to 1440 for worst-case addition, and 1470 for subtraction. All the boolean logic is constant-time, as there is no chaining between bit slices, and has a worst-case delay of 110 for `NAND` and `NOR`, and 120 for `XOR`, `AND`, and `OR`.
 
