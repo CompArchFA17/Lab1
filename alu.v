@@ -1,6 +1,7 @@
 `define NANDgate nand #320
 `define NORgate nor #320
-`define NOT not #10
+`define NOTgate not #10
+`define XORgate xor #650
 
 `define ADD  3'd0
 `define SUB  3'd1
@@ -53,8 +54,6 @@ module ALUunit // The bitslice ALU unit
 
 	wire notA;
 	wire inputB;
-	wire nand_AnotB; // for XOR
-	wire nand_BnotA; // for XOR
 	wire[7:0] muxinput;
 
 	`NOT not_a(notA, bitA);
@@ -66,14 +65,12 @@ module ALUunit // The bitslice ALU unit
 	Fulladder1bit adder(bitR, carryout, bitA, inputB, carryin);
 
 	assign muxinput[`SLT] = less;
-	`NANDgate nand_anotb_gate(nand_AnotB, bitA, notB);
-	`NANDgate nand_bnota_gate(nand_BnotA, notA, bitB);
-	`NANDgate nand_xor_gate(muxinput[`XOR], nand_AnotB, nand_BnotA);
+	`XORgate nand_xor_gate(muxinput[`XOR], bitA, bitB);
 
-	`NOT not_and_gate(muxinput[`AND], result[`NAND]);
+	`NOTgate not_and_gate(muxinput[`AND], result[`NAND]);
 	`NANDgate nandgate(muxinput[`NAND], bitA, bitB);
 	`NORgate norgate(muxinput[`NOR], bitA, bitB);
-	`NOT not_or_gate(muxinput[`OR], result[`NOR]);
+	`NOTgate not_or_gate(muxinput[`OR], result[`NOR]);
 
 	// needed to import 3bit multiplexer
 	Multiplexer mux(bitR, muxindex, muxinput);
@@ -97,9 +94,8 @@ module lastALUunit // last ALU unit, needed for calculating SLT value and overfl
 
 	ALUunit basic_unit(bitR, carryout, bitA, bitB, carryin, control);
 
-	// needed to define XOR gate from NAND, NOT, NOR gate
-	xor overflowxorgate(overflow, result[31], carryout);
-	xor slt_xorgate(slt, bitR, overflow);
+	`XORgate overflowxorgate(overflow, result[31], carryout);
+	`XORgate slt_xorgate(slt, bitR, overflow);
 
 endmodule
 
