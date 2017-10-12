@@ -47,11 +47,11 @@ genvar i;
 generate
   for (i = 1; i < 31; i = i + 1)
   begin: ripple
-  	FullAdder1bit addermid (result[i], carryoutmid[i], operandA[i], operandB[i], subtract, carryoutmid[i- 1]);
+  	FullAdder1bit addermid (result[i], carryoutmid[i], operandA[i], operandB[i], carryoutmid[i- 1], subtract);
   end
 endgenerate
 
-FullAdder1bit adderfinal (result[31], carryout, operandA[31], operandB[31], subtract, carryoutmid[30]);
+FullAdder1bit adderfinal (result[31], carryout, operandA[31], operandB[31], carryoutmid[30], subtract);
 
 `XOR overflowdetection(overflow, carryoutmid[30], carryout);
 
