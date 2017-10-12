@@ -376,5 +376,76 @@ module testALU32bit();
       $display("Test Case Failed");
     end
 
+    // add
+    ALUcommand = 3'b000;
+    #25000
+    $display("%b           %b %b | %b %b     %b", ALUcommand, a, b, finalALUsig, flag, cout);
+    // Verify expectations and report test result
+    if((finalALUsig != 32'b11111111111111111111111111111110) || (flag != 0) || (cout != 1)) begin
+      $display("Test Case Failed");
+    end
+
+    // sub
+    ALUcommand = 3'b001;
+    #25000
+    $display("%b           %b %b | %b %b     %b", ALUcommand, a, b, finalALUsig, flag, cout);
+    // Verify expectations and report test result
+    if((finalALUsig != 32'b00000000000000000000000000000000) || (flag != 0) || (cout != 1)) begin
+      $display("Test Case Failed");
+    end
+
+    // xor
+    ALUcommand = 3'b010;
+    #25000
+    $display("%b           %b %b | %b %b     %b", ALUcommand, a, b, finalALUsig, flag, cout);
+    // Verify expectations and report test result
+    if((finalALUsig != 32'b00000000000000000000000000000000) || (flag != 0) || (cout != 0)) begin
+      $display("Test Case Failed");
+    end
+
+    // slt
+    ALUcommand = 3'b011;
+    #25000
+    $display("%b           %b %b | %b %b     %b", ALUcommand, a, b, finalALUsig, flag, cout);
+    // Verify expectations and report test result
+    if((finalALUsig != 32'b00000000000000000000000000000000) || (flag != 0) || (cout != 0)) begin
+      $display("Test Case Failed");
+    end
+
+    // and
+    ALUcommand = 3'b100;
+    #25000
+    $display("%b           %b %b | %b %b     %b", ALUcommand, a, b, finalALUsig, flag, cout);
+    // Verify expectations and report test result
+    if((finalALUsig != 32'b11111111111111111111111111111111) || (flag != 0) || (cout != 0)) begin
+      $display("Test Case Failed");
+    end
+
+    // nand
+    ALUcommand = 3'b101;
+    #25000
+    $display("%b           %b %b | %b %b     %b", ALUcommand, a, b, finalALUsig, flag, cout);
+    // Verify expectations and report test result
+    if((finalALUsig != 32'b00000000000000000000000000000000) || (flag != 0) || (cout != 0)) begin
+      $display("Test Case Failed");
+    end
+
+    // nor
+    ALUcommand = 3'b110;
+    #25000
+    $display("%b           %b %b | %b %b     %b", ALUcommand, a, b, finalALUsig, flag, cout);
+    // Verify expectations and report test result
+    if((finalALUsig != 32'b00000000000000000000000000000000) || (flag != 0) || (cout != 0)) begin
+      $display("Test Case Failed");
+    end
+
+    // or
+    ALUcommand = 3'b111;
+    #25000
+    $display("%b           %b %b | %b %b     %b", ALUcommand, a, b, finalALUsig, flag, cout);
+    // Verify expectations and report test result
+    if((finalALUsig != 32'b11111111111111111111111111111111) || (flag != 0) || (cout != 0)) begin
+      $display("Test Case Failed");
+    end
   end
 endmodule
