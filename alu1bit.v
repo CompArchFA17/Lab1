@@ -27,8 +27,8 @@ module ALU1bit
 
   `NOT(nA, operandA);
   `NOT(nB, operandB);
-  mux2to1 Aselect(AnA, {nA, operandA}, invertA);
-  mux2to1 Bselect(BnB, {nB, operandB}, invertB);
+  mux2to1 Aselect(AnA, operandA, nA, invertA);
+  mux2to1 Bselect(BnB, operandB, nB, invertB);
   `AND(AandB, AnA, BnB);
   `AND(AorB, AnA, BnB);
   `XOR(AxorB, AnA, BnB);
@@ -70,8 +70,8 @@ module ALU1bitMSB
 
   `NOT(nA, operandA);
   `NOT(nB, operandB);
-  mux2to1 Aselect(AnA, {nA, operandA}, invertA);
-  mux2to1 Bselect(BnB, {nB, operandB}, invertB);
+  mux2to1 Aselect(AnA, operandA, nA, invertA);
+  mux2to1 Bselect(BnB, operandB, nB, invertB);
   `AND(AandB, AnA, BnB);
   `AND(AorB, AnA, BnB);
   `XOR(AxorB, AnA, BnB);

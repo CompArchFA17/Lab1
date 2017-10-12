@@ -14,7 +14,7 @@ module ALU_test();
   wire [31:0] result;
   wire carryout,zero,overflow;
 
-  ALU_full ALU(result[31:0],carryout,zero,overflow,A[31:0],B[31:0],command[2:0]);
+  ALU ALU_full(result[31:0],carryout,zero,overflow,A[31:0],B[31:0],command[2:0]);
 
   reg [31:0] testAVals [11:0];
   reg [31:0] testBVals [11:0];
