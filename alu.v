@@ -158,7 +158,7 @@ output zero,
 output overflow,
 input[31:0] operandA,
 input[31:0] operandB,
-input invertnor
+input invertor
 );
 
 wire norres[31:0];
@@ -174,7 +174,7 @@ genvar j;
 generate
   for (j = 0; j < 32; j = j + 1)
   begin: ripple1
-	`XOR final (result[j], invertnor, norres[j]);
+	`XOR final (result[j], invertor, norres[j]);
   end
 endgenerate
 
@@ -210,8 +210,8 @@ input[2:0]	ALUcommand
       `CSLT:  begin muxindex = 2; invertB=0; othercontrolsignal = 0; end
       `CAND:  begin muxindex = 3; invertB=0; othercontrolsignal = 0; end
       `CNAND: begin muxindex = 3; invertB=0; othercontrolsignal = 1; end
-      `CNOR:  begin muxindex = 4; invertB=0; othercontrolsignal = 1; end
-      `COR:   begin muxindex = 4; invertB=0; othercontrolsignal = 0; end
+      `CNOR:  begin muxindex = 4; invertB=0; othercontrolsignal = 0; end
+      `COR:   begin muxindex = 4; invertB=0; othercontrolsignal = 1; end
     endcase
   end
 endmodule
