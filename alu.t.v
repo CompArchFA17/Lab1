@@ -1,15 +1,6 @@
 `timescale 1 ns / 1 ps
 `include "alu.v"
 
-`define ADD  3'd0
-`define SUB  3'd1
-`define XOR  3'd2
-`define SLT  3'd3
-`define AND  3'd4
-`define NAND 3'd5
-`define NOR  3'd6
-`define OR   3'd7
-
 module testALU():
     reg [31:0] operandA;
     reg [31:0] operandB;
@@ -57,8 +48,8 @@ module testALU():
     a=32'hAA550055;b=32'hAAFF55AA;c=XOR; #1000
     $display("%b       %b      %b     |  %b    %b     %b   %b     |  00000000101010100101010111111111  0  0  0", result, carryout, zero, overflow);
     
-    a=32'hFF00FF00;b=32'h00FF00FF;c=XOR; #1000
-    $display("%b       %b      %b     |  %b    %b     %b   %b     |  11111111111111111111111111111111  0  0  0", result, carryout, zero, overflow);
+    a=32'hFFFF0000;b=32'h00FF00FF;c=XOR; #1000
+    $display("%b       %b      %b     |  %b    %b     %b   %b     |  11111111000000000000000011111111  0  0  0", result, carryout, zero, overflow);
 
     $display("testing SLT")
 
@@ -85,16 +76,16 @@ module testALU():
 
     $display("testing AND")
 
-    a=32'hFF00FF00;b=32'h00FF00FF;c=AND; #1000
-    $display("%b       %b      %b     |  %b    %b     %b   %b     |  00000000000000000000000000000001  0  0  0", result, carryout, zero, overflow);
+    a=32'hFFFF0000;b=32'h00FF00FF;c=AND; #1000
+    $display("%b       %b      %b     |  %b    %b     %b   %b     |  00000000111111110000000000000000  0  0  0", result, carryout, zero, overflow);
 
     a=32'hFF00AA55;b=32'hAAAA55AA;c=AND; #1000
-    $display("%b       %b      %b     |  %b    %b     %b   %b     |  10101010000000000000000000000001  0  0  0", result, carryout, zero, overflow);
+    $display("%b       %b      %b     |  %b    %b     %b   %b     |  10101010000000000000000000000000  0  0  0", result, carryout, zero, overflow);
 
     $display("testing NAND")
 
-    a=32'hFF00FF00;b=32'h00FF00FF;c=NAND; #1000
-    $display("%b       %b      %b     |  %b    %b     %b   %b     |  11111111111111111111111111111111  0  0  0", result, carryout, zero, overflow);
+    a=32'hFFFF0000;b=32'h00FF00FF;c=NAND; #1000
+    $display("%b       %b      %b     |  %b    %b     %b   %b     |  11111111000000001111111111111111  0  0  0", result, carryout, zero, overflow);
 
     a=32'hFF00AA55;b=32'hAAAA55AA;c=NAND; #1000
     $display("%b       %b      %b     |  %b    %b     %b   %b     |  01010101111111111111111111111111  0  0  0", result, carryout, zero, overflow);
@@ -104,13 +95,13 @@ module testALU():
     a=32'h55550055;b=32'hAAFF55AA;c=NOR; #1000
     $display("%b       %b      %b     |  %b    %b     %b   %b     |  00000000000000000101010100000000  0  0  0", result, carryout, zero, overflow);
 
-    a=32'hFF00FF00;b=32'h00FF00FF;c=NOR; #1000
-    $display("%b       %b      %b     |  %b    %b     %b   %b     |  00000000000000000000000000000000  0  0  0", result, carryout, zero, overflow);
+    a=32'hFFFF0000;b=32'h00FF00FF;c=NOR; #1000
+    $display("%b       %b      %b     |  %b    %b     %b   %b     |  00000000111111110000000000000000  0  0  0", result, carryout, zero, overflow);
 
     $display("testing OR")
 
     a=32'h55FFAA00;b=32'hAAAA55AA;c=OR; #1000
-    $display("%b       %b      %b     |  %b    %b     %b   %b     |  11111111111111111111111111111111  0  0  0", result, carryout, zero, overflow);
+    $display("%b       %b      %b     |  %b    %b     %b   %b     |  11111111111111111111111110101010  0  0  0", result, carryout, zero, overflow);
 
-    a=32'hFF00FF00;b=32'h00FF00FF;c=OR; #1000
-    $display("%b       %b      %b     |  %b    %b     %b   %b     |  11111111111111111111111111111111  0  0  0", result, carryout, zero, overflow);
+    a=32'hFFFF0000;b=32'h00FF00FF;c=OR; #1000
+    $display("%b       %b      %b     |  %b    %b     %b   %b     |  11111111111111110000000011111111  0  0  0", result, carryout, zero, overflow);
