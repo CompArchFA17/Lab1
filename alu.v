@@ -91,7 +91,6 @@ input[2:0]    command
   wire muxidec;
   wire[31:0] preresult;
   wire preflow;
-  wire prezero;
   wire nzero;
 
   //integer i = 0;
@@ -110,23 +109,24 @@ input[2:0]    command
   TheBigOR bigger(nzero, preresult); //a bit wise OR on all bits of result, might not be allowed to do this
   `XOR (preflow, Cout[31], Cout[30]); //determine overflow
 
-  `NOT (prezero, nzero);
-  `AND (zero, flagger, prezero); //set zero if flagger
+  `NOT (zero, nzero); //set zero for each operation
   `AND (carryout, flagger, Cout[31]); //set carryout if flagger
   `AND (overflow, flagger, preflow); //set overflow if flagger
   //`OR(overflow, preflow, 1'b0);
 
+  //Set SLT if the mux command is 3
   bitMultiplexer sltSL(slt, preflow, {operandA[31], preresult[31]}); //compute is less than
-  `OR (muxidec, muxindex[0], muxindex[1]);
-  `NOR (isSlt, flagger, muxidec);
-  bitMultiplexer sltOut(result[0], isSlt, {slt, preresult[0]});
+  `OR (muxidec, muxindex[0], muxindex[1]); //test if muxindex is 0
+  `NOR (isSlt, flagger, muxidec); //test if muxindex and flagger is zero, in which case it is SLT
+  bitMultiplexer sltOut(result[0], isSlt, {slt, preresult[0]}); //Set the first bit to be SLT value 
 
+  //Change the rest of the bits to 0 if SLT
   `NOT (nSlt, isSlt);
   genvar j;
   generate
   	for (j = 1; j < 32; j = j + 1)
   	begin: SLTSet
-  		`AND (result[j], nSlt, preresult[j]);
+  		`AND (result[j], nSlt, preresult[j]); //This and operation changes the bit to 0 if nSlt is false, and keeps the result otherwise.
   	end
   endgenerate
 endmodule

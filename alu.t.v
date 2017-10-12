@@ -19,7 +19,7 @@ module ALUTestBench();
     $dumpfile("alu.vcd");
     $dumpvars(0, operandA, operandB, result, overflow, zero, carryout, command, expected);
 
-    $display("            A  |            B  |  Com |            Out  |            Exp  ");
+    $display("            A  |            B  |  Com |            Out  |            Exp  | Overflow | Zero");
     operandA = -5358; //Set register a.
     operandB = 5369; //Set register b.
     command = 0;
