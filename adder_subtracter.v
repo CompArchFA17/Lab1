@@ -178,6 +178,7 @@ module mux
   or #20 or31(out[31], in031addr, in131addr);
 endmodule
 
+// 32 bit adder/subtracter that determines what operation to conduct based on the input command
 module adder_subtracter
   (
     output[31:0] ans,

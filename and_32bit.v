@@ -1,3 +1,4 @@
+// 32 bit and module
 module and_32bit
 	(	output[31:0] out,
 		input[31:0] a,

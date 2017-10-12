@@ -36,7 +36,7 @@ module single_slt_reversed
     or #20 compare(out, axorand, xornotand);
 endmodule
 
-// 32bit slt that handles two's complement
+// 32 bit slt that handles two's complement
 module full_slt_32bit
 	(
 		output[31:0] out,

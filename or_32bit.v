@@ -1,3 +1,4 @@
+// 32 bit or module
 module or_32bit
     (   output[31:0] out,
         input[31:0] a,

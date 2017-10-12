@@ -1,3 +1,4 @@
+// 32 bit nand module
 module nand_32bit
 	(	output[31:0] out,
 		input[31:0] a,
