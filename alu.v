@@ -102,7 +102,7 @@ input[2:0]    command
   generate
     for (i = 1; i < 32; i = i+1)
     begin: ripple
-      BitSliceALU bit(preresult[i], Cout[i], invertB, Cout[i-1], muxindex, operandA[i], operandB[i]);
+      BitSliceALU bitany(preresult[i], Cout[i], invertB, Cout[i-1], muxindex, operandA[i], operandB[i]);
     end
   endgenerate
   //BitSliceALU bit31(result[31], Cout[31], invertB, Cout[30], mux, operandA[31], operandB[31]);

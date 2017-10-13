@@ -11,25 +11,63 @@ module ALUTestBench();
   wire        zero;
   wire        overflow;
 
+  integer OperandAs[1:6];
+  integer OperandBs[1:6];
+  integer addresults[1:6];
+  integer a;
+
+  integer notpassed = 0;
+
   //ALUcontrolLUT controller(muxindex, invertB, flagger, command);
 
   ALU alu(result, carryout, zero, overflow, operandA, operandB, command);
 
-  initial begin
-    $dumpfile("alu.vcd");
-    $dumpvars(0, operandA, operandB, result, overflow, zero, carryout, command, expected);
-
+  // initial begin
+  //   $dumpfile("alu.vcd");
+  //   $dumpvars(0, operandA, operandB, result, overflow, zero, carryout, command, expected);
+  // end
+    initial begin
     $display("            A  |            B  |  Com |            Out  |            Exp  | Overflow | Zero");
-    operandA = -5358; //Set register a.
-    operandB = 5369; //Set register b.
+    //Test the Add operation:
     command = 0;
-    expected = 11;
-    #10000 //Delay.
-    $display("  %d  |  %d  |  %d  |    %d    |   %d   ", $signed(operandA), $signed(operandB), command, $signed(result), $signed(expected));
-    operandA = 552; //Set register a.
-    operandB = 600; //Set register b.
+    OperandAs[1] = -5358; OperandAs[2] = 0; OperandAs[3] = -35; 
+    OperandBs[1] = 5369; OperandBs[2] = 0; OperandBs[3] = -65;
+    addresults[1]= 11; addresults[2]= 0 ; addresults[3]= -100;
+    OperandAs[4] = 730; OperandAs[5] = 4294967210; OperandAs[6] = -4294961800;
+    OperandBs[4] = -520; OperandBs[5] = 300; OperandBs[6] = -30000;
+    addresults[4]= 210 ; addresults[5]= 0; addresults[6]= 0;
+    for (a = 1;  a < 7; a = a + 1)
+    #10000 //Delay
+    begin: addtest
+        operandA = OperandAs[a];
+        operandB = OperandBs[a];
+        #10000 //Delay
+        if((result != addresults[a]) && (overflow != 1)) begin 
+            notpassed = notpassed + 1;  // Add to test not passed
+            $display("Test Case adding %d to %d Failed with result %d and overflow %d", operandA, operandB, result, overflow);
+        end
+    end
+
+    //Test the Subtract operation
     command = 1;
-    expected = -48;
+    OperandAs[1] = -5358; OperandAs[2] = 0; OperandAs[3] = -35; 
+    OperandAs[4] = 730; OperandAs[5] = 4294967210; OperandAs[6] = -4294961800;
+    OperandBs[1] = 5369; OperandBs[2] = 0; OperandBs[3] = -65;
+    OperandBs[4] = -520; OperandBs[5] = 300; OperandBs[6] = -30000;
+    addresults[1]= 11; addresults[2]= 0 ; addresults[3]= -100;
+    addresults[4]= 210 ; addresults[5]= 0; addresults[6]= 0;
+    for (a = 1;  a < 7; a = a + 1)
+    #10000
+    begin: subtracttest
+        operandA = OperandAs[a];
+        operandB = OperandBs[a];
+        #10000
+        if((result != addresults[a]) && (overflow != 1)) begin 
+            notpassed = notpassed + 1;  // Add to test not passed
+            $display("Test Case subtracting %d - %d Failed", operandA, operandB);
+        end
+    end
+
     #10000 //Delay.
     $display("  %d  |  %d  |  %d  |    %d    |   %d   ", $signed(operandA), $signed(operandB), command, $signed(result), $signed(expected));
     operandA = 300; //Set register a.
@@ -131,6 +169,8 @@ module ALUTestBench();
     command = 1;
     expected = -1;
     #10000 //Delay.
-    $display("  %d  |  %d  |  %d  |    %d    |   %d   |   %b   |   %b   ", $signed(operandA), $signed(operandB), command, $signed(result), $signed(expected), overflow, zero);
-  end
+    //$display("  %d  |  %d  |  %d  |    %d    |   %d   |   %b   |   %b   ", $signed(operandA), $signed(operandB), command, $signed(result), $signed(expected), overflow, zero);
+
+    $display("Number of test failed %d", notpassed);
+end
 endmodule
