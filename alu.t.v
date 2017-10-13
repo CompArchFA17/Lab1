@@ -10,45 +10,24 @@ module testALU();
     wire        overflow;
     wire signed[31:0]  result;
 
+
     ALU dut(result, carryout, zero, overflow, a, b, command);
 
     initial begin
-      command = 3'd2;
-      a = -4;
-      b = -4; #10000000
-      $display("%d %d %d", a, b, result);
-      a = -3;
-      b = -4; #10000000
-      $display("%d %d %d", a, b, result);
-      a = -4;
-      b = -3; #10000000
-      $display("%d %d %d", a, b, result);
-      a = 4;
-      b = 4; #10000000
-      $display("%d %d %d", a, b, result);
-      a = 3;
-      b = 4; #10000000
-      $display("%d %d %d", a, b, result);
-      a = 4;
-      b = 3; #10000000
-      $display("%d %d %d", a, b, result);
-      a = 3;
-      b = 0; #10000000
-      $display("%d %d %d", a, b, result);
-      a = 0;
-      b = 3; #10000000
-      $display("%d %d %d", a, b, result);
-      a = -3;
-      b = 0; #10000000
-      $display("%d %d %d", a, b, result);
-      a = 0;
-      b = -3; #10000000
-      $display("%d %d %d", a, b, result);
-      a = 4;
-      b = -3; #10000000
-      $display("%d %d %d", a, b, result);
-      a = -4;
-      b = 3; #10000000
-      $display("%d %d %d", a, b, result);
+      $dumpfile("alu.vcd");
+      $dumpvars(0, testALU);
+        command = 3'd0;
+        a = -4;
+        b = 4; #1000000
+        if (result != 0 || overflow || !zero) begin
+            $display("FAIL %d %d %d |cmd: %d |ovf: %d |0: %d |co: %d", a, b, result, command, overflow, zero, carryout);
+        end
+        
+        command = 3'd1;
+        a = 4;
+        b = 4; #1000000
+        if (result != 0 || overflow || !zero) begin
+            $display("FAIL %d %d %d |cmd: %d |ovf: %d |0: %d |co: %d", a, b, result, command, overflow, zero, carryout);
+        end
     end
 endmodule
