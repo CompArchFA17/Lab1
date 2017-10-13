@@ -11,8 +11,10 @@ module testALUunit ();
 
     initial begin
     $display("bitA bitB carryin less muxIndex invertBFlag | bitR carryout");
-    bitA=1;bitB=0;carryin=0;less=0;muxIndex=3'd4;invertBFlag=0;
-    $display("%b  %b  %b  %b  %b  %b |  %b  %b", bitA, bitB, carryin, less, muxIndex, invertBFlag, bitR, carryout);
+    bitA=1;bitB=1;carryin=0;less=0;muxIndex=`AND;invertBFlag=0; #3000
+    $display("%b    %b    %b       %b    %b       %b          |  %b  %b", bitA, bitB, carryin, less, muxIndex, invertBFlag, bitR, carryout);
+    bitA=1;bitB=0;carryin=0;less=0;muxIndex=`AND;invertBFlag=0; #3000
+    $display("%b    %b    %b       %b    %b       %b          |  %b  %b", bitA, bitB, carryin, less, muxIndex, invertBFlag, bitR, carryout);
 
     end
 endmodule

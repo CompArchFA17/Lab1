@@ -1,24 +1,31 @@
+`define NANDgate nand #320
+`define ANDgate and #330
+`define NORgate nor #320
+`define ORgate  or  #330
+`define NOTgate not #10
+`define XORgate xor #650
+
 `timescale 1 ns / 1 ps
 `include "3bitMux.v"
 
 module test3BitMux ();
-    reg s0, s1, s2;
+    reg[2:0] addr;
     reg[7:0] inputs;
     wire out;
 
-    threeBitMux mux (out, s0, s1, s2, inputs);
+    threeBitMux mux (out, addr, inputs);
 
     initial begin
-    $display("s0 s1 s2 inputs | Output");
-    s0=0;s1=0;s2=0;inputs=8'b00010000; #1000
-    $display("%b %b %b %b | %b", s0, s1, s2, inputs, out);
-    s0=0;s1=0;s2=0;inputs=8'b10000001; #1000
-    $display("%b %b %b %b | %b", s0, s1, s2, inputs, out);
-    s0=0;s1=0;s2=0;inputs=8'b00000000; #1000
-    $display("%b %b %b %b | %b", s0, s1, s2, inputs, out);
-    s0=0;s1=1;s2=1;inputs=8'b01000001; #1000
-    $display("%b %b %b %b | %b", s0, s1, s2, inputs, out);
-    s0=0;s1=1;s2=0;inputs=8'b00001101; #1000
-    $display("%b %b %b %b | %b", s0, s1, s2, inputs, out);
+    $display("addr inputs | Output");
+    addr=3`b000;inputs=8'b00010000; #1000
+    $display("%b    %b | %b", addr, inputs, out);
+    addr=3`b000;inputs=8'b10000001; #1000
+    $display("%b    %b | %b", addr, inputs, out);
+    addr=3`b000;inputs=8'b00000000; #1000
+    $display("%b    %b | %b", addr, inputs, out);
+    addr=3`b011;inputs=8'b01000001; #1000
+    $display("%b    %b | %b", addr, inputs, out);
+    addr=3`b010;inputs=8'b00001101; #1000
+    $display("%b    %b | %b", addr, inputs, out);
     end
 endmodule

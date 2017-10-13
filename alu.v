@@ -1,9 +1,9 @@
-`define NANDgate nand #320
-`define ANDgate and #330
-`define NORgate nor #320
-`define ORgate 	or  #330
+`define NANDgate nand #10
+`define ANDgate and #20
+`define NORgate nor #10
+`define ORgate 	or  #20
 `define NOTgate not #10
-`define XORgate xor #650
+`define XORgate xor #30
 
 `define ADD  3'd0
 `define SUB  3'd1
@@ -98,7 +98,7 @@ endmodule
 module ALU // total ALU which has 32 basic ALU units and control unit.
 (
 	output[31:0]  result,
-	output        carryout,
+	output 	 	  carryout,
 	output        zero,
 	output        overflow,
 
@@ -107,6 +107,7 @@ module ALU // total ALU which has 32 basic ALU units and control unit.
 	input[2:0]    command
 );
 
+	wire[30:0]	internal_carryout; //carryout of each ALU unit except the last one
 	wire[2:0] 	muxindex;	//input address of MUX for every ALU unit
 	wire 		invertBflag;//invertB flag input for every ALU unit
 	wire 		set_SLT;	//less input for the first ALU unit
@@ -114,7 +115,7 @@ module ALU // total ALU which has 32 basic ALU units and control unit.
 	ALUcontrolLUT controlLUT(muxindex, invertBflag, command);
 
 	ALUunit firstunit(
-		result[0], result[1], // output: result, carryout
+		result[0], internal_carryout[0], // output: result, carryout
 		operandA[0], operandB[0], invertBflag, set_SLT, muxindex, invertBflag
 	);
 	
@@ -123,10 +124,10 @@ module ALU // total ALU which has 32 basic ALU units and control unit.
 		for(i=1; i<31; i=i+1) begin: generate_alu_unit
 			ALUunit unit(
 				result[i],
-				result[i+1],//carryout
+				internal_carryout[i],//carryout
 				operandA[i],
 				operandB[i],
-				result[i-1],//carryin
+				internal_carryout[i-1],//carryin
 				0, 			//result for SLT command
 				muxindex,
 				invertBflag
@@ -135,7 +136,7 @@ module ALU // total ALU which has 32 basic ALU units and control unit.
 	endgenerate
 	lastALUunit lastunit(
 		result[31], carryout, // output: result, carryout
-		overflow, set_SLT, operandA[31], operandB[31], result[30], 0, muxindex, invertBflag
+		overflow, set_SLT, operandA[31], operandB[31], internal_carryout[30], 0, muxindex, invertBflag
 	);
 
 endmodule
