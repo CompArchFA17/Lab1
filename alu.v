@@ -12,11 +12,13 @@ input[2:0]    command
     wire[31:0] zerobus;
     wire[31:0] overrideBus;
     wire[31:0] resultBus;
-    wire carryout;
     wire mixedSigns;
     wire sameSigns;
     wire possibleOverflow;
     wire sltPre;
+    wire flagsEnable;
+    wire carryoutint, overflowint;
+   
 
     reg[7:0] commandslice;
     always @(command) begin
@@ -54,16 +56,21 @@ input[2:0]    command
     `OR subflag(carryinbus[0], commandslice[1], commandslice[1]);
     //set carryout to the lest carry bit
     //this or gate is also a wire
-    `OR carryor(carryout, carryinbus[32], carryinbus[32]);
+    `OR carryor(carryoutint, carryinbus[32], carryinbus[32]);
     //and all the zero outputs to get the zero output
     and32 zeroout(zero, zerobus);
     //calculate overflow
     `XOR overflowXor(possibleOverflow, result[31], carryout);
     `XNOR overflowXnor(sameSigns, operandA[31], operandB[31]);
-    `AND overflowAnd(overflow, possibleOverflow, sameSigns);
+    `AND overflowAnd(overflowint, possibleOverflow, sameSigns);
     //handle the slt stuff
     `NOT sltNot(mixedSigns, sameSigns);
     `AND sltOut(sltPre, carryinbus[32], commandslice[3]);
     `XOR sltOut2(overrideBus[0], sltPre, mixedSigns);
     or32P resultOr(result, resultBus,  overrideBus);
+    //flag enabling
+    `OR addorsub(flagsEnable, commandslice[0], commandslice[1]);
+    `AND overflowand(overflow, overflowint, flagsEnable);
+   `AND carryoutand(carryout, carryoutint, flagsEnable);
+   
 endmodule
