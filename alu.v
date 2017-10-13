@@ -23,14 +23,14 @@ input[2:0]    command
     reg[7:0] commandslice;
     always @(command) begin
       case (command)
-      0:  begin commandslice = 1<<0; end
-      1:  begin commandslice = 1<<1; end
-      2:  begin commandslice = 1<<2; end
-      3:  begin commandslice = 1<<3; end
-      4:  begin commandslice = 1<<4; end
-      5:  begin commandslice = 1<<5; end
-      6:  begin commandslice = 1<<6; end
-      7:  begin commandslice = 1<<7; end
+      0:  begin commandslice = 8'd1<<0; end
+      1:  begin commandslice = 8'd1<<1; end
+      2:  begin commandslice = 8'd1<<2; end
+      3:  begin commandslice = 8'd1<<3; end
+      4:  begin commandslice = 8'd1<<4; end
+      5:  begin commandslice = 8'd1<<5; end
+      6:  begin commandslice = 8'd1<<6; end
+      7:  begin commandslice = 8'd1<<7; end
       endcase
     end
 
@@ -56,25 +56,23 @@ input[2:0]    command
     `OR subflag(carryinbus[0], commandslice[1], commandslice[1]);
     //set carryout to the lest carry bit
     //this or gate is also a wire
-    `OR carryor(carryoutint, carryinbus[32], carryinbus[32]);
+    `OR carryor(carryout, carryinbus[32], carryinbus[32]);
     //and all the zero outputs to get the zero output
     and32 zeroout(zero, zerobus);
+    //it's nice to know these
+    `XNOR sameSignXNOR(sameSigns, operandA[31], operandB[31]);
+    `NOT differentSignNOT(mixedSigns, sameSigns);
     //calculate overflow
     `XOR overflowXor(possibleOverflow, result[31], carryout);
-    `XNOR overflowXnorAdd(sameSigns, operandA[31], operandB[31]);
-    `NOT overflowNot(mixedSigns, sameSigns);
     mux1 overflowMux(overFlowPossible, mixedSigns, sameSigns, commandslice[0]);
     `OR addSubOr(addOrSub, commandslice[0], commandslice[1]);
     `AND overflowAnd(overflowPre, possibleOverflow, overFlowPossible);
-    `AND overflowOut(overflow, overflowPre, addOrSub);
+    `AND overflowOut(overflow, overflowPre, adOrSub);
+
     //handle the slt stuff
     `XOR sltOut(sltPre, carryout, mixedSigns);
     `AND sltOut2(overrideBus[0], sltPre, commandslice[3]);
 
     or32P resultOr(result, resultBus,  overrideBus);
-    //flag enabling
-    `OR addorsub(flagsEnable, commandslice[0], commandslice[1]);
-    `AND overflowand(overflow, overflowint, flagsEnable);
-   `AND carryoutand(carryout, carryoutint, flagsEnable);
 
 endmodule

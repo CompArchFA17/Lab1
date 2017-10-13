@@ -3,7 +3,7 @@
 `define AND  and  #30
 `define NOT  not  #10
 `define XNOR xnor #20
-`define NOR  xor  #20
+`define NOR  nor  #20
 `define NAND nand #20
 
 module or4(output out, input[3:0] in);
@@ -157,6 +157,7 @@ wire A_, B_;
 fullAdder adder(results[0], carryouts[0], A, B, carryin);
 fullAdder sub(results[1], carryouts[1], A, B_, carryin);
 `XOR xorGate(results[2], A, B);
+`OR(carryouts[2], 0, 0);
 //slt is odd. Only the first bit is ever set, but it depends
 //on the lest bit. The actual result is handled later,
 //in the full ALU
@@ -164,9 +165,13 @@ slt sltGate(carryouts[3], carryin, A, A_, B, B_);
 `OR  falseGate(results[3], 0, 0);
 
 `AND andGate(results[4], A, B);
+`OR(carryouts[4], 0, 0);
 `NAND nandGate(results[5], A, B);
+`OR(carryouts[5], 0, 0);
 `NOR  norGate(results[6], A, B);
+`OR(carryouts[6], 0, 0);
 `OR   orGate(results[7], A, B);
+`OR(carryouts[7], 0, 0);
 unaryMultiplexor resMux(result, results, command);
 unaryMultiplexor cMux(carryout, carryouts, command);
 `NOT(zero, result);

@@ -28,7 +28,7 @@ module testALU();
         if (result != 31'h80000000 || !overflow || zero) begin
             $display("FAIL %d %d %d |cmd: %d |ovf: %d |0: %d |co: %d |des: %d", a, b, result, command, overflow, zero, carryout, 31'h8000000);
         end
-        
+
         //Subtraction tests
         command = 3'd1;
         a = 4;
@@ -41,20 +41,20 @@ module testALU();
         if (result != 31'h7fffffff || !overflow || zero) begin
             $display("FAIL %d %d %d |cmd: %d |ovf: %d |0: %d |co: %d |des: %d", a, b, result, command, overflow, zero, carryout, 31'h7fffffff);
         end
-        
+
         //XOR tests
         command = 3'd2;
         a = 4'b1001;
         b = 4'b1010; #1000000
-        if (result != a^b) begin
+        if (result != (a^b)) begin
             $display("FAIL %d %d %d |cmd: %d |ovf: %d |0: %d |co: %d |des: %d", a, b, result, command, overflow, zero, carryout, a^b);
         end
         a = 4'b0000;
         b = 4'b1111; #1000000
-        if (result != a^b) begin
+        if (result != (a^b)) begin
             $display("FAIL %d %d %d |cmd: %d |ovf: %d |0: %d |co: %d |des: %d", a, b, result, command, overflow, zero, carryout, a^b);
         end
-        
+
         //SLT tests
         command = 3'd3;
         a = -8;
@@ -77,7 +77,7 @@ module testALU();
         if (result) begin
             $display("FAIL %d %d %d |cmd: %d |ovf: %d |0: %d |co: %d |des: %d", a, b, result, command, overflow, zero, carryout, 1);
         end
-        
+
         //AND tests
         command = 3'd4;
         a = 4'b1001;
@@ -90,7 +90,7 @@ module testALU();
         if (result != a&b) begin
             $display("FAIL %b %b %b |cmd: %d |ovf: %d |0: %d |co: %d |des: %b", a, b, result, command, overflow, zero, carryout, a&b);
         end
-        
+
         //AND tests
         command = 3'd5;
         a = 4'b1001;
@@ -103,7 +103,7 @@ module testALU();
         if (result != ~(a&b)) begin
             $display("FAIL %b %b %b |cmd: %d |ovf: %d |0: %d |co: %d |des: %b", a, b, result, command, overflow, zero, carryout, ~(a&b));
         end
-        
+
         //NOR tests
         command = 3'd6;
         a = 4'b1001;
@@ -116,7 +116,7 @@ module testALU();
         if (result != ~(a|b)) begin
             $display("FAIL %b %b %b |cmd: %d |ovf: %d |0: %d |co: %d |des: %b", a, b, result, command, overflow, zero, carryout, ~(a|b));
         end
-        
+
         //OR tests
         command = 3'd7;
         a = 4'b1001;
