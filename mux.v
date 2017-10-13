@@ -8,12 +8,12 @@ module mux2to1
   input   select
 );
 
-  wire d1, d2, nSelect;
+  wire d0, d1, nSelect;
 
   `NOT(nSelect, select);
-  `AND(d1, a, nSelect);
-  `AND(d2, b, select);
-  `OR(selected, d1, d2);
+  `AND(d0, a, nSelect);
+  `AND(d1, b, select);
+  `OR(selected, d0, d1);
 
 endmodule
 

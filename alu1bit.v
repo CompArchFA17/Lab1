@@ -91,7 +91,7 @@ module ALU1bitMSB
   `XOR(AxorB, operandA, operandB);
   adder1bit adder(sum, _carryout, AnA, BnB, carryin);
 
-  `NOR(useCarryout, operation[0], operation[1], operation[2]);
+  `NOR3(useCarryout, operation[0], operation[1], operation[2]);
   `AND(carryout, _carryout, useCarryout);
 
   assign values[0] = sum;
