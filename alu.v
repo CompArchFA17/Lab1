@@ -2,6 +2,7 @@
 `include "lut.v"
 `include "aluFullBit.v"
 
+// Define gates and timings.
 `define AND and #30
 `define OR or #30
 `define NOT not #10
@@ -28,7 +29,7 @@ wire [1:0] select;
 wire nSltFlag;
 wire sltFlag;
 wire aLessB;
-wire nCommand;
+wire [1:0]nCommand;
 wire partialResult2;
 wire finalSlt;
 
@@ -37,8 +38,8 @@ ALULut _lut(select[1:0], invert, carry, command[2:0]);
 `XOR (finalB[0], operandB[0], invert);
 `AND (cIn[0], carry, command[0]);
 
-`NOT (nCommand, command[2]);
-nand #30 (nSltFlag, command[0], command[1], nCommand);
+`NOT (nCommand[1], command[2]);
+nand #30 (nSltFlag, command[0], command[1], nCommand[1]);
 `NOT (sltFlag, nSltFlag);
 
 aluFullBit _bit(partialResult[0], cOut[0], operandA[0], finalB[0], cIn[0], command[0], select[1:0]);
@@ -59,10 +60,6 @@ wire partialOverflow;
 
 wire [1:0] nSelect;
 
-and #40 (carryout, cOut[31], select[0], select[1]);
-and #40 (overflow, partialOverflow, select[0], select[1]);
-
-
 wire [30:0] zeroFlags;
 `OR (zeroFlags[0], result[0], result[1]);
 
@@ -74,7 +71,10 @@ endgenerate
 
 wire zeroPartial;
 `NOT (zeroPartial, zeroFlags[30]);
-and #40 (zero, zeroPartial, select[0], select[1]);
+`NOT (nCommand[0], command[1]);
+and #40 (zero, zeroPartial, nCommand[0], nCommand[1]);
+and #40 (carryout, cOut[31], nCommand[0], nCommand[1]);
+and #40 (overflow, partialOverflow, nCommand[0], nCommand[1]);
 
 `XOR (aLessB, partialOverflow, partialResult[31]);
 `AND (finalSlt, aLessB, sltFlag);
