@@ -1,3 +1,11 @@
+`define AND and #30
+`define OR or #30
+`define NOT not #10
+`define NAND nand #20
+`define NOR nor #20
+`define XOR xor #30
+
+
 module ALU(result, carryout, overflow, zero, operandA, operandB, command);
 
    output [31:0] result;
