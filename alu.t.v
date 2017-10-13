@@ -13,42 +13,9 @@ module testALU();
     ALU dut(result, carryout, zero, overflow, a, b, command);
 
     initial begin
-      command = 3'd2;
-      a = -4;
-      b = -4; #10000000
-      $display("%d %d %d", a, b, result);
-      a = -3;
-      b = -4; #10000000
-      $display("%d %d %d", a, b, result);
-      a = -4;
-      b = -3; #10000000
-      $display("%d %d %d", a, b, result);
-      a = 4;
-      b = 4; #10000000
-      $display("%d %d %d", a, b, result);
-      a = 3;
-      b = 4; #10000000
-      $display("%d %d %d", a, b, result);
-      a = 4;
-      b = 3; #10000000
-      $display("%d %d %d", a, b, result);
-      a = 3;
-      b = 0; #10000000
-      $display("%d %d %d", a, b, result);
-      a = 0;
-      b = 3; #10000000
-      $display("%d %d %d", a, b, result);
-      a = -3;
-      b = 0; #10000000
-      $display("%d %d %d", a, b, result);
-      a = 0;
-      b = -3; #10000000
-      $display("%d %d %d", a, b, result);
-      a = 4;
-      b = -3; #10000000
-      $display("%d %d %d", a, b, result);
-      a = -4;
-      b = 3; #10000000
-      $display("%d %d %d", a, b, result);
+      command = 3'd3;
+      a = -2;
+      b = -1; #10000000
+      $display("%d %d %d %b", a, b, result, overflow);
     end
 endmodule

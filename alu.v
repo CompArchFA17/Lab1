@@ -16,7 +16,11 @@ input[2:0]    command
     wire mixedSigns;
     wire sameSigns;
     wire possibleOverflow;
+    wire overFlowPossible;
+    wire overflowPre;
+    wire addOrSub;
     wire sltPre;
+    wire B31_;
 
     reg[7:0] commandslice;
     always @(command) begin
@@ -59,11 +63,15 @@ input[2:0]    command
     and32 zeroout(zero, zerobus);
     //calculate overflow
     `XOR overflowXor(possibleOverflow, result[31], carryout);
-    `XNOR overflowXnor(sameSigns, operandA[31], operandB[31]);
-    `AND overflowAnd(overflow, possibleOverflow, sameSigns);
+    `XNOR overflowXnorAdd(sameSigns, operandA[31], operandB[31]);
+    `NOT overflowNot(mixedSigns, sameSigns);
+    mux1 overflowMux(overFlowPossible, mixedSigns, sameSigns, commandslice[0]);
+    `OR addSubOr(addOrSub, commandslice[0], commandslice[1]);
+    `AND overflowAnd(overflowPre, possibleOverflow, overFlowPossible);
+    `AND overflowOut(overflow, overflowPre, addOrSub);
     //handle the slt stuff
-    `NOT sltNot(mixedSigns, sameSigns);
-    `AND sltOut(sltPre, carryinbus[32], commandslice[3]);
-    `XOR sltOut2(overrideBus[0], sltPre, mixedSigns);
+    `XOR sltOut(sltPre, carryout, mixedSigns);
+    `AND sltOut2(overrideBus[0], sltPre, commandslice[3]);
+
     or32P resultOr(result, resultBus,  overrideBus);
 endmodule
