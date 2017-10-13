@@ -17,9 +17,10 @@ In the case of addition each the LSB of the carryin bus is left empty and the ca
 ## Test Results
 ### Test Choice
 ### Test Driven Development Catches Bugs
+We waited until after writing the ALU to begin writing comprehensive test cases. After writing just two test cases we were able to find and fix two 
 ### Discovered Tests
 
 ## Timing
 
 ## Work Plan Reflection
-Writing the implementation happened fairly quickly in about the time we predicted, however the act of gathering information and creating visuals for the 
+Writing the implementation happened fairly quickly in about the time we predicted, however the act of gathering information and creating visuals for the final write up turned out to be more time intensive than we had planned
