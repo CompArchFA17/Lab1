@@ -1,0 +1,4 @@
+write tests (4 hrs) : 10/7
+write verilog (2 hrs) : 10/8
+fix tests (1 hr) : 10/8 
+fpga integration (1 hr - ∞) : 10/11 - 10/13
