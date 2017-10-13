@@ -1,0 +1,8 @@
+Work Plan
+Single-Bit ALU Implementation - 1-2 hours - done by Saturday 10/7
+Single-Bit ALU Test Bench and Debugging - 1 hour - done by Saturday 10/7
+Full ALU Implementation - 30 minutes - done by Monday 10/9
+Full ALU Test Bench and Debugging - 3-4 hours - done by Tuesday 10/10
+ALU Zynq Interfacing - 1-2 hours - done by Tuesday 10/10
+ALU Zynq - 2 hours - done by Tuesday 10/10
+Polishing and Report - 2-3 hours - done by Wednesday 10/11
