@@ -12,7 +12,6 @@ input[2:0]    command
     wire[31:0] zerobus;
     wire[31:0] overrideBus;
     wire[31:0] resultBus;
-    wire carryout;
     wire mixedSigns;
     wire sameSigns;
     wire possibleOverflow;
@@ -20,7 +19,13 @@ input[2:0]    command
     wire overflowPre;
     wire addOrSub;
     wire sltPre;
+<<<<<<< HEAD
     wire B31_;
+=======
+    wire flagsEnable;
+    wire carryoutint, overflowint;
+
+>>>>>>> 01e44d4a2603a90d54d9733c1c5803503d771d61
 
     reg[7:0] commandslice;
     always @(command) begin
@@ -58,7 +63,7 @@ input[2:0]    command
     `OR subflag(carryinbus[0], commandslice[1], commandslice[1]);
     //set carryout to the lest carry bit
     //this or gate is also a wire
-    `OR carryor(carryout, carryinbus[32], carryinbus[32]);
+    `OR carryor(carryoutint, carryinbus[32], carryinbus[32]);
     //and all the zero outputs to get the zero output
     and32 zeroout(zero, zerobus);
     //calculate overflow
@@ -74,4 +79,9 @@ input[2:0]    command
     `AND sltOut2(overrideBus[0], sltPre, commandslice[3]);
 
     or32P resultOr(result, resultBus,  overrideBus);
+    //flag enabling
+    `OR addorsub(flagsEnable, commandslice[0], commandslice[1]);
+    `AND overflowand(overflow, overflowint, flagsEnable);
+   `AND carryoutand(carryout, carryoutint, flagsEnable);
+
 endmodule
