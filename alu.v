@@ -1,188 +1,6 @@
-`define NOR nor #10
-`define OR or #20
-`define AND and #20
-`define XOR xor #20
-`define NOT not #10
+// Implementation of an ALU that performs addition, subtraction, XOR, SLT, OR, NOR, NAND, and AND operations.
 
-// Implementation of a 1-bit full adder. When true, subtract inverts input B.
-module FullAdder1bit
-(
-    output sum,
-    output carryout,
-    input a,
-    input b0,
-    input carryin,
-    input subtract
-);
-    wire cout1;
-    wire cout2;
-    wire sumAB;
-    wire b;
-
-    `XOR b0xorsubtract(b, b0, subtract);
-    `XOR AxorB(sumAB, a, b);
-    `XOR sumABxorCin(sum, sumAB, carryin);
-
-    `AND AandB(cout1, a, b);
-    `AND sumABandCin(cout2, sumAB, carryin);
-
-    `OR orcarries(carryout, cout1, cout2);
-endmodule
-
-// Implementation of a 32 bit adder/subtractor.
-module AddSub
-(
-output[31:0] result,
-output carryout,
-output zero,
-output overflow,
-input[31:0] operandA,
-input[31:0] operandB,
-input subtract
-);
-
-wire[30:0] carryoutmid;
-wire nzero;
-
-FullAdder1bit adderinit (result[0], carryoutmid[0], operandA[0], operandB[0], subtract, subtract);
-
-genvar i;
-generate
-  for (i = 1; i < 31; i = i + 1)
-  begin: ripple
-  	FullAdder1bit addermid (result[i], carryoutmid[i], operandA[i], operandB[i], carryoutmid[i- 1], subtract);
-  end
-endgenerate
-
-FullAdder1bit adderfinal (result[31], carryout, operandA[31], operandB[31], carryoutmid[30], subtract);
-
-`XOR overflowdetection(overflow, carryoutmid[30], carryout);
-
-`OR orbits(nzero, result[31:0], 32'b0);
-`NOT norbits(zero, nzero);
-
-endmodule
-
-// Implementation of a 32 bit XOR operation.
-module alu32bitxor
-(
-output[31:0]  result,
-output        carryout,
-output        zero,
-output        overflow,
-input[31:0]   operandA,
-input[31:0]   operandB
-);
-
-genvar i;
-generate
-  for (i = 0; i < 32; i = i + 1)
-  begin: ripple
-    `XOR xorgate (result[i], operandA[i], operandB[i]);
-  end
-endgenerate
-
-endmodule
-
-// Implementation of the set-less-than operation. Uses the 32-bit subtractor.
-module alu32bitslt
-(
-output[31:0]  result,
-output        carryout,
-output        zero,
-output        overflow,
-input[31:0]   operandA,
-input[31:0]   operandB
-);
-wire[31:0] subresult;
-wire subcarryout;
-wire subzero;
-wire suboverflow;
-
-// Set invertB to 1 because subtraction is needed.
-AddSub subtractor (subresult, subcarryout, subzero, suboverflow, operandA, operandB, 1'b1);
-
-assign result[31:1] = 31'b0;
-
-`XOR final (result[0], subresult[31], suboverflow);
-
-//doesn't need to set a flag
-assign carryout = 0;
-assign zero = 0;
-assign overflow = 0;
-
-endmodule
-
-module alu32bitandn
-(
-output[31:0]  result,
-output        carryout,
-output        zero,
-output        overflow,
-input[31:0]   operandA,
-input[31:0]   operandB,
-input         othercontrolsignal
-);
-wire interresult[31:0];
-
-genvar i;
-generate
-  for (i = 0; i < 32; i = i + 1)
-  begin: ripple0
-    `AND andgate (interresult[i], operandA[i], operandB[i]);
-  end
-endgenerate
-
-genvar j;
-generate
-  for (j = 0; j < 32; j = j + 1)
-  begin: ripple1
-    `XOR final (result[j], othercontrolsignal, interresult[j]);
-  end
-endgenerate
-
-//doesn't need to set a flag
-assign carryout = 0;
-assign zero = 0;
-assign overflow = 0;
-
-endmodule
-
-// Implementation of a 32 bit NOR or OR operation. 
-// When 1, the invertnor input indicates a NOR operation. 
-// When invertor is 0, this module performs an OR operation.
-module NOROR
-(
-output[31:0] result,
-output carryout,
-output zero,
-output overflow,
-input[31:0] operandA,
-input[31:0] operandB,
-input invertor
-);
-
-wire norres[31:0];
-genvar i;
-generate
-  for (i = 0; i < 32; i = i + 1)
-  begin: ripple0
-	`NOR norgate (norres[i], operandA[i], operandB[i]);
-  end
-endgenerate
-
-genvar j;
-generate
-  for (j = 0; j < 32; j = j + 1)
-  begin: ripple1
-	`XOR final (result[j], invertor, norres[j]);
-  end
-endgenerate
-
-buf setcarryout (carryout, 'b0);
-buf setzero (zero, 'b0);
-buf setoverflow (overflow, 'b0);
-endmodule
+`include "operations.v"
 
 // Definine command numbers
 `define CADD  3'd0
@@ -238,30 +56,34 @@ output reg carryout,
 output reg zero,
 output reg overflow
 );
+
+// The results of each module.
 wire[31:0] resAddsub;
 wire[31:0] resXor;
 wire[31:0] resSlt;
 wire[31:0] resAndnand;
 wire[31:0] resNoror;
 
+// The carryout flags of each module.
 wire carryoutAddSub;
 wire carryoutXor;
 wire carryoutSLT;
 wire carryoutAND;
 wire carryoutOR;
 
+// The zero flags of each module.
 wire zeroAddSub;
 wire zeroXor;
 wire zeroSLT;
 wire zeroAND;
 wire zeroOR;
 
+// The overflow flags of each module.
 wire overflowAddSub;
 wire overflowXor;
 wire overflowSLT;
 wire overflowAND;
 wire overflowOR;
-
 
 AddSub #1000 dut0 (resAddsub, carryoutAddSub, zeroAddSub, overflowAddSub, operandA, operandB, invertB);
 alu32bitxor dut1 (resXor, carryoutXor, zeroXor, overflowXor, operandA, operandB);
@@ -269,6 +91,8 @@ alu32bitslt dut2 (resSlt, carryoutSLT, zeroSLT, overflowSLT, operandA, operandB)
 alu32bitandn dut3 (resAndnand, carryoutAND, zeroAND, overflowAND, operandA, operandB, othercontrolsignal);
 NOROR dut4 (resNoror, carryoutOR, zeroOR, overflowOR, operandA, operandB, othercontrolsignal);
 
+// The LUT behaves as a set of muxes that choose each bit of the result and each flag based on the muxindex 
+// it is passed as an address.
 always @(muxindex or resAddsub or resXor or resSlt or resAndnand or resNoror) begin
  case(muxindex)
     `MADDSUB: begin  result = resAddsub;   carryout = carryoutAddSub;  zero = zeroAddSub;  overflow = overflowAddSub; end
@@ -302,26 +126,3 @@ ALUcontrolLUT controlLookup (muxindex, invertB, othercontrolsignal, command);
 ALUoutputLUT outputLookup (operandA, operandB, muxindex, invertB, othercontrolsignal, result, carryout, zero, overflow);
 
 endmodule
-
-
-// module TEST();
-//   reg[31:0] operandA;
-//   reg[31:0] operandB;
-//   reg control;
-//   reg[2:0] command;
-
-//   wire[31:0] result;
-//   wire carryout;
-//   wire zero;
-//   wire overflow;
-
-//    ALU alu(result, carryout, zero, overflow, operandA, operandB, command);
-
-//   initial begin
-//     operandA = 32'b10101010101010101010101010101010; operandB = 32'b01000000000000000000000000001010; command = 3'b111; #100000
-//     $displayb("operandA: %b", operandA);
-//     $displayb("operandB: %b", operandB);
-//     $displayb("result:   %b", result);
-//   end
-
-// endmodule
