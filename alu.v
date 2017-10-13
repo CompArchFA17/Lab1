@@ -77,10 +77,7 @@ output        overflow,
 input[31:0]   operandA,
 input[31:0]   operandB,
 input[2:0]    command
-//input         invertB,
-//input         flagger
 );
-  //wire control2;
   wire[31:0] Cout;
   wire slt;
   wire isSlt;
@@ -97,7 +94,6 @@ input[2:0]    command
   //for the 0th bit slice, pass in invertB for Cin too (add one if subtracting)
   ALUcontrolLUT ctrl(muxindex, invertB, flagger, command);
   BitSliceALU bit0(preresult[0], Cout[0], invertB, invertB, muxindex, operandA[0], operandB[0]);
-
   genvar i;
   generate
     for (i = 1; i < 32; i = i+1)
@@ -105,14 +101,10 @@ input[2:0]    command
       BitSliceALU bitany(preresult[i], Cout[i], invertB, Cout[i-1], muxindex, operandA[i], operandB[i]);
     end
   endgenerate
-  //BitSliceALU bit31(result[31], Cout[31], invertB, Cout[30], mux, operandA[31], operandB[31]);
-  TheBigOR bigger(nzero, preresult); //a bit wise OR on all bits of result, might not be allowed to do this
+  
   `XOR (preflow, Cout[31], Cout[30]); //determine overflow
-
-  `NOT (zero, nzero); //set zero for each operation
   `AND (carryout, flagger, Cout[31]); //set carryout if flagger
   `AND (overflow, flagger, preflow); //set overflow if flagger
-  //`OR(overflow, preflow, 1'b0);
 
   //Set SLT if the mux command is 3
   bitMultiplexer sltSL(slt, preflow, {operandA[31], preresult[31]}); //compute is less than
@@ -129,4 +121,8 @@ input[2:0]    command
   		`AND (result[j], nSlt, preresult[j]); //This and operation changes the bit to 0 if nSlt is false, and keeps the result otherwise.
   	end
   endgenerate
+
+  TheBigOR bigger(nzero, result); //a bit wise OR on all bits of result, might not be allowed to do this
+  `NOT (zero, nzero); //set zero for each operation
+
 endmodule
