@@ -103,8 +103,5 @@ module testALU();
 
     a=32'hFFFF0000;b=32'h00FF00FF;c=`OR; #2000
     $display("%h %h %h       | %b    %b     %b   %b       | 11111111111111110000000011111111  0  0  0", a, b, c, result, carryout, zero, overflow);
-    
-    $display("tmep");
-    $display("testing SLT/SUB");
     end
 endmodule

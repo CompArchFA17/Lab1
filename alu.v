@@ -125,6 +125,7 @@ module ALU // total ALU which has 32 basic ALU units and control unit.
 		operandA[0], operandB[0], invertBflag, set_SLT, muxindex, invertBflag
 	);
 	
+	//// construct 32 ALU units
 	genvar i;
 	generate // 2nd to 31st adder instantiation 
 		for(i=1; i<31; i=i+1) begin: generate_alu_unit
@@ -145,10 +146,11 @@ module ALU // total ALU which has 32 basic ALU units and control unit.
 		operandA[31], operandB[31], internal_carryout[30], 0, muxindex, invertBflag
 	);
 
+	/// make logic for zero flag
 	wire[30:0] wire_for_zero;
 	wire[31:0] inverted_result;
 	`NORgate norgate0(wire_for_zero[0], result[0], result[1]);
-	generate//zero flag
+	generate
 		for(i=2; i<32; i=i+1) begin: generate_inverted_result
 			`NOTgate notgate(inverted_result[i], result[i]);
 		end
