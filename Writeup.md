@@ -32,6 +32,21 @@ We chose tests that would cover edge cases for the difficult operands: overflow 
 We waited until after writing the ALU to begin writing comprehensive test cases. After writing just two test cases we were able to find and fix two bugs in post-processing. We were incorrectly diagnosing overflow on subtraction, because the signs must not match for overflow to occur in subtraction. We also found a typo where we were XORin instead of ORing.
 
 ## Timing
-
+### Addition
+![add](https://github.com/TShapinsky/Lab1/blob/master/addition.PNG?raw=true)
+### Subtraction
+![sub](https://github.com/TShapinsky/Lab1/blob/master/Subtraction.PNG?raw=true)
+### XOR
+![xor](https://github.com/TShapinsky/Lab1/blob/master/XOR.PNG?raw=true)
+### SLT
+![slt](https://github.com/TShapinsky/Lab1/blob/master/SLT.PNG?raw=true)
+### AND
+![and](https://github.com/TShapinsky/Lab1/blob/master/AND.PNG?raw=true)
+### NAND
+![nand](https://github.com/TShapinsky/Lab1/blob/master/NAND.PNG?raw=true)
+### NOR
+![nor](https://github.com/TShapinsky/Lab1/blob/master/NOR.PNG?raw=true)
+### OR
+![or](https://github.com/TShapinsky/Lab1/blob/master/OR.PNG?raw=true)
 ## Work Plan Reflection
 Writing the implementation happened fairly quickly in about the time we predicted, however the act of gathering information and creating visuals for the final write up turned out to be more time intensive than we had planned
