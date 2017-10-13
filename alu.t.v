@@ -25,8 +25,8 @@ module testALU();
         end
         a = 31'h7fffffff;
         b = 1; #1000000
-        if (result != 31'h80000000 || !overflow || zero) begin
-            $display("FAIL %d %d %d |cmd: %d |ovf: %d |0: %d |co: %d |des: %d", a, b, result, command, overflow, zero, carryout, 31'h8000000);
+        if (result != -2147483648 || !overflow || zero) begin
+            $display("FAIL %d %d %d |cmd: %d |ovf: %d |0: %d |co: %d |des: %d", a, b, result, command, overflow, zero, carryout, -2147483648);
         end
         
         //Subtraction tests
@@ -38,21 +38,21 @@ module testALU();
         end
         a = 31'h80000000;
         b = 1; #1000000
-        if (result != 31'h7fffffff || !overflow || zero) begin
-            $display("FAIL %d %d %d |cmd: %d |ovf: %d |0: %d |co: %d |des: %d", a, b, result, command, overflow, zero, carryout, 31'h7fffffff);
+        if (result != -1 || !overflow || zero) begin
+            $display("FAIL %d %d %d |cmd: %d |ovf: %d |0: %d |co: %d |des: %d", a, b, result, command, overflow, zero, carryout, -1);
         end
         
         //XOR tests
         command = 3'd2;
         a = 4'b1001;
         b = 4'b1010; #1000000
-        if (result != a^b) begin
-            $display("FAIL %d %d %d |cmd: %d |ovf: %d |0: %d |co: %d |des: %d", a, b, result, command, overflow, zero, carryout, a^b);
+        if (result != (a^b)) begin
+            $display("FAIL %b %b %b |cmd: %d |ovf: %d |0: %d |co: %d |des: %b", a, b, result, command, overflow, zero, carryout, a^b);
         end
         a = 4'b0000;
         b = 4'b1111; #1000000
-        if (result != a^b) begin
-            $display("FAIL %d %d %d |cmd: %d |ovf: %d |0: %d |co: %d |des: %d", a, b, result, command, overflow, zero, carryout, a^b);
+        if (result != (a^b)) begin
+            $display("FAIL %b %b %b |cmd: %d |ovf: %d |0: %d |co: %d |des: %b", a, b, result, command, overflow, zero, carryout, a^b);
         end
         
         //SLT tests
