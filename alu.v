@@ -2,6 +2,7 @@
 `define OR or #20
 `define AND and #20
 `define XOR xor #20
+`define NOT not #10
 
 // Implementation of a 1-bit full adder.
 module FullAdder1bit
@@ -39,9 +40,14 @@ input[31:0] operandB,
 input subtract
 );
 
-wire carryoutmid[30:0];
-wire zeromid[30:0];
+wire[30:0] carryoutmid;
+wire nzero;
+
 FullAdder1bit adderinit (result[0], carryoutmid[0], operandA[0], operandB[0], subtract, subtract);
+
+initial begin
+  $display("comid: %b", subtract);
+end
 
 genvar i;
 generate
@@ -55,9 +61,9 @@ FullAdder1bit adderfinal (result[31], carryout, operandA[31], operandB[31], carr
 
 `XOR overflowdetection(overflow, carryoutmid[30], carryout);
 
-`NOR zeroinit(zeromid[0], result[0], result[1]);
+`OR orbits(nzero, result[31:0], 32'b0);
+`NOT norbits(zero, nzero);
 
-`NOR norall(zero, result[31:0], 32'b0);
 endmodule
 
 module alu32bitxor
@@ -210,8 +216,8 @@ input[2:0]	ALUcommand
       `CSLT:  begin muxindex = 2; invertB=0; othercontrolsignal = 0; end
       `CAND:  begin muxindex = 3; invertB=0; othercontrolsignal = 0; end
       `CNAND: begin muxindex = 3; invertB=0; othercontrolsignal = 1; end
-      `CNOR:  begin muxindex = 4; invertB=0; othercontrolsignal = 0; end
-      `COR:   begin muxindex = 4; invertB=0; othercontrolsignal = 1; end
+      `CNOR:  begin muxindex = 4; invertB=0; othercontrolsignal = 1; end
+      `COR:   begin muxindex = 4; invertB=0; othercontrolsignal = 0; end
     endcase
   end
 endmodule
@@ -260,7 +266,8 @@ wire overflowSLT;
 wire overflowAND;
 wire overflowOR;
 
-AddSub dut0 (resAddsub, carryoutAddSub, zeroAddSub, overflowAddSub, operandA, operandB, invertB);
+
+AddSub #1000 dut0 (resAddsub, carryoutAddSub, zeroAddSub, overflowAddSub, operandA, operandB, invertB);
 alu32bitxor dut1 (resXor, carryoutXor, zeroXor, overflowXor, operandA, operandB);
 alu32bitslt dut2 (resSlt, carryoutSLT, zeroSLT, overflowSLT, operandA, operandB);
 alu32bitandn dut3 (resAndnand, carryoutAND, zeroAND, overflowAND, operandA, operandB, othercontrolsignal);
@@ -301,24 +308,24 @@ ALUoutputLUT outputLookup (operandA, operandB, muxindex, invertB, othercontrolsi
 endmodule
 
 
-module TEST();
-  reg[31:0] operandA;
-  reg[31:0] operandB;
-  reg control;
-  reg[2:0] command;
+// module TEST();
+//   reg[31:0] operandA;
+//   reg[31:0] operandB;
+//   reg control;
+//   reg[2:0] command;
 
-  wire[31:0] result;
-  wire carryout;
-  wire zero;
-  wire overflow;
+//   wire[31:0] result;
+//   wire carryout;
+//   wire zero;
+//   wire overflow;
 
-   ALU alu(result, carryout, zero, overflow, operandA, operandB, command);
+//    ALU alu(result, carryout, zero, overflow, operandA, operandB, command);
 
-  initial begin
-    operandA = 32'b10101010101010101010101010101010; operandB = 32'b01000000000000000000000000001010; command = 3'b111; #100000
-    $displayb("operandA: %b", operandA);
-    $displayb("operandB: %b", operandB);
-    $displayb("result:   %b", result);
-  end
+//   initial begin
+//     operandA = 32'b10101010101010101010101010101010; operandB = 32'b01000000000000000000000000001010; command = 3'b111; #100000
+//     $displayb("operandA: %b", operandA);
+//     $displayb("operandB: %b", operandB);
+//     $displayb("result:   %b", result);
+//   end
 
-endmodule
+// endmodule

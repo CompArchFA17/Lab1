@@ -18,13 +18,16 @@ wire overflow;
 
     // add test cases
     // Cout = 0, Overflow = 0; Cout = 1, Overflow = 0; Cout = 0, Overflow = 1; Cout = 1, Overflow = 1
-    operandA = 32'b00100000000000000000000000000000; operandB = 32'b11000000000000000000000000000000; command = 3'b000; #1000
+    // operandA = 32'b00100000000000000000000000000000; operandB = 32'b11000000000000000000000000000111; command = 3'b000; #100000
+    operandA = 32'b00100000000000000000000000000000; operandB = 32'b11000000000000000000000000000000; command = 3'b000; #100000
+    $display("command: %b", command);
+    $display("result: %b, carryout: %b, zero: %b overflow: %b", result, carryout, zero, overflow);
     if (result !== 32'b11100000000000000000000000000000) $display("Add test case 1 (Cout = 0, Overflow = 0) result failed");
     if (carryout !== 0) $display("Add test case 1 (Cout = 0, Overflow = 0) Cout failed");
     if (overflow !== 0) $display("Add test case 1 (Cout = 0, Overflow = 0) Overflow failed");
     operandA = 32'b00000000000000000000000000001110; operandB = 32'b00000000000000000000000000001100; command = 3'b000; #1000
-    if (result !== 32'b10100000000000000000000000000000) $displayb(result);//("Add test case 2 (Cout = 1, Overflow = 0) result failed");
-    if (carryout !== 1) $displayb(carryout);//("Add test case 1 (Cout = 1, Overflow = 0) Cout failed");
+    if (result !== 32'b10100000000000000000000000000000) $display("result case 2: %b", result);//("Add test case 2 (Cout = 1, Overflow = 0) result failed");
+    if (carryout !== 1) $display("carryout case 2: %b ", carryout);//("Add test case 1 (Cout = 1, Overflow = 0) Cout failed");
     if (overflow !== 0) $display("Add test case 1 (Cout = 1, Overflow = 0) Overflow failed");
 
     // subtract test cases
