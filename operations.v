@@ -1,3 +1,5 @@
+// The modules defining each operaton of the ALU.
+
 `define NOR nor #10
 `define OR or #20
 `define AND and #20
@@ -10,17 +12,14 @@ module FullAdder1bit
     output sum,
     output carryout,
     input a,
-    input b0,
-    input carryin,
-    input subtract
+    input b,
+    input carryin
 );
     wire cout1;
     wire cout2;
     wire sumAB;
-    wire b;
 
     // B is inverted for subtraction operations.
-    `XOR b0xorsubtract(b, b0, subtract);
     `XOR AxorB(sumAB, a, b);
     `XOR sumABxorCin(sum, sumAB, carryin);
 
@@ -42,20 +41,25 @@ input[31:0] operandB,
 input subtract
 );
 
+wire[31:0] invB;
 wire[30:0] carryoutmid;
 wire nzero;
 
-FullAdder1bit adderinit (result[0], carryoutmid[0], operandA[0], operandB[0], subtract, subtract);
+// Pass a 1 as the carryin to the first full adder for subtraction.
+`XOR invertB (invB[0], operandB[0], subtract);
+FullAdder1bit adderinit (result[0], carryoutmid[0], operandA[0], invB[0], subtract);
 
 genvar i;
 generate
   for (i = 1; i < 31; i = i + 1)
   begin: ripple
-  	FullAdder1bit addermid (result[i], carryoutmid[i], operandA[i], operandB[i], carryoutmid[i- 1], subtract);
+    `XOR invertB (invB[i], operandB[i], subtract);
+  	FullAdder1bit addermid (result[i], carryoutmid[i], operandA[i], invB[i], carryoutmid[i- 1]);
   end
 endgenerate
 
-FullAdder1bit adderfinal (result[31], carryout, operandA[31], operandB[31], carryoutmid[30], subtract);
+`XOR invertB (invB[31], operandB[31], subtract);
+FullAdder1bit adderfinal (result[31], carryout, operandA[31], invB[31], carryoutmid[30]);
 
 `XOR overflowdetection(overflow, carryoutmid[30], carryout);
 
