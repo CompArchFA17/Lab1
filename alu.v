@@ -8,33 +8,44 @@ module ALU(result, carryout, overflow, zero, operandA, operandB, command);
    input [31:0] operandB;
    input [2:0] command;
    
-   wire carryout =  0;
-   wire overflow =  0; 
-   wire zero = 0;
+   wire subOverflow,addOverflow,subCarryout,addCarryout; 
+   wire zero;
    wire [31:0] carryin, addedResult, subResult, xorResult, andResult, nandResult, norResult, orResult;
    wire [31:0] sltResult;
    reg [31:0] result;
+   reg overflow,carryout;
    
-   assign zero = !(1'b0||result[0]) && !(1'b0||result[1]) && !(1'b0||result[2]) && !(1'b0||result[3]) && !(1'b0||result[4]) && !(1'b0||result[5]) && !(1'b0||result[6]) && !(1'b0||result[7]) && !(1'b0||result[8]) && !(1'b0||result[9]) && !(1'b0||result[10]) && !(1'b0||result[11]) && !(1'b0||result[12]) && !(1'b0||result[13]) && !(1'b0||result[14]) && !(1'b0||result[15]) && !(1'b0||result[16]) && !(1'b0||result[17]) && !(1'b0||result[18]) && !(1'b0||result[19]) && !(1'b0||result[20]) && !(1'b0||result[21]) && !(1'b0||result[22]) && !(1'b0||result[23]) && !(1'b0||result[24]) && !(1'b0||result[25]) && !(1'b0||result[26]) && !(1'b0||result[27]) && !(1'b0||result[28]) && !(1'b0||result[29]) && !(1'b0||result[30]) && !(1'b0||result[31]);
-   
-   multi_bit_adder adder(addedResult, carryout, overflow, operandA, operandB);
-   multi_bit_subtracter subtracter(subResult, carryout, overflow, operandA, operandB);
+   zeroes is_zero(zero,result);
+   multi_bit_adder adder(addedResult, addCarryout, addOverflow, operandA, operandB);
+   multi_bit_subtracter subtracter(subResult, subCarryout, subOverflow, operandA, operandB);
    multi_bit_SLT slt(sltResult,operandA,operandB);
+   multi_bit_and andit(andResult,operandA,operandB);
+   multi_bit_or orit(orResult,operandA,operandB);
+   multi_bit_xor xorit(xorResult,operandA,operandB);
    //output_mux result_mux(.result(result),.command(command),.operandA(operandA),.operandB(operandB),.addedResult(addedResult),.subResult(subResult),.sltResult(sltResult));
 
    always @ (*) begin
       case(command)
-         3'b000: result = addedResult;
-         3'b001: result = subResult;
-         3'b010: result = operandA ^ operandB;
+         3'b000: begin result = addedResult; carryout = addCarryout; overflow = addOverflow; end
+         3'b001: begin result = subResult; carryout = subCarryout; overflow = subOverflow; end
+         3'b010: result = xorResult;
          3'b011: result = sltResult;
-         3'b100: result = operandA && operandB;
-         3'b101: result = !(operandA && operandB);
-         3'b110: result = !(operandA || operandB);
-         3'b111: result = operandA || operandB;
+         3'b100: result = andResult;
+         3'b101: result = ~andResult;
+         3'b110: result = ~orResult;
+         3'b111: result = orResult;
       endcase
    end
 endmodule
+
+module zeroes(zero,result);
+   output zero;
+   input [31:0] result;
+   
+    assign zero = !(1'b0||result[0]) && !(1'b0||result[1]) && !(1'b0||result[2]) && !(1'b0||result[3]) && !(1'b0||result[4]) && !(1'b0||result[5]) && !(1'b0||result[6]) && !(1'b0||result[7]) && !(1'b0||result[8]) && !(1'b0||result[9]) && !(1'b0||result[10]) && !(1'b0||result[11]) && !(1'b0||result[12]) && !(1'b0||result[13]) && !(1'b0||result[14]) && !(1'b0||result[15]) && !(1'b0||result[16]) && !(1'b0||result[17]) && !(1'b0||result[18]) && !(1'b0||result[19]) && !(1'b0||result[20]) && !(1'b0||result[21]) && !(1'b0||result[22]) && !(1'b0||result[23]) && !(1'b0||result[24]) && !(1'b0||result[25]) && !(1'b0||result[26]) && !(1'b0||result[27]) && !(1'b0||result[28]) && !(1'b0||result[29]) && !(1'b0||result[30]) && !(1'b0||result[31]);
+   
+endmodule
+
 
 //We can check if A<B by subtracting B from A and determining from the most significant bit which is bigger
 
@@ -52,7 +63,7 @@ module multi_bit_SLT(sltresult,A,B);
    //subtract B from A
    // If B is bigger then it should be negative so the most significant bit is 1
    // If B is equal or same then it should be positive so the most significant bit is 0
-   
+
    multi_bit_subtracter SLTcompare(sltsub, carryout, overflow, A, B);
 
    //XOR the significant bit with the overflow: We get a 1 if a is less than b, and a 0 if b is less than a
@@ -71,13 +82,6 @@ module multi_bit_adder(sum, carryout, overflow, A, B);
    input [31:0] A;
    input [31:0] B;
 
-   wire [31:0] result; 
-   wire carryout, overflow;
-   wire [31:0] A,B;
-   wire carryout0,carryout1,carryout2,carryout3,carryout4,carryout5,carryout6,carryout7,carryout8,carryout9;
-   wire carryout10,carryout11,carryout12,carryout13,carryout14,carryout15,carryout16,carryout17,carryout18;
-   wire carryout19,carryout20,carryout21,carryout22,carryout23,carryout24,carryout25,carryout26,carryout27;
-   wire carryout28,carryout29,carryout30;
 
    single_bit_adder adder0 (sum[0], carryout0, A[0], B[0], 1'b0);
    single_bit_adder adder1 (sum[1], carryout1, A[1], B[1], carryout0);
@@ -161,4 +165,136 @@ module single_bit_adder(result, carryout, A, B, carryin) ;
    assign carryout = (A && B) || (((!A && B) || (A && !B)) && carryin);
    assign result = (((!A && B) || (A && !B)) && !carryin) || (!((!A && B) || (A && !B)) && carryin);
 
+endmodule
+
+module multi_bit_and(andResult, operandA, operandB);
+   output [31:0] andResult;
+   input [31:0] operandA;
+   input [31:0] operandB;
+   
+   //wire [31:0] operandA, operandB;
+   wire and0,and1,and2,and3,and4,and5,and6,and7,and8,and9,and10,and11,and12,and13,and14,and15,and16,and17,and18,and19,and20,and21,and22,and23,and24,and25,and26,and27,and28,and29,and30,and31;
+   
+   assign and0 = operandA[0] && operandB[0];
+   assign and1 = operandA[1] && operandB[1];
+   assign and2 = operandA[2] && operandB[2];
+   assign and3 = operandA[3] && operandB[3];
+   assign and4 = operandA[4] && operandB[4];
+   assign and5 = operandA[5] && operandB[5];
+   assign and6 = operandA[6] && operandB[6];
+   assign and7 = operandA[7] && operandB[7];
+   assign and8 = operandA[8] && operandB[8];
+   assign and9 = operandA[9] && operandB[9];
+   assign and10 = operandA[10] && operandB[10];
+   assign and11 = operandA[11] && operandB[11];
+   assign and12 = operandA[12] && operandB[12];
+   assign and13 = operandA[13] && operandB[13];
+   assign and14 = operandA[14] && operandB[14];
+   assign and15 = operandA[15] && operandB[15];
+   assign and16 = operandA[16] && operandB[16];
+   assign and17 = operandA[17] && operandB[17];
+   assign and18 = operandA[18] && operandB[18];
+   assign and19 = operandA[19] && operandB[19];
+   assign and20 = operandA[20] && operandB[20];
+   assign and21 = operandA[21] && operandB[21];
+   assign and22 = operandA[22] && operandB[22];
+   assign and23 = operandA[23] && operandB[23];
+   assign and24 = operandA[24] && operandB[24];
+   assign and25 = operandA[25] && operandB[25];
+   assign and26 = operandA[26] && operandB[26];
+   assign and27 = operandA[27] && operandB[27];
+   assign and28 = operandA[28] && operandB[28];
+   assign and29 = operandA[29] && operandB[29];
+   assign and30 = operandA[30] && operandB[30];
+   assign and31 = operandA[31] && operandB[31];
+   
+   assign andResult = {and31,and30,and29,and28,and27,and26,and25,and24,and23,and22,and21,and20,and19,and18,and17,and16,and15,and14,and13,and12,and11,and10,and9,and8,and7,and6,and5,and4,and3,and2,and1,and0};
+endmodule
+
+module multi_bit_or(orResult, operandA, operandB);
+   output [31:0] orResult;
+   input [31:0] operandA;
+   input [31:0] operandB;
+   
+   //wire [31:0] operandA, operandB;
+   wire or0,or1,or2,or3,or4,or5,or6,or7,or8,or9,or10,or11,or12,or13,or14,or15,or16,or17,or18,or19,or20,or21,or22,or23,or24,or25,or26,or27,or28,or29,or30,or31;
+   
+   assign or0 = operandA[0] || operandB[0];
+   assign or1 = operandA[1] || operandB[1];
+   assign or2 = operandA[2] || operandB[2];
+   assign or3 = operandA[3] || operandB[3];
+   assign or4 = operandA[4] || operandB[4];
+   assign or5 = operandA[5] || operandB[5];
+   assign or6 = operandA[6] || operandB[6];
+   assign or7 = operandA[7] || operandB[7];
+   assign or8 = operandA[8] || operandB[8];
+   assign or9 = operandA[9] || operandB[9];
+   assign or10 = operandA[10] || operandB[10];
+   assign or11 = operandA[11] || operandB[11];
+   assign or12 = operandA[12] || operandB[12];
+   assign or13 = operandA[13] || operandB[13];
+   assign or14 = operandA[14] || operandB[14];
+   assign or15 = operandA[15] || operandB[15];
+   assign or16 = operandA[16] || operandB[16];
+   assign or17 = operandA[17] || operandB[17];
+   assign or18 = operandA[18] || operandB[18];
+   assign or19 = operandA[19] || operandB[19];
+   assign or20 = operandA[20] || operandB[20];
+   assign or21 = operandA[21] || operandB[21];
+   assign or22 = operandA[22] || operandB[22];
+   assign or23 = operandA[23] || operandB[23];
+   assign or24 = operandA[24] || operandB[24];
+   assign or25 = operandA[25] || operandB[25];
+   assign or26 = operandA[26] || operandB[26];
+   assign or27 = operandA[27] || operandB[27];
+   assign or28 = operandA[28] || operandB[28];
+   assign or29 = operandA[29] || operandB[29];
+   assign or30 = operandA[30] || operandB[30];
+   assign or31 = operandA[31] || operandB[31];
+   
+   assign orResult = {or0,or1,or2,or3,or4,or5,or6,or7,or8,or9,or10,or11,or12,or13,or14,or15,or16,or17,or18,or19,or20,or21,or22,or23,or24,or25,or26,or27,or28,or29,or30,or31};
+endmodule
+
+module multi_bit_xor(xorResult, operandA, operandB);
+   output [31:0] xorResult;
+   input [31:0] operandA;
+   input [31:0] operandB;
+   
+   //wire [31:0] operandA, operandB;
+   wire xor0,xor1,xor2,xor3,xor4,xor5,xor6,xor7,xor8,xor9,xor10,xor11,xor12,xor13,xor14,xor15,xor16,xor17,xor18,xor19,xor20,xor21,xor22,xor23,xor24,xor25,xor26,xor27,xor28,xor29,xor30,xor31;
+   
+   assign xor0 = (!operandA[0] && operandB[0]) || (operandA[0] && !operandB[0]);
+   assign xor1 = (!operandA[1] && operandB[1]) || (operandA[1] && !operandB[1]);
+   assign xor2 = (!operandA[2] && operandB[2]) || (operandA[2] && !operandB[2]);
+   assign xor3 = (!operandA[3] && operandB[3]) || (operandA[3] && !operandB[3]);
+   assign xor4 = (!operandA[4] && operandB[4]) || (operandA[4] && !operandB[4]);
+   assign xor5 = (!operandA[5] && operandB[5]) || (operandA[5] && !operandB[5]);
+   assign xor6 = (!operandA[6] && operandB[6]) || (operandA[6] && !operandB[6]);
+   assign xor7 = (!operandA[7] && operandB[7]) || (operandA[7] && !operandB[7]);
+   assign xor8 = (!operandA[8] && operandB[8]) || (operandA[8] && !operandB[8]);
+   assign xor9 = (!operandA[9] && operandB[9]) || (operandA[9] && !operandB[9]);
+   assign xor10 = (!operandA[10] && operandB[10]) || (operandA[10] && !operandB[10]);
+   assign xor11 = (!operandA[11] && operandB[11]) || (operandA[11] && !operandB[11]);
+   assign xor12 = (!operandA[12] && operandB[12]) || (operandA[12] && !operandB[12]);
+   assign xor13 = (!operandA[13] && operandB[13]) || (operandA[13] && !operandB[13]);
+   assign xor14 = (!operandA[14] && operandB[14]) || (operandA[14] && !operandB[14]);
+   assign xor15 = (!operandA[15] && operandB[15]) || (operandA[15] && !operandB[15]);
+   assign xor16 = (!operandA[16] && operandB[16]) || (operandA[16] && !operandB[16]);
+   assign xor17 = (!operandA[17] && operandB[17]) || (operandA[17] && !operandB[17]);
+   assign xor18 = (!operandA[18] && operandB[18]) || (operandA[18] && !operandB[18]);
+   assign xor19 = (!operandA[19] && operandB[19]) || (operandA[19] && !operandB[19]);
+   assign xor20 = (!operandA[20] && operandB[20]) || (operandA[20] && !operandB[20]);
+   assign xor21 = (!operandA[21] && operandB[21]) || (operandA[21] && !operandB[21]);
+   assign xor22 = (!operandA[22] && operandB[22]) || (operandA[22] && !operandB[22]);
+   assign xor23 = (!operandA[23] && operandB[23]) || (operandA[23] && !operandB[23]);
+   assign xor24 = (!operandA[24] && operandB[24]) || (operandA[24] && !operandB[24]);
+   assign xor25 = (!operandA[25] && operandB[25]) || (operandA[25] && !operandB[25]);
+   assign xor26 = (!operandA[26] && operandB[26]) || (operandA[26] && !operandB[26]);
+   assign xor27 = (!operandA[27] && operandB[27]) || (operandA[27] && !operandB[27]);
+   assign xor28 = (!operandA[28] && operandB[28]) || (operandA[28] && !operandB[28]);
+   assign xor29 = (!operandA[29] && operandB[29]) || (operandA[29] && !operandB[29]);
+   assign xor30 = (!operandA[30] && operandB[30]) || (operandA[30] && !operandB[30]);
+   assign xor31 = (!operandA[31] && operandB[31]) || (operandA[31] && !operandB[31]);
+   
+   assign xorResult = {xor0,xor1,xor2,xor3,xor4,xor5,xor6,xor7,xor8,xor9,xor10,xor11,xor12,xor13,xor14,xor15,xor16,xor17,xor18,xor19,xor20,xor21,xor22,xor23,xor24,xor25,xor26,xor27,xor28,xor29,xor30,xor31};
 endmodule
