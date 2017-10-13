@@ -15,23 +15,59 @@ wire overflow;
 
   initial begin
     $dumpfile("alu.vcd");
-
+    $dumpvars();
     // add test cases
-    // Cout = 0, Overflow = 0; Cout = 1, Overflow = 0; Cout = 0, Overflow = 1; Cout = 1, Overflow = 1
-    // operandA = 32'b00100000000000000000000000000000; operandB = 32'b11000000000000000000000000000111; command = 3'b000; #100000
-    operandA = 32'b00100000000000000000000000000000; operandB = 32'b11000000000000000000000000000000; command = 3'b000; #100000
-    $display("command: %b", command);
-    $display("result: %b, carryout: %b, zero: %b overflow: %b", result, carryout, zero, overflow);
-    if (result !== 32'b11100000000000000000000000000000) $display("Add test case 1 (Cout = 0, Overflow = 0) result failed");
-    if (carryout !== 0) $display("Add test case 1 (Cout = 0, Overflow = 0) Cout failed");
-    if (overflow !== 0) $display("Add test case 1 (Cout = 0, Overflow = 0) Overflow failed");
-    operandA = 32'b00000000000000000000000000001110; operandB = 32'b00000000000000000000000000001100; command = 3'b000; #1000
-    if (result !== 32'b10100000000000000000000000000000) $display("result case 2: %b", result);//("Add test case 2 (Cout = 1, Overflow = 0) result failed");
-    if (carryout !== 1) $display("carryout case 2: %b ", carryout);//("Add test case 1 (Cout = 1, Overflow = 0) Cout failed");
-    if (overflow !== 0) $display("Add test case 1 (Cout = 1, Overflow = 0) Overflow failed");
+    $display("Add test cases");
+    // Case 1: Inputs consist of all 0s.
+    operandA = 32'b00000000000000000000000000000000; operandB = 32'b00000000000000000000000000000000; command = 3'b000; #1000
+    if (result !== 32'b00000000000000000000000000000000) $display("Add test case 1 result failed.\nExpected result: %b\tActual result: %b", 32'd0, result);
+    if (carryout !== 0) $display("Add test case 1 Cout failed\nExpected Cout: %b\tActual Cout: %b", 1'b0, carryout);
+    if (overflow !== 0) $display("Add test case 1 Overflow failed\nExpected Overflow: %b\tActual Overflow: %b", 1'b0, overflow);
+    if (zero !== 1) $display("Add test case 1 Zero failed\nExpected Zero: %b\tActual Zero: %b",  1'b1, zero);
+
+    // Case 2: Inputs consist of all 1s.
+    operandA = 32'b11111111111111111111111111111111; operandB = 32'b11111111111111111111111111111111; command = 3'b000; #1000
+    if (result != 32'b11111111111111111111111111111110) $display("Add test case 2 result failed.\nExpected result: %b\tActual result: %b", 32'b11111111111111111111111111111110, result);
+    if (carryout !== 1) $display("Add test case 2 Cout failed\nExpected Cout: %b\tActual Cout: %b", 1'b1, carryout);
+    if (overflow !== 0) $display("Add test case 2 Overflow failed\nExpected Overflow: %b\tActual Overflow: %b", 1'b0, overflow);
+    if (zero !== 0) $display("Add test case 2 Zero failed\nExpected Zero: %b\tActual Zero: %b",  1'b0, zero);
+
+    // Case 3: Overflow and Carryout.
+    operandA = 32'b10000011111111111111111111111111; operandB = 32'b10111111111111111111111111111111; command = 3'b000; #1000
+    if (result != 32'b010000111111111111111111111111) $display("Add test case 3 result failed.\nExpected result: %b\tActual result: %b", 32'b010000111111111111111111111111, result);
+    if (carryout !== 1) $display("Add test case 3 Cout failed\nExpected Cout: %b\tActual Cout: %b", 1'b1, carryout);
+    if (overflow !== 1) $display("Add test case Overflow failed\nExpected Overflow: %b\tActual Overflow: %b", 1'b1, overflow);
+    if (zero !== 0) $display("Add test case Zero failed\nExpected Zero: %b\tActual Zero: %b",  1'b0, zero);
+
+    // Case 4: Overflow only.
+    operandA = 32'b01000000000000000000000000001110; operandB = 32'b01000000000000000000000000001100; command = 3'b000; #1000
+        if (result != 32'b10000000000000000000000000011010) $display("Add test case 4 result failed.\nExpected result: %b\tActual result: %b", 32'b10000000000000000000000000011010, result);
+    if (carryout !== 0) $display("Add test case 4 Cout failed\nExpected Cout: %b\tActual Cout: %b", 1'b1, carryout);
+    if (overflow !== 1) $display("Add test case 4 Overflow failed\nExpected Overflow: %b\tActual Overflow: %b", 1'b1, overflow);
+    if (zero !== 0) $display("Add test case 4 Zero failed\nExpected Zero: %b\tActual Zero: %b",  1'b0, zero);
 
     // subtract test cases
-    // Cout = 0, Overflow = 0; Cout = 1, Overflow = 0; Cout = 0, Overflow = 1; Cout = 1, Overflow = 1
+    $display("Subtract test cases");
+    // Case 1: All zeros
+    operandA = 32'b00000000000000000000000000000000; operandB = 32'b00000000000000000000000000000000; command = 3'b001; #1000
+    if (result !== 32'b00000000000000000000000000000000) $display("Subtract test case 1 result failed.\nExpected result: %b\tActual result: %b", 32'd0, result);
+    if (carryout !== 1) $display("Subtract test case 1 Cout failed\nExpected Cout: %b\tActual Cout: %b", 1'b1, carryout);
+    if (overflow !== 0) $display("Subtract test case 1 Overflow failed\nExpected Overflow: %b\tActual Overflow: %b", 1'b0, overflow);
+    if (zero !== 1) $display("Subtract test case 1 Zero failed\nExpected Zero: %b\tActual Zero: %b",  1'b1, zero);
+
+    // Case 2: Subtract a negative number
+    operandA = 32'b00000000000000000000000000000000; operandB = 32'b11111111111111111111111111111111; command = 3'b001; #1000
+    if (result !== 32'b00000000000000000000000000000001) $display("Subtract test case 2 result failed.\nExpected result: %b\tActual result: %b", 32'b00000000000000000000000000000001, result);
+    if (carryout !== 0) $display("Subtract test case 2 Cout failed\nExpected Cout: %b\tActual Cout: %b", 1'b0, carryout);
+    if (overflow !== 0) $display("Subtract test case 2 Overflow failed\nExpected Overflow: %b\tActual Overflow: %b", 1'b0, overflow);
+    if (zero !== 0) $display("Subtract test case 2 Zero failed\nExpected Zero: %b\tActual Zero: %b",  1'b0, zero);
+
+    // Case 3: Subtract a positive number
+    operandA = 32'b00000000000000000000000000000000; operandB = 32'b00011111111111111111111111111111; command = 3'b001; #1000
+    if (result !== 32'b11100000000000000000000000000001) $display("Subtract test case 2 result failed.\nExpected result: %b\tActual result: %b", 32'b11100000000000000000000000000001, result);
+    if (carryout !== 0) $display("Subtract test case 2 Cout failed\nExpected Cout: %b\tActual Cout: %b", 1'b0, carryout);
+    if (overflow !== 0) $display("Subtract test case 2 Overflow failed\nExpected Overflow: %b\tActual Overflow: %b", 1'b0, overflow);
+    if (zero !== 0) $display("Subtract test case 2 Zero failed\nExpected Zero: %b\tActual Zero: %b",  1'b0, zero);
 
     // Xor test cases
     // two inputs the same; two inputs totally different; two inputs with some bits corresponding
@@ -94,5 +130,6 @@ wire overflow;
     if (result !== 32'b11111111111111111111111111111111) $display("Or test case 2 (inputs different) failed");
     operandA = 32'b01010101010101010101010101010101; operandB = 32'b01011010010110100101101001011010; command = 3'b110; #1000
     if (result !== 32'b01011111010111110101111101011111) $display("Or test case 3 (inputs somewhat corresponding) failed");
+    $finish();
 end
 endmodule // testalu
