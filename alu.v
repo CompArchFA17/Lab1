@@ -67,7 +67,7 @@ input[2:0]    command
     mux1 overflowMux(overFlowPossible, mixedSigns, sameSigns, commandslice[0]);
     `OR addSubOr(addOrSub, commandslice[0], commandslice[1]);
     `AND overflowAnd(overflowPre, possibleOverflow, overFlowPossible);
-    `AND overflowOut(overflow, overflowPre, adOrSub);
+    `AND overflowOut(overflow, overflowPre, addOrSub);
 
     //handle the slt stuff
     `XOR sltOut(sltPre, carryout, mixedSigns);
