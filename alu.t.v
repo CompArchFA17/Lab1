@@ -33,13 +33,13 @@ module testALU();
     $display("testing SUB");
 
     a=32'h00000003;b=32'h00000001;c=`SUB; #2000
-    $display("%h %h %h       | %b    %b     %b   %b       | 00000000000000000000000000000010  0  0  0", a, b, c, result, carryout, zero, overflow);
+    $display("%h %h %h       | %b    %b     %b   %b       | 00000000000000000000000000000010  1  0  0", a, b, c, result, carryout, zero, overflow);
 
     a=32'h80000000;b=32'h00000001;c=`SUB; #2000
     $display("%h %h %h       | %b    %b     %b   %b       | 01111111111111111111111111111111  1  0  1", a, b, c, result, carryout, zero, overflow);
 
     a=32'h00000000;b=32'h00000000;c=`SUB; #2000
-    $display("%h %h %h       | %b    %b     %b   %b       | 00000000000000000000000000000000  0  1  0", a, b, c, result, carryout, zero, overflow);
+    $display("%h %h %h       | %b    %b     %b   %b       | 00000000000000000000000000000000  1  1  0", a, b, c, result, carryout, zero, overflow);
 
     a=32'hFFFFFFFF;b=32'hFFFFFFFF;c=`SUB; #2000
     $display("%h %h %h       | %b    %b     %b   %b       | 00000000000000000000000000000000  1  1  0", a, b, c, result, carryout, zero, overflow);
@@ -67,9 +67,6 @@ module testALU();
     $display("%h %h %h       | %b    %b     %b   %b       | 00000000000000000000000000000001  0  0  0", a, b, c, result, carryout, zero, overflow);
 
     a=32'hAAAA55AA;b=32'hAA5555AA;c=`SLT; #2000
-    $display("%h %h %h       | %b    %b     %b   %b       | 00000000000000000000000000000001  0  0  0", a, b, c, result, carryout, zero, overflow);
-
-    a=32'hFF55FF00;b=32'hFFFF5500;c=`SLT; #2000
     $display("%h %h %h       | %b    %b     %b   %b       | 00000000000000000000000000000000  0  0  0", a, b, c, result, carryout, zero, overflow);
 
     a=32'hFF55FF00;b=32'hFFFF5500;c=`SLT; #2000
@@ -106,5 +103,8 @@ module testALU();
 
     a=32'hFFFF0000;b=32'h00FF00FF;c=`OR; #2000
     $display("%h %h %h       | %b    %b     %b   %b       | 11111111111111110000000011111111  0  0  0", a, b, c, result, carryout, zero, overflow);
+    
+    $display("tmep");
+    $display("testing SLT/SUB");
     end
 endmodule
