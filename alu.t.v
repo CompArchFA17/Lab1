@@ -1,4 +1,4 @@
-`include "ALU.v"
+`include "alu.v"
 `define ADD  3'd0
 `define SUB  3'd1
 `define XOR  3'd2
@@ -42,6 +42,8 @@ module ALU_test();
   integer i;
 
   initial begin
+    $dumpfile("alu.vcb");
+    $dumpvars;
 
     testAVals[0] = 32'h7FFFFFFF; testBVals[0] = 32'h1; testcommand[0] = `ADD; testresults[0] = 32'h80000000; testoverflow[0] = 1; testzero[0]=0; testcarryouts[0]=0;
 
