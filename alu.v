@@ -8,21 +8,21 @@ module ALU(result, carryout, overflow, zero, operandA, operandB, command);
    input [31:0] operandB;
    input [2:0] command;
    
-   reg [31:0] result;
    wire carryout =  0;
    wire overflow =  0; 
    wire zero = 0;
    wire [31:0] carryin, addedResult, subResult, xorResult, andResult, nandResult, norResult, orResult;
    wire sltResult;
-
+   reg [31:0] result;
+   
+   assign zero = !(1'b0||result[0]) && !(1'b0||result[1]) && !(1'b0||result[2]) && !(1'b0||result[3]) && !(1'b0||result[4]) && !(1'b0||result[5]) && !(1'b0||result[6]) && !(1'b0||result[7]) && !(1'b0||result[8]) && !(1'b0||result[9]) && !(1'b0||result[10]) && !(1'b0||result[11]) && !(1'b0||result[12]) && !(1'b0||result[13]) && !(1'b0||result[14]) && !(1'b0||result[15]) && !(1'b0||result[16]) && !(1'b0||result[17]) && !(1'b0||result[18]) && !(1'b0||result[19]) && !(1'b0||result[20]) && !(1'b0||result[21]) && !(1'b0||result[22]) && !(1'b0||result[23]) && !(1'b0||result[24]) && !(1'b0||result[25]) && !(1'b0||result[26]) && !(1'b0||result[27]) && !(1'b0||result[28]) && !(1'b0||result[29]) && !(1'b0||result[30]) && !(1'b0||result[31]);
+   
    multi_bit_adder adder(addedResult, carryout, overflow, operandA, operandB);
    multi_bit_subtracter subtracter(subResult, carryout, overflow, operandA, operandB);
    multi_bit_SLT slt(sltResult,operandA,operandB);
+   //output_mux result_mux(.result(result),.command(command),.operandA(operandA),.operandB(operandB),.addedResult(addedResult),.subResult(subResult),.sltResult(sltResult));
 
-   //Check for zeros 
-   and zeros(zero, !(0||result[0]), !(0||result[1]) ,!(0||result[2]) ,!(0||result[3]) ,!(0||result[4]),!(0||result[5]) ,!(0||result[6]) ,!(0||result[7]) ,!(0||result[8]) ,!(0||result[9]) ,!(0||result[10]) ,        !(0||result[11]) ,!(0||result[12]) ,!(0||result[13]) ,!(0||result[14]) ,!(0||result[15]) ,!(0||result[16]),    !(0||result[17]) ,!(0||result[18]) ,!(0||result[19]) ,!(0||result[20]) ,!(0||result[21]) ,!(0||result[22]),    !(0||result[23]) ,!(0||result[24]) ,!(0||result[25]) ,!(0||result[26]) ,!(0||result[27]) ,!(0||result[28]) ,   !(0||result[29]) ,!(0||result[30]) ,!(0||result[31]) );
-
-   always @ (command || operandA || operandB) begin
+   always @ (*) begin
       case(command)
          3'b000: result = addedResult;
          3'b001: result = subResult;
@@ -41,7 +41,7 @@ endmodule
 //If A[n]>B[n] @ n then stop and return 0 
 //If A[n]=B[n] @ n continue until the end 
 //If A = B , return 0
-
+   
 module multi_bit_SLT(sltresult,A,B);
   
    output sltresult;
@@ -49,18 +49,65 @@ module multi_bit_SLT(sltresult,A,B);
    input [31:0] B;
    integer i;
 
-   reg sltresult = 0;
+   reg sltresult;
    initial begin
       for (i = 31 ; i >= 0; i = i-1) begin
          //If A[n]<B[n] @ n then stop and return 1 b/c A<B
          if (!A[i] && B[i])  begin
             sltresult = 1;
-         end else if ((i == 0 && A[i] && B[i]) || (A[i] > B[i])) begin
+         i = -1;
+         end else if ((A[i] && B[i]) || (A[i] && !B[i])) begin
             sltresult = 0;
          end
       end
+     i = 31;
    end
 endmodule
+
+module multi_bit_and(andResult, operandA, operandB);
+   output [31:0] andResult;
+   input [31:0] operandA;
+   input [31:0] operandB;
+   
+   //wire [31:0] operandA, operandB;
+   wire and0,and1,and2,and3,and4,and5,and6,and7,and8,and9,and10,and11,and12,and13,and14,and15,and16,and17,and18,and19,and20,and21,and22,and23,and24,and25,and26,and27,and28,and29,and30,and31;
+   
+   assign and0 = operandA[0] && operandB[0];
+   assign and1 = operandA[1] && operandB[1];
+   assign and2 = operandA[2] && operandB[2];
+   assign and3 = operandA[3] && operandB[3];
+   assign and4 = operandA[4] && operandB[4];
+   assign and5 = operandA[5] && operandB[5];
+   assign and6 = operandA[6] && operandB[6];
+   assign and7 = operandA[7] && operandB[7];
+   assign and8 = operandA[8] && operandB[8];
+   assign and9 = operandA[9] && operandB[9];
+   assign and10 = operandA[10] && operandB[10];
+   assign and11 = operandA[11] && operandB[11];
+   assign and12 = operandA[12] && operandB[12];
+   assign and13 = operandA[13] && operandB[13];
+   assign and14 = operandA[14] && operandB[14];
+   assign and15 = operandA[15] && operandB[15];
+   assign and16 = operandA[16] && operandB[16];
+   assign and17 = operandA[17] && operandB[17];
+   assign and18 = operandA[18] && operandB[18];
+   assign and19 = operandA[19] && operandB[19];
+   assign and20 = operandA[20] && operandB[20];
+   assign and21 = operandA[21] && operandB[21];
+   assign and22 = operandA[22] && operandB[22];
+   assign and23 = operandA[23] && operandB[23];
+   assign and24 = operandA[24] && operandB[24];
+   assign and25 = operandA[25] && operandB[25];
+   assign and26 = operandA[26] && operandB[26];
+   assign and27 = operandA[27] && operandB[27];
+   assign and28 = operandA[28] && operandB[28];
+   assign and29 = operandA[29] && operandB[29];
+   assign and30 = operandA[30] && operandB[30];
+   assign and31 = operandA[31] && operandB[31];
+   
+   assign andResult = and31 && and30 && and29 && and31 && and30 && and29 && && and28 && and27 && and26 && and25 && and24 && and23 && and22 && and21 && and20 && and19 && and18 && and17 && and16 && and15 && and14 && and13 && and12 && and11 && and10 && and9 && and8 && and7 && and6 && and5 && and4 && and3 && and2 && and1 && and0;
+endmodule
+
 
 module multi_bit_adder(sum, carryout, overflow, A, B);
    
