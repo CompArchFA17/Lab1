@@ -1,3 +1,8 @@
+***Computer Architecture***
+***Lab 1 Report***
+***Joseph Lee and Sam Myers***
+***10/12/2017***
+
 ### Implementation
 We implemented our ALU using a bitslice approach in which all but the most significant bit are identical slices (the MSB is a slightly modified version of every other bitslice ALU). The carry-ins for each bit slice are hooked up to the previous carry-outs, as one would expect. The block diagrams below (figures 1 and 2) show our bitslice implementations.
 
@@ -7,13 +12,13 @@ We implemented SLT by having an extra “less” control signal that feeds direc
 
 Another interesting implementation approach that allowed us to have our adder always connected to the inputs without incorrectly raising overflow, carryout, or zero flags is that we included a small logic block to determine if the adder was being used (NOR the bits of the operation signal, since addition and subtraction both use 000) and only output those flags if appropriate.
 
-![Figure 1](1bitALU.png)
+![Figure 1](assets/1bitALU.png)
 *Figure 1: Block diagram of the 1-bit ALU used for bits 0-30.*
 
-![Figure 2](1bitALU-MSB.png)
+![Figure 2](assets/1bitALU-MSB.png)
 *Figure 2: Block diagram of the 1-bit ALU used for bit 31.*
 
-![Figure 3](32bitALU.png)
+![Figure 3](assets/32bitALU.png)
 *Figure 3: Block diagram of the 32-bit ALU.*
 
 ### Test Results
@@ -42,7 +47,7 @@ Our OR propagation delay is 240 ticks as well. We wanted to look at this analyti
 #### Timing analysis of SLT function:
 Our SLT propagation delay was 3070 ticks which makes sense as it is effectively implemented as a subtract operation.
 
-![Figure 4](timing.png)
+![Figure 4](assets/timing.png)
 *Figure 4: Waveforms showing the time delay for ALU operations.*
 
 ### Work Plan Reflection
