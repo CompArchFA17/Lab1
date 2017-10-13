@@ -12,7 +12,7 @@ module ALU(result, carryout, overflow, zero, operandA, operandB, command);
    wire overflow =  0; 
    wire zero = 0;
    wire [31:0] carryin, addedResult, subResult, xorResult, andResult, nandResult, norResult, orResult;
-   wire sltResult;
+   wire [31:0] sltResult;
    reg [31:0] result;
    
    assign zero = !(1'b0||result[0]) && !(1'b0||result[1]) && !(1'b0||result[2]) && !(1'b0||result[3]) && !(1'b0||result[4]) && !(1'b0||result[5]) && !(1'b0||result[6]) && !(1'b0||result[7]) && !(1'b0||result[8]) && !(1'b0||result[9]) && !(1'b0||result[10]) && !(1'b0||result[11]) && !(1'b0||result[12]) && !(1'b0||result[13]) && !(1'b0||result[14]) && !(1'b0||result[15]) && !(1'b0||result[16]) && !(1'b0||result[17]) && !(1'b0||result[18]) && !(1'b0||result[19]) && !(1'b0||result[20]) && !(1'b0||result[21]) && !(1'b0||result[22]) && !(1'b0||result[23]) && !(1'b0||result[24]) && !(1'b0||result[25]) && !(1'b0||result[26]) && !(1'b0||result[27]) && !(1'b0||result[28]) && !(1'b0||result[29]) && !(1'b0||result[30]) && !(1'b0||result[31]);
@@ -36,76 +36,30 @@ module ALU(result, carryout, overflow, zero, operandA, operandB, command);
    end
 endmodule
 
-//We can check if A<B by checking starting at the most significant bit and moving to the right checking for following cases
-//If A[n]<B[n] @ n then stop and return 1
-//If A[n]>B[n] @ n then stop and return 0 
-//If A[n]=B[n] @ n continue until the end 
-//If A = B , return 0
-   
+//We can check if A<B by subtracting B from A and determining from the most significant bit which is bigger
+
 module multi_bit_SLT(sltresult,A,B);
   
-   output sltresult;
-   input [31:0] A;
-   input [31:0] B;
-   integer i;
+   output [31:0] sltresult;
+   input [31:0] A, B;
 
-   reg sltresult;
-   initial begin
-      for (i = 31 ; i >= 0; i = i-1) begin
-         //If A[n]<B[n] @ n then stop and return 1 b/c A<B
-         if (!A[i] && B[i])  begin
-            sltresult = 1;
-         i = -1;
-         end else if ((A[i] && B[i]) || (A[i] && !B[i])) begin
-            sltresult = 0;
-         end
-      end
-     i = 31;
-   end
-endmodule
+   wire [31:0] sltsub;
+   wire [31:0] sltresult;
 
-module multi_bit_and(andResult, operandA, operandB);
-   output [31:0] andResult;
-   input [31:0] operandA;
-   input [31:0] operandB;
+   wire overflow, carryout, sign;
+
+
+   //subtract B from A
+   // If B is bigger then it should be negative so the most significant bit is 1
+   // If B is equal or same then it should be positive so the most significant bit is 0
    
-   //wire [31:0] operandA, operandB;
-   wire and0,and1,and2,and3,and4,and5,and6,and7,and8,and9,and10,and11,and12,and13,and14,and15,and16,and17,and18,and19,and20,and21,and22,and23,and24,and25,and26,and27,and28,and29,and30,and31;
-   
-   assign and0 = operandA[0] && operandB[0];
-   assign and1 = operandA[1] && operandB[1];
-   assign and2 = operandA[2] && operandB[2];
-   assign and3 = operandA[3] && operandB[3];
-   assign and4 = operandA[4] && operandB[4];
-   assign and5 = operandA[5] && operandB[5];
-   assign and6 = operandA[6] && operandB[6];
-   assign and7 = operandA[7] && operandB[7];
-   assign and8 = operandA[8] && operandB[8];
-   assign and9 = operandA[9] && operandB[9];
-   assign and10 = operandA[10] && operandB[10];
-   assign and11 = operandA[11] && operandB[11];
-   assign and12 = operandA[12] && operandB[12];
-   assign and13 = operandA[13] && operandB[13];
-   assign and14 = operandA[14] && operandB[14];
-   assign and15 = operandA[15] && operandB[15];
-   assign and16 = operandA[16] && operandB[16];
-   assign and17 = operandA[17] && operandB[17];
-   assign and18 = operandA[18] && operandB[18];
-   assign and19 = operandA[19] && operandB[19];
-   assign and20 = operandA[20] && operandB[20];
-   assign and21 = operandA[21] && operandB[21];
-   assign and22 = operandA[22] && operandB[22];
-   assign and23 = operandA[23] && operandB[23];
-   assign and24 = operandA[24] && operandB[24];
-   assign and25 = operandA[25] && operandB[25];
-   assign and26 = operandA[26] && operandB[26];
-   assign and27 = operandA[27] && operandB[27];
-   assign and28 = operandA[28] && operandB[28];
-   assign and29 = operandA[29] && operandB[29];
-   assign and30 = operandA[30] && operandB[30];
-   assign and31 = operandA[31] && operandB[31];
-   
-   assign andResult = and31 && and30 && and29 && and31 && and30 && and29 && && and28 && and27 && and26 && and25 && and24 && and23 && and22 && and21 && and20 && and19 && and18 && and17 && and16 && and15 && and14 && and13 && and12 && and11 && and10 && and9 && and8 && and7 && and6 && and5 && and4 && and3 && and2 && and1 && and0;
+   multi_bit_subtracter SLTcompare(sltsub, carryout, overflow, A, B);
+
+   //XOR the significant bit with the overflow: We get a 1 if a is less than b, and a 0 if b is less than a
+   xor signedbit(sign, sltsub[31],overflow);
+
+   //set sltresult equal to the signed bit of our 2's compliment subtractor
+   assign sltresult = {32{sign}};
 endmodule
 
 
@@ -181,12 +135,15 @@ module multi_bit_subtracter(result, carryout, overflow, A, B);
    wire [31:0] A;
    wire [31:0] B;
    wire [31:0] nB;
+   wire [31:0] sub1;
   
-   //initial nB[31:0] = ~B[31:0];
-   //invert second operand B for subtraction
-   assign nB = !B[31] && !B[30] && !B[29] && !B[28] && !B[27]&& !B[26] && !B[25] && !B[24] && !B[23] && !B[22] && !B[21]&& !B[20] && !B[19] && !B[18] && !B[17] && !B[16] && !B[15] && !B[14] && !B[13] && !B[12] && !B[11] && !B[10] && !B[9] && !B[8] && !B[7] && !B[6] && !B[5] && !B[4] && !B[3] && !B[2] && !B[1] && !B[0] ;
+   assign nB[31:0] = ~B[31:0];
+   //invert second operand B for subtraction and add 1 to the least significant bit
+   //assign nB = !B[31] && !B[30] && !B[29] && !B[28] && !B[27]&& !B[26] && !B[25] && !B[24] && !B[23] && !B[22] && !B[21]&& !B[20] && !B[19] && !B[18] && !B[17] && !B[16] && !B[15] && !B[14] && !B[13] && !B[12] && !B[11] && !B[10] && !B[9] && !B[8] && !B[7] && !B[6] && !B[5] && !B[4] && !B[3] && !B[2] && !B[1] && !B[0] ;
 
-   multi_bit_adder subtract1(result, carryout, overflow, A, nB);
+   multi_bit_adder subtract1(sub1, carryout, overflow, A, nB);
+   // Add 1!
+   multi_bit_adder subtract2(result, carryout, overflow, sub1, 32'b00000000000000000000000000000001);   
 
 endmodule
 
