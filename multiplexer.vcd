@@ -1,0 +1,54 @@
+$date
+	Mon Oct  9 21:56:39 2017
+$end
+$version
+	Icarus Verilog
+$end
+$timescale
+	1ps
+$end
+$scope module testMultiplexer $end
+$var reg 3 ! address [2:0] $end
+$upscope $end
+$scope module testMultiplexer $end
+$var reg 8 " in [7:0] $end
+$upscope $end
+$scope module testMultiplexer $end
+$var wire 1 # out $end
+$upscope $end
+$enddefinitions $end
+#0
+$dumpvars
+x#
+bx "
+b0 !
+$end
+#1000000
+bx0 "
+#1120000
+0#
+#2000000
+bx1 "
+#2120000
+1#
+#3000000
+b1 !
+bx0x "
+#3130000
+0#
+#4000000
+bx1x "
+#4120000
+1#
+#5000000
+b10 !
+bx0xx "
+#5090000
+x#
+#5120000
+0#
+#6000000
+bx1xx "
+#6120000
+1#
+#7000000
