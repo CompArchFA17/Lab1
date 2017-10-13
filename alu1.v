@@ -119,6 +119,17 @@ module slt(output out,
   `OR   or1(out,  w0, lt);
 endmodule
 
+module mux1(output out, input a, input b, input s);
+  wire s_;
+  wire w0;
+  wire w1;
+
+  `NOT sNot(s_,s);
+  `AND aAnd(w0, a, s_);
+  `AND bAnd(w1, b, s);
+  `OR(out,w0,w1);
+endmodule
+
 `define ADDSig  command[0]
 `define SUBSig  command[1]
 `define XORSig  command[2]
