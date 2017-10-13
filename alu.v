@@ -88,9 +88,15 @@ module lastALUunit // last ALU unit, which has an ALU unit with outputs of SLT v
 );
 
 	ALUunit basic_unit(bitR, carryout, bitA, bitB, carryin, less, muxindex, invertBflag);
+	`XORgate overflowxorgate(overflow, carryin, carryout);
 
-	`XORgate overflowxorgate(overflow, bitR, carryout);
-	`XORgate slt_xorgate(slt, bitR, overflow);
+	wire slt_result;  //sum of A, ~B and carryin, used when the command is SLT because bitR is always 0 for SLT.
+	wire slt_carryout;//not used variable
+	wire notB;//inverted B, used when the command is SLT 
+
+	`NOTgate invert_b_notgate(notB, bitB);
+	fullAdder1bit slt_adder(slt_result, add_carryout, bitA, notB, carryin);
+	`XORgate slt_xorgate(slt, slt_result, overflow);
 
 endmodule
 
@@ -119,8 +125,8 @@ module ALU // total ALU which has 32 basic ALU units and control unit.
 		operandA[0], operandB[0], invertBflag, set_SLT, muxindex, invertBflag
 	);
 	
+	genvar i;
 	generate // 2nd to 31st adder instantiation 
-		genvar i;
 		for(i=1; i<31; i=i+1) begin: generate_alu_unit
 			ALUunit unit(
 				result[i],
@@ -135,8 +141,21 @@ module ALU // total ALU which has 32 basic ALU units and control unit.
 		end
 	endgenerate
 	lastALUunit lastunit(
-		result[31], carryout, // output: result, carryout
-		overflow, set_SLT, operandA[31], operandB[31], internal_carryout[30], 0, muxindex, invertBflag
+		result[31], carryout, overflow, set_SLT, // output: result, carryout, overflow, slt
+		operandA[31], operandB[31], internal_carryout[30], 0, muxindex, invertBflag
 	);
+
+	wire[30:0] wire_for_zero;
+	wire[31:0] inverted_result;
+	`NORgate norgate0(wire_for_zero[0], result[0], result[1]);
+	generate//zero flag
+		for(i=2; i<32; i=i+1) begin: generate_inverted_result
+			`NOTgate notgate(inverted_result[i], result[i]);
+		end
+		for(i=1; i<31; i=i+1) begin: generate_zero_flag
+			`ANDgate norgate(wire_for_zero[i], inverted_result[i+1], wire_for_zero[i-1]);
+		end
+	endgenerate
+	assign zero = wire_for_zero[30];
 
 endmodule
