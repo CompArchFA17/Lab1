@@ -135,7 +135,6 @@ module multi_bit_subtracter(result, carryout, overflow, A, B);
    input [31:0] B;
    
    wire [31:0] result;
-   wire carryout, overflow;
    wire [31:0] A;
    wire [31:0] B;
    wire [31:0] nB;
@@ -145,9 +144,9 @@ module multi_bit_subtracter(result, carryout, overflow, A, B);
    //invert second operand B for subtraction and add 1 to the least significant bit
    //assign nB = !B[31] && !B[30] && !B[29] && !B[28] && !B[27]&& !B[26] && !B[25] && !B[24] && !B[23] && !B[22] && !B[21]&& !B[20] && !B[19] && !B[18] && !B[17] && !B[16] && !B[15] && !B[14] && !B[13] && !B[12] && !B[11] && !B[10] && !B[9] && !B[8] && !B[7] && !B[6] && !B[5] && !B[4] && !B[3] && !B[2] && !B[1] && !B[0] ;
 
-   multi_bit_adder subtract1(sub1, carryout, overflow, A, nB);
+   multi_bit_adder subtract1(sub1, trash_carryout, trash_overflow, 32'b00000000000000000000000000000001, nB);
    // Add 1!
-   multi_bit_adder subtract2(result, carryout, overflow, sub1, 32'b00000000000000000000000000000001);   
+   multi_bit_adder subtract2(result, carryout, overflow, sub1, A);   
 
 endmodule
 
@@ -252,7 +251,7 @@ module multi_bit_or(orResult, operandA, operandB);
    assign or30 = operandA[30] || operandB[30];
    assign or31 = operandA[31] || operandB[31];
    
-   assign orResult = {or0,or1,or2,or3,or4,or5,or6,or7,or8,or9,or10,or11,or12,or13,or14,or15,or16,or17,or18,or19,or20,or21,or22,or23,or24,or25,or26,or27,or28,or29,or30,or31};
+   assign orResult = {or31,or30,or29,or28,or27,or26,or25,or24,or23,or22,or21,or20,or19,or18,or17,or16,or15,or14,or13,or12,or11,or10,or9,or8,or7,or6,or5,or4,or3,or2,or1,or0};
 endmodule
 
 module multi_bit_xor(xorResult, operandA, operandB);
@@ -296,5 +295,5 @@ module multi_bit_xor(xorResult, operandA, operandB);
    assign xor30 = (!operandA[30] && operandB[30]) || (operandA[30] && !operandB[30]);
    assign xor31 = (!operandA[31] && operandB[31]) || (operandA[31] && !operandB[31]);
    
-   assign xorResult = {xor0,xor1,xor2,xor3,xor4,xor5,xor6,xor7,xor8,xor9,xor10,xor11,xor12,xor13,xor14,xor15,xor16,xor17,xor18,xor19,xor20,xor21,xor22,xor23,xor24,xor25,xor26,xor27,xor28,xor29,xor30,xor31};
+   assign xorResult = {xor31,xor30,xor29,xor28,xor27,xor26,xor25,xor24,xor23,xor22,xor21,xor20,xor19,xor18,xor17,xor16,xor15,xor14,xor13,xor12,xor11,xor10,xor9,xor8,xor7,xor6,xor5,xor4,xor3,xor2,xor1,xor0};
 endmodule
