@@ -19,13 +19,6 @@ input[2:0]    command
     wire overflowPre;
     wire addOrSub;
     wire sltPre;
-<<<<<<< HEAD
-    wire B31_;
-=======
-    wire flagsEnable;
-    wire carryoutint, overflowint;
-
->>>>>>> 01e44d4a2603a90d54d9733c1c5803503d771d61
 
     reg[7:0] commandslice;
     always @(command) begin
