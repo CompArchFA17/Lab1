@@ -22,6 +22,10 @@ In the case of subtraction the LSB of the carryin bus is flipped to a 1 and each
 #### Addition
 In the case of addition each the LSB of the carryin bus is left empty and the carryout of each 1 bit ALU slice is connected to the carryin of the next bit, with the final connected to an AND gate to enable the carryout flag.
 
+### Implementation Diagram
+![dg1](https://github.com/TShapinsky/Lab1/blob/master/Diagram_Page_1.png?raw=true)
+![dg2](https://github.com/TShapinsky/Lab1/blob/master/Diagram_Page_2.png?raw=true)
+
 ## Test Results
 After some difficulties with post processing, we got our tests to pass. We weren't sure if carryout and zero were flags that should not be set for other operands beside ADD and SUB, so we didn't test that.
 
