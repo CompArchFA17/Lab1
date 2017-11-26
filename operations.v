@@ -58,13 +58,16 @@ generate
   end
 endgenerate
 
+
 `XOR invertB (invB[31], operandB[31], subtract);
 FullAdder1bit adderfinal (result[31], carryout, operandA[31], invB[31], carryoutmid[30]);
 
+// determine overflows
 `XOR overflowdetection(overflow, carryoutmid[30], carryout);
 
-`OR orbits(nzero, result[31:0], 32'b0);
-`NOT norbits(zero, nzero);
+assign nzero = |result;
+`NOT notgate(zero, nzero);
+
 
 endmodule
 
